@@ -1,0 +1,39 @@
+name: Save Monthly Archive
+
+on:
+  schedule:
+    # 1st of month, 6 AM PT == 13:00 UTC (PDT)
+    - cron: '0 13 1 * *'
+  workflow_dispatch:
+
+jobs:
+  freeze:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install requests
+
+      - name: Resolve previous month
+        id: mo
+        run: echo "month=$(date -u -d 'last month' +%Y-%m)" >> "$GITHUB_OUTPUT"
+
+      - name: Freeze month
+        env:
+          CLOSE_API_KEY: ${{ secrets.CLOSE_API_KEY }}
+        run: python fetch_and_build.py --month "${{ steps.mo.outputs.month }}"
+
+      - name: Commit
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add archives/
+          git diff --staged --quiet && echo "No changes" && exit 0
+          git commit -m "Freeze monthly archive ${{ steps.mo.outputs.month }}"
+          git pull --rebase --strategy-option=ours origin main
+          git push

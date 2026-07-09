@@ -1,0 +1,50 @@
+name: Backfill Archive
+
+on:
+  workflow_dispatch:
+    inputs:
+      month:
+        description: 'Month to backfill (YYYY-MM). Leave blank if using week.'
+        required: false
+      week:
+        description: 'Week Monday to backfill (YYYY-MM-DD). Leave blank if using month.'
+        required: false
+
+jobs:
+  backfill:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install requests
+
+      - name: Validate — exactly one of month/week
+        run: |
+          M="${{ inputs.month }}"; W="${{ inputs.week }}"
+          if [ -n "$M" ] && [ -n "$W" ]; then echo "Provide month OR week, not both."; exit 1; fi
+          if [ -z "$M" ] && [ -z "$W" ]; then echo "Provide month or week.";          exit 1; fi
+
+      - name: Backfill
+        env:
+          CLOSE_API_KEY: ${{ secrets.CLOSE_API_KEY }}
+        run: |
+          if [ -n "${{ inputs.month }}" ]; then
+            python fetch_and_build.py --month "${{ inputs.month }}"
+          else
+            python fetch_and_build.py --week "${{ inputs.week }}"
+          fi
+
+      - name: Commit
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add archives/
+          git diff --staged --quiet && echo "No changes" && exit 0
+          git commit -m "Backfill archive"
+          git pull --rebase --strategy-option=ours origin main
+          git push

@@ -1296,6 +1296,43 @@ def generate_html(data, month_picker_html="", week_picker_html=""):
     line-height: 1.6;
   }}
 
+  /* ── Collapsible methodology ── */
+  .methodology {{
+    margin: 8px 36px 40px;
+    border-top: 1px solid var(--border);
+    padding-top: 14px;
+  }}
+  .methodology summary {{
+    font-size: 11px;
+    color: var(--muted);
+    cursor: pointer;
+    list-style: none;
+    user-select: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }}
+  .methodology summary::-webkit-details-marker {{ display: none; }}
+  .methodology summary::before {{
+    content: "›";
+    display: inline-block;
+    transition: transform 0.15s ease;
+    font-size: 13px;
+  }}
+  .methodology[open] summary::before {{ transform: rotate(90deg); }}
+  .methodology summary:hover {{ color: var(--accent); }}
+  .methodology-body {{
+    max-width: 700px;
+    padding-top: 10px;
+  }}
+  .methodology-body p {{
+    font-size: 11px;
+    color: var(--muted);
+    line-height: 1.7;
+    margin-bottom: 8px;
+  }}
+  .methodology-body strong {{ color: var(--muted2); }}
+
   /* ── Clickable KPI tiles ── */
   .kpi-clickable {{ cursor: pointer; transition: transform 0.1s, box-shadow 0.1s; }}
   .kpi-clickable:hover {{
@@ -1628,36 +1665,31 @@ def generate_html(data, month_picker_html="", week_picker_html=""):
   }}
 </script>
 
-<div style="padding: 24px 36px 32px; border-top: 1px solid var(--border); margin-top: 8px;">
-  <p style="font-size: 11px; color: var(--muted); line-height: 1.7; max-width: 680px;">
-    <strong style="color: var(--muted2);">Scope</strong> — This dashboard covers only the five agency-managed funnels
-    (Instagram, X, Linkedin, Anthony X, Anthony IG). No other funnel data is fetched or published.
-    &nbsp;·&nbsp;
-    <strong style="color: var(--muted2);">Setter / Closer</strong> — two independent counts, not a split.
-    <em>Setter</em> is discovery calls held this period; leads that score below the bar are vetted by a setter
-    before a closer's calendar opens up. <em>Closer</em> is first sales calls. A lead with a discovery on the 19th
-    and a sales call on the 22nd is counted once in each — they are two separate calls, so the columns do not add up.
-    &nbsp;·&nbsp;
-    <strong style="color: var(--muted2);">Stuck</strong> — discovery calls that have produced no closer call at all.
-    A discovery held in the last few days may simply not have converted yet. Re-running an archive refreshes this.
-    &nbsp;·&nbsp;
-    <strong style="color: var(--muted2);">Show %, Qual %, CW %</strong> are all measured against
-    <em>Closer</em>, never Setter.
-    &nbsp;·&nbsp;
-    <strong style="color: var(--muted2);">Projected</strong> — End-of-month estimate based on current daily booking pace:
-    <em>(Booked ÷ Days Elapsed) × Days in Month</em>.
-    <span style="color: var(--green); font-weight:600;">Green</span> = exceeding pace ·
-    <span style="color: #ca8a04; font-weight:600;">Yellow</span> = on pace ·
-    <span style="color: var(--red); font-weight:600;">Red</span> = behind pace.
-    Funnels without a goal show —.
-    &nbsp;·&nbsp;
-    <strong style="color: var(--muted2);">Cash Collected</strong> — entered manually in Close.
-    A dash means not yet recorded, not zero. Cash may exceed gross when payments land from
-    deals closed in a prior period.
-    &nbsp;·&nbsp;
-    <strong style="color: var(--muted2);">Email</strong> — partially masked.
-  </p>
-</div>
+<details class="methodology">
+  <summary>Definitions &amp; methodology</summary>
+  <div class="methodology-body">
+    <p><strong>Scope</strong> — Only the five agency-managed funnels (Instagram, X, Linkedin, Anthony X, Anthony IG).
+    No other funnel data is fetched or published.</p>
+
+    <p><strong>Setter and Closer are two independent counts, not a split of one number.</strong>
+    Setter is discovery calls held this period — leads that scored below the bar get vetted by a setter
+    before a closer's calendar opens up. Closer is first sales calls. A lead with a discovery on the 19th
+    and a sales call on the 22nd is counted once in each. <em>The two columns do not add up.</em></p>
+
+    <p><strong>Stuck</strong> — discovery calls that have produced no closer call at all. A discovery held in the
+    last few days may simply not have converted yet, so a fresh week will always look worse than it is.
+    Check the Lead Status column: <em>Disqualified</em> means it ended, <em>Call Booked</em> means it's still moving.</p>
+
+    <p><strong>Show %, Qual %, CW %</strong> are measured against Closer, never Setter.
+    &nbsp;·&nbsp; <strong>Projected</strong> — end-of-month estimate at current daily booking pace:
+    <em>(Booked ÷ days elapsed) × days in month</em>. Green = exceeding, yellow = on pace, red = behind.
+    Funnels with no goal show —.</p>
+
+    <p><strong>Cash Collected</strong> — entered manually in Close. A dash means not yet recorded, not zero.
+    Cash may exceed gross when payments land from deals closed in a prior period.
+    &nbsp;·&nbsp; <strong>Email</strong> — partially masked.</p>
+  </div>
+</details>
 
 </body>
 </html>"""

@@ -254,6 +254,78 @@
   .col-cash    { text-align: right; color: var(--blue);  font-weight: 500; font-variant-numeric: tabular-nums; }
   .col-cash.cash-missing { color: var(--muted); font-weight: 400; }
   .lead-empty  { padding: 24px 12px; text-align: center; color: var(--muted); }
+  .col-status  { color: var(--muted2); font-size: 12px; }
+  .col-adv     { text-align: right; }
+  .col-flag    { text-align: right; }
+
+  .adv-yes { color: var(--green); font-weight: 500; font-variant-numeric: tabular-nums; }
+  .adv-no  { color: var(--amber); font-weight: 600; }
+  .yn      { font-weight: 500; }
+  .yn.yes  { color: var(--green); }
+  .yn.no   { color: var(--muted); font-weight: 400; }
+
+  /* ── Lead tabs ── */
+  .lead-tabs {
+    display: flex;
+    gap: 6px;
+    padding: 0 36px 12px;
+    flex-wrap: wrap;
+  }
+  .lead-tab {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 7px;
+    padding: 7px 13px;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--muted2);
+    cursor: pointer;
+    font-family: inherit;
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    transition: all 0.12s;
+  }
+  .lead-tab:hover { border-color: var(--accent); color: var(--text); }
+  .lead-tab.active {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: #fff;
+  }
+  .lead-tab .tab-n {
+    background: var(--surface2);
+    color: var(--muted2);
+    border-radius: 20px;
+    padding: 1px 7px;
+    font-size: 10.5px;
+    font-weight: 600;
+  }
+  .lead-tab.active .tab-n { background: rgba(255,255,255,0.22); color: #fff; }
+  .lead-tab[data-tab="stuck"].active { background: var(--amber); border-color: var(--amber); }
+
+  .pane-note {
+    font-size: 11px;
+    color: var(--muted);
+    padding: 12px 2px 0;
+    line-height: 1.6;
+  }
+
+  /* ── Clickable KPI tiles ── */
+  .kpi-clickable { cursor: pointer; transition: transform 0.1s, box-shadow 0.1s; }
+  .kpi-clickable:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.09), 0 1px 2px rgba(0,0,0,0.05);
+  }
+  .kpi-clickable:hover .kpi-jump { opacity: 1; }
+  .kpi-jump {
+    position: absolute;
+    top: 10px; right: 12px;
+    font-size: 9.5px;
+    color: var(--accent);
+    opacity: 0;
+    transition: opacity 0.12s;
+    letter-spacing: 0.03em;
+  }
 
   .funnel-chip {
     display: inline-block;
@@ -330,7 +402,7 @@
       <option value="/agency-funnel-dashboard/archives/week-current.html" selected>Jul 6–9 ▶</option></select></div>
     </div>
     <span class="snapshot-label"><span class="archive-badge">Week View</span></span>
-    July 09, 2026 at 02:57 PM PT<br>
+    July 09, 2026 at 03:29 PM PT<br>
     Source · Close CRM
   </div>
 </div>
@@ -342,13 +414,18 @@
     <div class="value">22</div>
     <div class="kpi-sub">new leads this period</div>
   </div>
-  <div class="kpi" style="--kpi-accent:#9333ea; --kpi-color:#9333ea;">
+  <div class="kpi kpi-clickable" data-tab="setter" onclick="showLeadTab('setter')"
+       style="--kpi-accent:#9333ea; --kpi-color:#9333ea;" title="Click to list these leads below">
+    <div class="kpi-jump">view leads ↓</div>
     <div class="label">Setter Calls</div>
     <div class="value">5</div>
     <div class="kpi-sub">0% advanced to a closer</div>
-    <div class="kpi-cash partial">5 stuck · no closer call</div>
+    <div class="kpi-cash partial" onclick="event.stopPropagation();showLeadTab('stuck')"
+         style="cursor:pointer;">5 stuck · no closer call</div>
   </div>
-  <div class="kpi" style="--kpi-accent:#4f46e5; --kpi-color:var(--text);">
+  <div class="kpi kpi-clickable" data-tab="closer" onclick="showLeadTab('closer')"
+       style="--kpi-accent:#4f46e5; --kpi-color:var(--text);" title="Click to list these leads below">
+    <div class="kpi-jump">view leads ↓</div>
     <div class="label">Closer Calls</div>
     <div class="value">22</div>
     <div class="kpi-sub">first sales calls</div>
@@ -368,7 +445,9 @@
     <div class="value">1</div>
     <div class="kpi-sub">4.5% booked→close · 8.3% qual→close</div>
   </div>
-  <div class="kpi" style="--kpi-accent:#0e9f6e; --kpi-color:#0e9f6e;">
+  <div class="kpi kpi-clickable" data-tab="closed" onclick="showLeadTab('closed')"
+       style="--kpi-accent:#0e9f6e; --kpi-color:#0e9f6e;" title="Click to list these leads below">
+    <div class="kpi-jump">view leads ↓</div>
     <div class="label">Closed Revenue</div>
     <div class="value">$5,697</div>
     <div class="kpi-sub">$5,697 avg deal</div>
@@ -463,6 +542,25 @@
     </tr>
 
     <tr class="utm-row" data-parent="instagram">
+      <td class="col-name col-utm">↳ 1918113011</td>
+      <td class="col-num">—</td>
+      <td class="col-num col-setter">—</td>
+      <td class="col-num col-stuck">—</td>
+      <td class="col-pct ">—</td>
+      <td class="col-num">1</td>
+      <td class="col-pace"></td>
+      <td class="col-goal"></td>
+      <td class="col-num">1</td>
+      <td class="col-pct good">100.0%</td>
+      <td class="col-num">1</td>
+      <td class="col-pct good">100.0%</td>
+      <td class="col-num">—</td>
+      <td class="col-pct bad">0.0%</td>
+      <td class="col-rev">$0</td>
+      <td class="col-num">—</td>
+    </tr>
+
+    <tr class="utm-row" data-parent="instagram">
       <td class="col-name col-utm">↳ ltf_buyers</td>
       <td class="col-num">—</td>
       <td class="col-num col-setter">—</td>
@@ -494,25 +592,6 @@
       <td class="col-pct bad">0.0%</td>
       <td class="col-num">—</td>
       <td class="col-pct bad">0.0%</td>
-      <td class="col-num">—</td>
-      <td class="col-pct bad">0.0%</td>
-      <td class="col-rev">$0</td>
-      <td class="col-num">—</td>
-    </tr>
-
-    <tr class="utm-row" data-parent="instagram">
-      <td class="col-name col-utm">↳ 1918113011</td>
-      <td class="col-num">—</td>
-      <td class="col-num col-setter">—</td>
-      <td class="col-num col-stuck">—</td>
-      <td class="col-pct ">—</td>
-      <td class="col-num">1</td>
-      <td class="col-pace"></td>
-      <td class="col-goal"></td>
-      <td class="col-num">1</td>
-      <td class="col-pct good">100.0%</td>
-      <td class="col-num">1</td>
-      <td class="col-pct good">100.0%</td>
       <td class="col-num">—</td>
       <td class="col-pct bad">0.0%</td>
       <td class="col-rev">$0</td>
@@ -1024,13 +1103,324 @@
   </table>
 </div>
 
-<!-- Closed-Won Lead Detail -->
+<!-- Lead Detail — tabbed -->
 <div class="section-label">
-  Closed-Won Deal Line Items
-  <span class="count-pill">1 deal</span>
+  Lead Line Items
+  <span class="count-pill" id="lead-count">1 deals</span>
 </div>
 
-<div class="table-wrap">
+<div class="lead-tabs">
+  <button class="lead-tab" data-tab="setter" onclick="showLeadTab('setter')">Setter Calls <span class="tab-n">5</span></button>
+  <button class="lead-tab" data-tab="stuck"  onclick="showLeadTab('stuck')">Stuck <span class="tab-n">5</span></button>
+  <button class="lead-tab" data-tab="closer" onclick="showLeadTab('closer')">Closer Calls <span class="tab-n">22</span></button>
+  <button class="lead-tab active" data-tab="closed" onclick="showLeadTab('closed')">Closed-Won <span class="tab-n">1</span></button>
+</div>
+
+<!-- Setter + Stuck share one table; Stuck hides advanced rows -->
+<div class="table-wrap lead-pane" id="pane-setter" style="display:none">
+  <table>
+    <thead>
+      <tr>
+        <th class="col-date">Discovery Date</th>
+        <th class="col-client">Client</th>
+        <th class="col-email">Email</th>
+        <th class="col-funnel">Funnel</th>
+        <th class="col-status">Lead Status</th>
+        <th class="col-adv">Advanced to Closer</th>
+      </tr>
+    </thead>
+    <tbody>
+
+    <tr class="lead-row stuck-row">
+      <td class="col-date">7/9/2026</td>
+      <td class="col-client">Bishal Chettri</td>
+      <td class="col-email">b****1000@gmail.com</td>
+      <td class="col-funnel"><span class="funnel-chip chip-instagram">Instagram</span></td>
+      <td class="col-status">☎️ Call Booked</td>
+      <td class="col-adv"><span class="adv-no">Stuck</span></td>
+    </tr>
+
+    <tr class="lead-row stuck-row">
+      <td class="col-date">7/9/2026</td>
+      <td class="col-client">James Yoon</td>
+      <td class="col-email">j****s440@gmail.com</td>
+      <td class="col-funnel"><span class="funnel-chip chip-instagram">Instagram</span></td>
+      <td class="col-status">☎️ Call Booked</td>
+      <td class="col-adv"><span class="adv-no">Stuck</span></td>
+    </tr>
+
+    <tr class="lead-row stuck-row">
+      <td class="col-date">7/9/2026</td>
+      <td class="col-client">Karan Shah</td>
+      <td class="col-email">k****8658@gmail.com</td>
+      <td class="col-funnel"><span class="funnel-chip chip-instagram">Instagram</span></td>
+      <td class="col-status">☎️ Call Booked</td>
+      <td class="col-adv"><span class="adv-no">Stuck</span></td>
+    </tr>
+
+    <tr class="lead-row stuck-row">
+      <td class="col-date">7/9/2026</td>
+      <td class="col-client">Mike Segal</td>
+      <td class="col-email">s****lgon@yahoo.com</td>
+      <td class="col-funnel"><span class="funnel-chip chip-instagram">Instagram</span></td>
+      <td class="col-status">☎️ Call Booked</td>
+      <td class="col-adv"><span class="adv-no">Stuck</span></td>
+    </tr>
+
+    <tr class="lead-row stuck-row">
+      <td class="col-date">7/9/2026</td>
+      <td class="col-client">Xion Jackson</td>
+      <td class="col-email">g****on05@gmail.com</td>
+      <td class="col-funnel"><span class="funnel-chip chip-instagram">Instagram</span></td>
+      <td class="col-status">☎️ Call Booked</td>
+      <td class="col-adv"><span class="adv-no">Stuck</span></td>
+    </tr>
+    </tbody>
+  </table>
+  <p class="pane-note" id="note-setter">Every discovery call held this period. <strong>Advanced</strong> shows the date the lead reached a closer.</p>
+  <p class="pane-note" id="note-stuck" style="display:none">Discovery calls with no closer call booked. A call held in the last few days may simply not have converted yet.</p>
+</div>
+
+<div class="table-wrap lead-pane" id="pane-closer" style="display:none">
+  <table>
+    <thead>
+      <tr>
+        <th class="col-date">Sales Call Date</th>
+        <th class="col-client">Client</th>
+        <th class="col-email">Email</th>
+        <th class="col-funnel">Funnel</th>
+        <th class="col-status">Lead Status</th>
+        <th class="col-flag">Showed</th>
+        <th class="col-flag">Qualified</th>
+      </tr>
+    </thead>
+    <tbody>
+
+    <tr class="lead-row">
+      <td class="col-date">7/6/2026</td>
+      <td class="col-client">Juan Arcos</td>
+      <td class="col-email">q****7gad@hotmail.com</td>
+      <td class="col-funnel"><span class="funnel-chip chip-instagram">Instagram</span></td>
+      <td class="col-status">📞 Follow Up</td>
+      <td class="col-flag"><span class="yn yes">Yes</span></td>
+      <td class="col-flag"><span class="yn yes">Yes</span></td>
+    </tr>
+
+    <tr class="lead-row">
+      <td class="col-date">7/6/2026</td>
+      <td class="col-client">Michael Chisom</td>
+      <td class="col-email">l****l950@gmail.com</td>
+      <td class="col-funnel"><span class="funnel-chip chip-instagram">Instagram</span></td>
+      <td class="col-status">☎️ Call Booked</td>
+      <td class="col-flag"><span class="yn no">No</span></td>
+      <td class="col-flag"><span class="yn no">No</span></td>
+    </tr>
+
+    <tr class="lead-row">
+      <td class="col-date">7/6/2026</td>
+      <td class="col-client">Philip Galin</td>
+      <td class="col-email">p****ilip@galinvending.com</td>
+      <td class="col-funnel"><span class="funnel-chip chip-instagram">Instagram</span></td>
+      <td class="col-status">🗓️ Long Term Follow Up</td>
+      <td class="col-flag"><span class="yn yes">Yes</span></td>
+      <td class="col-flag"><span class="yn yes">Yes</span></td>
+    </tr>
+
+    <tr class="lead-row">
+      <td class="col-date">7/6/2026</td>
+      <td class="col-client">Ryan Gracey</td>
+      <td class="col-email">r****acey@gmail.com</td>
+      <td class="col-funnel"><span class="funnel-chip chip-instagram">Instagram</span></td>
+      <td class="col-status">☎️ Call Booked</td>
+      <td class="col-flag"><span class="yn no">No</span></td>
+      <td class="col-flag"><span class="yn no">No</span></td>
+    </tr>
+
+    <tr class="lead-row">
+      <td class="col-date">7/6/2026</td>
+      <td class="col-client">Ryan Gracey</td>
+      <td class="col-email">r****acey@gmail.com</td>
+      <td class="col-funnel"><span class="funnel-chip chip-instagram">Instagram</span></td>
+      <td class="col-status">📞 Follow Up</td>
+      <td class="col-flag"><span class="yn yes">Yes</span></td>
+      <td class="col-flag"><span class="yn yes">Yes</span></td>
+    </tr>
+
+    <tr class="lead-row">
+      <td class="col-date">7/6/2026</td>
+      <td class="col-client">Tyria F</td>
+      <td class="col-email">t****rise@gmail.com</td>
+      <td class="col-funnel"><span class="funnel-chip chip-instagram">Instagram</span></td>
+      <td class="col-status">☎️ Call Booked</td>
+      <td class="col-flag"><span class="yn no">No</span></td>
+      <td class="col-flag"><span class="yn no">No</span></td>
+    </tr>
+
+    <tr class="lead-row">
+      <td class="col-date">7/7/2026</td>
+      <td class="col-client">Amanda Repoza</td>
+      <td class="col-email">a****oz01@gmail.com</td>
+      <td class="col-funnel"><span class="funnel-chip chip-instagram">Instagram</span></td>
+      <td class="col-status">👻 No Show</td>
+      <td class="col-flag"><span class="yn no">No</span></td>
+      <td class="col-flag"><span class="yn no">No</span></td>
+    </tr>
+
+    <tr class="lead-row">
+      <td class="col-date">7/7/2026</td>
+      <td class="col-client">Dominic Divito</td>
+      <td class="col-email">d****o711@gmail.com</td>
+      <td class="col-funnel"><span class="funnel-chip chip-instagram">Instagram</span></td>
+      <td class="col-status">📞 Follow Up</td>
+      <td class="col-flag"><span class="yn yes">Yes</span></td>
+      <td class="col-flag"><span class="yn yes">Yes</span></td>
+    </tr>
+
+    <tr class="lead-row">
+      <td class="col-date">7/7/2026</td>
+      <td class="col-client">Erik Reyes</td>
+      <td class="col-email">r****ik82@gmail.com</td>
+      <td class="col-funnel"><span class="funnel-chip chip-instagram">Instagram</span></td>
+      <td class="col-status">📞 Follow Up</td>
+      <td class="col-flag"><span class="yn yes">Yes</span></td>
+      <td class="col-flag"><span class="yn yes">Yes</span></td>
+    </tr>
+
+    <tr class="lead-row">
+      <td class="col-date">7/8/2026</td>
+      <td class="col-client">David Mojuetan</td>
+      <td class="col-email">d****etan@gmail.com</td>
+      <td class="col-funnel"><span class="funnel-chip chip-instagram">Instagram</span></td>
+      <td class="col-status">📞 Follow Up</td>
+      <td class="col-flag"><span class="yn yes">Yes</span></td>
+      <td class="col-flag"><span class="yn yes">Yes</span></td>
+    </tr>
+
+    <tr class="lead-row">
+      <td class="col-date">7/8/2026</td>
+      <td class="col-client">Jana Valdez</td>
+      <td class="col-email">j****z926@gmail.com</td>
+      <td class="col-funnel"><span class="funnel-chip chip-instagram">Instagram</span></td>
+      <td class="col-status">💔 Lost</td>
+      <td class="col-flag"><span class="yn no">No</span></td>
+      <td class="col-flag"><span class="yn no">No</span></td>
+    </tr>
+
+    <tr class="lead-row">
+      <td class="col-date">7/8/2026</td>
+      <td class="col-client">Mikey Flores</td>
+      <td class="col-email">m****cent@yahoo.com</td>
+      <td class="col-funnel"><span class="funnel-chip chip-instagram">Instagram</span></td>
+      <td class="col-status">☎️ Call Booked</td>
+      <td class="col-flag"><span class="yn no">No</span></td>
+      <td class="col-flag"><span class="yn no">No</span></td>
+    </tr>
+
+    <tr class="lead-row">
+      <td class="col-date">7/8/2026</td>
+      <td class="col-client">Sam Seekamp</td>
+      <td class="col-email">s****kamp@gmail.com</td>
+      <td class="col-funnel"><span class="funnel-chip chip-instagram">Instagram</span></td>
+      <td class="col-status">🗓️ Long Term Follow Up</td>
+      <td class="col-flag"><span class="yn yes">Yes</span></td>
+      <td class="col-flag"><span class="yn yes">Yes</span></td>
+    </tr>
+
+    <tr class="lead-row">
+      <td class="col-date">7/8/2026</td>
+      <td class="col-client">Sarah Lyday</td>
+      <td class="col-email">s****enix@gmail.com</td>
+      <td class="col-funnel"><span class="funnel-chip chip-instagram">Instagram</span></td>
+      <td class="col-status">💔 Lost</td>
+      <td class="col-flag"><span class="yn yes">Yes</span></td>
+      <td class="col-flag"><span class="yn yes">Yes</span></td>
+    </tr>
+
+    <tr class="lead-row">
+      <td class="col-date">7/8/2026</td>
+      <td class="col-client">Sierra Husmann</td>
+      <td class="col-email">s****bble@gmail.com</td>
+      <td class="col-funnel"><span class="funnel-chip chip-instagram">Instagram</span></td>
+      <td class="col-status">☎️ Call Booked</td>
+      <td class="col-flag"><span class="yn no">No</span></td>
+      <td class="col-flag"><span class="yn no">No</span></td>
+    </tr>
+
+    <tr class="lead-row">
+      <td class="col-date">7/8/2026</td>
+      <td class="col-client">Toby Tolman</td>
+      <td class="col-email">t****an20@yahoo.com</td>
+      <td class="col-funnel"><span class="funnel-chip chip-instagram">Instagram</span></td>
+      <td class="col-status">📞 Follow Up</td>
+      <td class="col-flag"><span class="yn yes">Yes</span></td>
+      <td class="col-flag"><span class="yn yes">Yes</span></td>
+    </tr>
+
+    <tr class="lead-row">
+      <td class="col-date">7/8/2026</td>
+      <td class="col-client">Zachary Chadwick</td>
+      <td class="col-email">z****@waldmfg.com</td>
+      <td class="col-funnel"><span class="funnel-chip chip-instagram">Instagram</span></td>
+      <td class="col-status">📞 Follow Up</td>
+      <td class="col-flag"><span class="yn yes">Yes</span></td>
+      <td class="col-flag"><span class="yn yes">Yes</span></td>
+    </tr>
+
+    <tr class="lead-row">
+      <td class="col-date">7/9/2026</td>
+      <td class="col-client">Alexander Castellanos</td>
+      <td class="col-email">a****s679@gmail.com</td>
+      <td class="col-funnel"><span class="funnel-chip chip-instagram">Instagram</span></td>
+      <td class="col-status">☎️ Call Booked</td>
+      <td class="col-flag"><span class="yn no">No</span></td>
+      <td class="col-flag"><span class="yn no">No</span></td>
+    </tr>
+
+    <tr class="lead-row">
+      <td class="col-date">7/9/2026</td>
+      <td class="col-client">CaseyBybee</td>
+      <td class="col-email">c****ybee@gmail.com</td>
+      <td class="col-funnel"><span class="funnel-chip chip-instagram">Instagram</span></td>
+      <td class="col-status">☎️ Call Booked</td>
+      <td class="col-flag"><span class="yn no">No</span></td>
+      <td class="col-flag"><span class="yn no">No</span></td>
+    </tr>
+
+    <tr class="lead-row">
+      <td class="col-date">7/9/2026</td>
+      <td class="col-client">Shay Seltzer</td>
+      <td class="col-email">s****s119@gmail.com</td>
+      <td class="col-funnel"><span class="funnel-chip chip-instagram">Instagram</span></td>
+      <td class="col-status">🗓️ Long Term Follow Up</td>
+      <td class="col-flag"><span class="yn yes">Yes</span></td>
+      <td class="col-flag"><span class="yn yes">Yes</span></td>
+    </tr>
+
+    <tr class="lead-row">
+      <td class="col-date">7/9/2026</td>
+      <td class="col-client">Tessa Domenici</td>
+      <td class="col-email">t****ci07@yahoo.com</td>
+      <td class="col-funnel"><span class="funnel-chip chip-instagram">Instagram</span></td>
+      <td class="col-status">☎️ Call Booked</td>
+      <td class="col-flag"><span class="yn no">No</span></td>
+      <td class="col-flag"><span class="yn no">No</span></td>
+    </tr>
+
+    <tr class="lead-row">
+      <td class="col-date">7/9/2026</td>
+      <td class="col-client">Tj Rice</td>
+      <td class="col-email">t****ce20@gmail.com</td>
+      <td class="col-funnel"><span class="funnel-chip chip-instagram">Instagram</span></td>
+      <td class="col-status">📞 Follow Up</td>
+      <td class="col-flag"><span class="yn yes">Yes</span></td>
+      <td class="col-flag"><span class="yn yes">Yes</span></td>
+    </tr>
+    </tbody>
+  </table>
+  <p class="pane-note">First sales calls with a closer. Some were preceded by a discovery call, some went direct.</p>
+</div>
+
+<div class="table-wrap lead-pane" id="pane-closed">
   <table>
     <thead>
       <tr>
@@ -1082,6 +1472,39 @@
       r.classList.toggle("open", !isOpen);
     });
     if (chevron) chevron.classList.toggle("open", !isOpen);
+  }
+
+  const LEAD_COUNTS = {
+    setter: "5 calls",
+    stuck:  "5 stuck",
+    closer: "22 calls",
+    closed: "1 deals",
+  };
+
+  function showLeadTab(tab) {
+    // Stuck reuses the setter pane, filtered to non-advanced rows.
+    const paneId = (tab === "stuck") ? "setter" : tab;
+
+    document.querySelectorAll(".lead-pane").forEach(p => {
+      p.style.display = (p.id === "pane-" + paneId) ? "" : "none";
+    });
+    document.querySelectorAll(".lead-tab").forEach(b => {
+      b.classList.toggle("active", b.dataset.tab === tab);
+    });
+
+    const onlyStuck = (tab === "stuck");
+    document.querySelectorAll("#pane-setter .advanced-row").forEach(r => {
+      r.style.display = onlyStuck ? "none" : "";
+    });
+    const nSetter = document.getElementById("note-setter");
+    const nStuck  = document.getElementById("note-stuck");
+    if (nSetter) nSetter.style.display = onlyStuck ? "none" : "";
+    if (nStuck)  nStuck.style.display  = onlyStuck ? "" : "none";
+
+    const pill = document.getElementById("lead-count");
+    if (pill) pill.textContent = LEAD_COUNTS[tab] || "";
+
+    document.querySelector(".lead-tabs").scrollIntoView({behavior: "smooth", block: "nearest"});
   }
 
   function toggleUTM(fid) {

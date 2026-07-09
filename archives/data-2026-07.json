@@ -4,8 +4,8 @@
   "grand": {
     "leads_created": 49,
     "booked": 41,
-    "setter": 8,
-    "stuck": 7,
+    "setter": 7,
+    "stuck": 6,
     "showed": 23,
     "qualified": 24,
     "closed": 4,
@@ -17,9 +17,9 @@
   "funnels": {
     "Instagram": {
       "leads_created": 43,
-      "setter": 8,
-      "stuck": 7,
-      "advance_pct": 12.5,
+      "setter": 7,
+      "stuck": 6,
+      "advance_pct": 14.3,
       "booked": 35,
       "book_pct": 81.4,
       "showed": 18,

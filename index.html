@@ -75,9 +75,12 @@
   /* ── KPI Cards ── */
   .kpis {
     display: grid;
-    grid-template-columns: repeat(6, 1fr);
-    gap: 14px;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 12px;
     padding: 24px 36px;
+  }
+  @media (max-width: 1500px) {
+    .kpis { grid-template-columns: repeat(4, 1fr); }
   }
   .kpi {
     background: var(--surface);
@@ -218,6 +221,9 @@
   .col-pct.bad  { color: var(--red); }
   .col-pct.mid  { color: var(--amber); }
 
+  .col-setter { color: var(--purple); }
+  .col-stuck  { color: var(--amber); font-weight: 500; }
+
   .col-pace  { text-align: right; font-size: 12px; color: var(--muted); }
   .col-goal  { text-align: right; font-size: 12px; color: var(--muted); }
   .col-pace.pace-exceed  { color: var(--green); font-weight: 600; }
@@ -319,11 +325,12 @@
   <div class="header-right">
     <div class="pickers-row">
       <div class="month-picker"><select onchange="window.location.href=this.value"><option value="/agency-funnel-dashboard/index.html" selected>July 2026</option>
+      <option value="/agency-funnel-dashboard/archives/2026-06.html" >June 2026</option>
       </select></div><span class="picker-divider">|</span><div class="week-picker"><select onchange="window.location.href=this.value"><option value="/agency-funnel-dashboard/index.html" selected>Full Month</option>
       <option value="/agency-funnel-dashboard/archives/week-current.html" >Jul 6–9 ▶</option></select></div>
     </div>
     <span class="snapshot-label">Snapshot</span>
-    July 09, 2026 at 01:03 PM PT<br>
+    July 09, 2026 at 02:57 PM PT<br>
     Source · Close CRM
   </div>
 </div>
@@ -332,28 +339,34 @@
 <div class="kpis">
   <div class="kpi" style="--kpi-accent:#6366f1; --kpi-color:#6366f1;">
     <div class="label">Leads Created</div>
-    <div class="value">50</div>
+    <div class="value">49</div>
     <div class="kpi-sub">new leads this period</div>
   </div>
+  <div class="kpi" style="--kpi-accent:#9333ea; --kpi-color:#9333ea;">
+    <div class="label">Setter Calls</div>
+    <div class="value">8</div>
+    <div class="kpi-sub">12% advanced to a closer</div>
+    <div class="kpi-cash partial">7 stuck · no closer call</div>
+  </div>
   <div class="kpi" style="--kpi-accent:#4f46e5; --kpi-color:var(--text);">
-    <div class="label">Total Booked</div>
-    <div class="value">42</div>
-    <div class="kpi-sub">new first calls</div>
+    <div class="label">Closer Calls</div>
+    <div class="value">41</div>
+    <div class="kpi-sub">first sales calls</div>
   </div>
   <div class="kpi" style="--kpi-accent:#2563eb; --kpi-color:#2563eb;">
     <div class="label">Showed</div>
-    <div class="value">22</div>
-    <div class="kpi-sub">52.4% show rate</div>
+    <div class="value">23</div>
+    <div class="kpi-sub">56.1% show rate</div>
   </div>
   <div class="kpi" style="--kpi-accent:#7c3aed; --kpi-color:#7c3aed;">
     <div class="label">Qualified</div>
-    <div class="value">23</div>
-    <div class="kpi-sub">54.8% qual rate</div>
+    <div class="value">24</div>
+    <div class="kpi-sub">58.5% qual rate</div>
   </div>
   <div class="kpi" style="--kpi-accent:#d97706; --kpi-color:#d97706;">
     <div class="label">Closed Won</div>
     <div class="value">4</div>
-    <div class="kpi-sub">9.5% booked→close · 17.4% qual→close</div>
+    <div class="kpi-sub">9.8% booked→close · 16.7% qual→close</div>
   </div>
   <div class="kpi" style="--kpi-accent:#0e9f6e; --kpi-color:#0e9f6e;">
     <div class="label">Closed Revenue</div>
@@ -364,7 +377,7 @@
 </div>
 
 <!-- Funnel Table -->
-<div class="section-label">Funnel Breakdown — Booked → Showed → Qualified → Closed Won → Revenue</div>
+<div class="section-label">Funnel Breakdown — Setter → Closer → Showed → Qualified → Closed Won → Revenue</div>
 
 <div class="table-wrap">
   <table>
@@ -372,7 +385,10 @@
       <tr>
         <th class="col-name">Funnel</th>
         <th class="col-num">Leads</th>
-        <th class="col-num">Booked</th>
+        <th class="col-num" title="Discovery calls held this period, converted or not">Setter</th>
+        <th class="col-num" title="Discovery calls with no closer call booked at all">Stuck</th>
+        <th class="col-pct" title="Share of discovery calls that reached a closer">Adv %</th>
+        <th class="col-num" title="First sales calls with a closer">Closer</th>
         <th class="col-pace">Projected</th>
         <th class="col-goal">Goal %</th>
         <th class="col-num">Showed</th>
@@ -391,16 +407,19 @@
       <td class="col-name">
         <span class="chevron" id="chev-instagram">›</span>Instagram
       </td>
-      <td class="col-num">44</td>
-      <td class="col-num">36</td>
-      <td class="col-pace pace-behind">124</td>
+      <td class="col-num">43</td>
+      <td class="col-num col-setter">8</td>
+      <td class="col-num col-stuck">7</td>
+      <td class="col-pct bad">12%</td>
+      <td class="col-num">35</td>
+      <td class="col-pace pace-behind">121</td>
       <td class="col-goal">12% (300)</td>
-      <td class="col-num">17</td>
-      <td class="col-pct bad">47.2%</td>
-      <td class="col-num">17</td>
-      <td class="col-pct bad">47.2%</td>
+      <td class="col-num">18</td>
+      <td class="col-pct mid">51.4%</td>
+      <td class="col-num">18</td>
+      <td class="col-pct mid">51.4%</td>
       <td class="col-num">3</td>
-      <td class="col-pct mid">8.3%</td>
+      <td class="col-pct mid">8.6%</td>
       <td class="col-rev pkg-trigger" onclick="event.stopPropagation();togglePkg('instagram')" title="Click to see package breakdown">$23,991 <span class="pkg-chevron" id="pkgchev-instagram">›</span></td>
       <td class="col-num">$7,997</td>
     </tr>
@@ -408,6 +427,9 @@
     <tr class="pkg-row" data-parent="instagram" style="display:none">
       <td class="col-name col-pkg">↳ Silver - $8,997</td>
       <td class="col-num">—</td>
+      <td class="col-num">—</td>
+      <td class="col-num">—</td>
+      <td class="col-pct"></td>
       <td class="col-num">—</td>
       <td class="col-pace"></td>
       <td class="col-goal"></td>
@@ -425,6 +447,9 @@
       <td class="col-name col-pkg">↳ Bronze - $5,997</td>
       <td class="col-num">—</td>
       <td class="col-num">—</td>
+      <td class="col-num">—</td>
+      <td class="col-pct"></td>
+      <td class="col-num">—</td>
       <td class="col-pace"></td>
       <td class="col-goal"></td>
       <td class="col-num">—</td>
@@ -440,6 +465,9 @@
     <tr class="utm-row" data-parent="instagram">
       <td class="col-name col-utm">↳ Unattributed</td>
       <td class="col-num">—</td>
+      <td class="col-num col-setter">—</td>
+      <td class="col-num col-stuck">—</td>
+      <td class="col-pct ">—</td>
       <td class="col-num">4</td>
       <td class="col-pace"></td>
       <td class="col-goal"></td>
@@ -456,6 +484,9 @@
     <tr class="utm-row" data-parent="instagram">
       <td class="col-name col-utm">↳ _____</td>
       <td class="col-num">—</td>
+      <td class="col-num col-setter">1</td>
+      <td class="col-num col-stuck">1</td>
+      <td class="col-pct bad">0%</td>
       <td class="col-num">2</td>
       <td class="col-pace"></td>
       <td class="col-goal"></td>
@@ -472,6 +503,9 @@
     <tr class="utm-row" data-parent="instagram">
       <td class="col-name col-utm">↳ 249132349</td>
       <td class="col-num">—</td>
+      <td class="col-num col-setter">—</td>
+      <td class="col-num col-stuck">—</td>
+      <td class="col-pct ">—</td>
       <td class="col-num">2</td>
       <td class="col-pace"></td>
       <td class="col-goal"></td>
@@ -486,8 +520,30 @@
     </tr>
 
     <tr class="utm-row" data-parent="instagram">
-      <td class="col-name col-utm">↳ 1327568259</td>
+      <td class="col-name col-utm">↳ ltf_buyers</td>
       <td class="col-num">—</td>
+      <td class="col-num col-setter">—</td>
+      <td class="col-num col-stuck">—</td>
+      <td class="col-pct ">—</td>
+      <td class="col-num">1</td>
+      <td class="col-pace"></td>
+      <td class="col-goal"></td>
+      <td class="col-num">—</td>
+      <td class="col-pct bad">0.0%</td>
+      <td class="col-num">—</td>
+      <td class="col-pct bad">0.0%</td>
+      <td class="col-num">—</td>
+      <td class="col-pct bad">0.0%</td>
+      <td class="col-rev">$0</td>
+      <td class="col-num">—</td>
+    </tr>
+
+    <tr class="utm-row" data-parent="instagram">
+      <td class="col-name col-utm">↳ 1813049335</td>
+      <td class="col-num">—</td>
+      <td class="col-num col-setter">—</td>
+      <td class="col-num col-stuck">—</td>
+      <td class="col-pct ">—</td>
       <td class="col-num">1</td>
       <td class="col-pace"></td>
       <td class="col-goal"></td>
@@ -504,102 +560,9 @@
     <tr class="utm-row" data-parent="instagram">
       <td class="col-name col-utm">↳ 1918113011</td>
       <td class="col-num">—</td>
-      <td class="col-num">1</td>
-      <td class="col-pace"></td>
-      <td class="col-goal"></td>
-      <td class="col-num">—</td>
-      <td class="col-pct bad">0.0%</td>
-      <td class="col-num">—</td>
-      <td class="col-pct bad">0.0%</td>
-      <td class="col-num">—</td>
-      <td class="col-pct bad">0.0%</td>
-      <td class="col-rev">$0</td>
-      <td class="col-num">—</td>
-    </tr>
-
-    <tr class="utm-row" data-parent="instagram">
-      <td class="col-name col-utm">↳ 1748168352</td>
-      <td class="col-num">—</td>
-      <td class="col-num">1</td>
-      <td class="col-pace"></td>
-      <td class="col-goal"></td>
-      <td class="col-num">1</td>
-      <td class="col-pct good">100.0%</td>
-      <td class="col-num">1</td>
-      <td class="col-pct good">100.0%</td>
-      <td class="col-num">—</td>
-      <td class="col-pct bad">0.0%</td>
-      <td class="col-rev">$0</td>
-      <td class="col-num">—</td>
-    </tr>
-
-    <tr class="utm-row" data-parent="instagram">
-      <td class="col-name col-utm">↳ ltf_buyers</td>
-      <td class="col-num">—</td>
-      <td class="col-num">1</td>
-      <td class="col-pace"></td>
-      <td class="col-goal"></td>
-      <td class="col-num">—</td>
-      <td class="col-pct bad">0.0%</td>
-      <td class="col-num">—</td>
-      <td class="col-pct bad">0.0%</td>
-      <td class="col-num">—</td>
-      <td class="col-pct bad">0.0%</td>
-      <td class="col-rev">$0</td>
-      <td class="col-num">—</td>
-    </tr>
-
-    <tr class="utm-row" data-parent="instagram">
-      <td class="col-name col-utm">↳ 203467257</td>
-      <td class="col-num">—</td>
-      <td class="col-num">1</td>
-      <td class="col-pace"></td>
-      <td class="col-goal"></td>
-      <td class="col-num">1</td>
-      <td class="col-pct good">100.0%</td>
-      <td class="col-num">1</td>
-      <td class="col-pct good">100.0%</td>
-      <td class="col-num">—</td>
-      <td class="col-pct bad">0.0%</td>
-      <td class="col-rev">$0</td>
-      <td class="col-num">—</td>
-    </tr>
-
-    <tr class="utm-row" data-parent="instagram">
-      <td class="col-name col-utm">↳ 1813049335</td>
-      <td class="col-num">—</td>
-      <td class="col-num">1</td>
-      <td class="col-pace"></td>
-      <td class="col-goal"></td>
-      <td class="col-num">—</td>
-      <td class="col-pct bad">0.0%</td>
-      <td class="col-num">—</td>
-      <td class="col-pct bad">0.0%</td>
-      <td class="col-num">—</td>
-      <td class="col-pct bad">0.0%</td>
-      <td class="col-rev">$0</td>
-      <td class="col-num">—</td>
-    </tr>
-
-    <tr class="utm-row" data-parent="instagram">
-      <td class="col-name col-utm">↳ 1585391961</td>
-      <td class="col-num">—</td>
-      <td class="col-num">1</td>
-      <td class="col-pace"></td>
-      <td class="col-goal"></td>
-      <td class="col-num">—</td>
-      <td class="col-pct bad">0.0%</td>
-      <td class="col-num">—</td>
-      <td class="col-pct bad">0.0%</td>
-      <td class="col-num">—</td>
-      <td class="col-pct bad">0.0%</td>
-      <td class="col-rev">$0</td>
-      <td class="col-num">—</td>
-    </tr>
-
-    <tr class="utm-row" data-parent="instagram">
-      <td class="col-name col-utm">↳ 1650399155</td>
-      <td class="col-num">—</td>
+      <td class="col-num col-setter">—</td>
+      <td class="col-num col-stuck">—</td>
+      <td class="col-pct ">—</td>
       <td class="col-num">1</td>
       <td class="col-pace"></td>
       <td class="col-goal"></td>
@@ -616,6 +579,9 @@
     <tr class="utm-row" data-parent="instagram">
       <td class="col-name col-utm">↳ 308219473</td>
       <td class="col-num">—</td>
+      <td class="col-num col-setter">—</td>
+      <td class="col-num col-stuck">—</td>
+      <td class="col-pct ">—</td>
       <td class="col-num">1</td>
       <td class="col-pace"></td>
       <td class="col-goal"></td>
@@ -630,8 +596,87 @@
     </tr>
 
     <tr class="utm-row" data-parent="instagram">
+      <td class="col-name col-utm">↳ 1748168352</td>
+      <td class="col-num">—</td>
+      <td class="col-num col-setter">—</td>
+      <td class="col-num col-stuck">—</td>
+      <td class="col-pct ">—</td>
+      <td class="col-num">1</td>
+      <td class="col-pace"></td>
+      <td class="col-goal"></td>
+      <td class="col-num">1</td>
+      <td class="col-pct good">100.0%</td>
+      <td class="col-num">1</td>
+      <td class="col-pct good">100.0%</td>
+      <td class="col-num">—</td>
+      <td class="col-pct bad">0.0%</td>
+      <td class="col-rev">$0</td>
+      <td class="col-num">—</td>
+    </tr>
+
+    <tr class="utm-row" data-parent="instagram">
+      <td class="col-name col-utm">↳ 203467257</td>
+      <td class="col-num">—</td>
+      <td class="col-num col-setter">—</td>
+      <td class="col-num col-stuck">—</td>
+      <td class="col-pct ">—</td>
+      <td class="col-num">1</td>
+      <td class="col-pace"></td>
+      <td class="col-goal"></td>
+      <td class="col-num">1</td>
+      <td class="col-pct good">100.0%</td>
+      <td class="col-num">1</td>
+      <td class="col-pct good">100.0%</td>
+      <td class="col-num">—</td>
+      <td class="col-pct bad">0.0%</td>
+      <td class="col-rev">$0</td>
+      <td class="col-num">—</td>
+    </tr>
+
+    <tr class="utm-row" data-parent="instagram">
+      <td class="col-name col-utm">↳ 1585391961</td>
+      <td class="col-num">—</td>
+      <td class="col-num col-setter">—</td>
+      <td class="col-num col-stuck">—</td>
+      <td class="col-pct ">—</td>
+      <td class="col-num">1</td>
+      <td class="col-pace"></td>
+      <td class="col-goal"></td>
+      <td class="col-num">—</td>
+      <td class="col-pct bad">0.0%</td>
+      <td class="col-num">—</td>
+      <td class="col-pct bad">0.0%</td>
+      <td class="col-num">—</td>
+      <td class="col-pct bad">0.0%</td>
+      <td class="col-rev">$0</td>
+      <td class="col-num">—</td>
+    </tr>
+
+    <tr class="utm-row" data-parent="instagram">
+      <td class="col-name col-utm">↳ 1650399155</td>
+      <td class="col-num">—</td>
+      <td class="col-num col-setter">—</td>
+      <td class="col-num col-stuck">—</td>
+      <td class="col-pct ">—</td>
+      <td class="col-num">1</td>
+      <td class="col-pace"></td>
+      <td class="col-goal"></td>
+      <td class="col-num">1</td>
+      <td class="col-pct good">100.0%</td>
+      <td class="col-num">1</td>
+      <td class="col-pct good">100.0%</td>
+      <td class="col-num">—</td>
+      <td class="col-pct bad">0.0%</td>
+      <td class="col-rev">$0</td>
+      <td class="col-num">—</td>
+    </tr>
+
+    <tr class="utm-row" data-parent="instagram">
       <td class="col-name col-utm">↳ 1737608554</td>
       <td class="col-num">—</td>
+      <td class="col-num col-setter">—</td>
+      <td class="col-num col-stuck">—</td>
+      <td class="col-pct ">—</td>
       <td class="col-num">1</td>
       <td class="col-pace"></td>
       <td class="col-goal"></td>
@@ -648,6 +693,9 @@
     <tr class="utm-row" data-parent="instagram">
       <td class="col-name col-utm">↳ 1803167826</td>
       <td class="col-num">—</td>
+      <td class="col-num col-setter">—</td>
+      <td class="col-num col-stuck">—</td>
+      <td class="col-pct ">—</td>
       <td class="col-num">1</td>
       <td class="col-pace"></td>
       <td class="col-goal"></td>
@@ -664,6 +712,9 @@
     <tr class="utm-row" data-parent="instagram">
       <td class="col-name col-utm">↳ 440598312</td>
       <td class="col-num">—</td>
+      <td class="col-num col-setter">—</td>
+      <td class="col-num col-stuck">—</td>
+      <td class="col-pct ">—</td>
       <td class="col-num">1</td>
       <td class="col-pace"></td>
       <td class="col-goal"></td>
@@ -680,6 +731,9 @@
     <tr class="utm-row" data-parent="instagram">
       <td class="col-name col-utm">↳ 1781469215</td>
       <td class="col-num">—</td>
+      <td class="col-num col-setter">—</td>
+      <td class="col-num col-stuck">—</td>
+      <td class="col-pct ">—</td>
       <td class="col-num">1</td>
       <td class="col-pace"></td>
       <td class="col-goal"></td>
@@ -696,6 +750,9 @@
     <tr class="utm-row" data-parent="instagram">
       <td class="col-name col-utm">↳ 38988588</td>
       <td class="col-num">—</td>
+      <td class="col-num col-setter">—</td>
+      <td class="col-num col-stuck">—</td>
+      <td class="col-pct ">—</td>
       <td class="col-num">1</td>
       <td class="col-pace"></td>
       <td class="col-goal"></td>
@@ -712,6 +769,9 @@
     <tr class="utm-row" data-parent="instagram">
       <td class="col-name col-utm">↳ 2095898318</td>
       <td class="col-num">—</td>
+      <td class="col-num col-setter">—</td>
+      <td class="col-num col-stuck">—</td>
+      <td class="col-pct ">—</td>
       <td class="col-num">1</td>
       <td class="col-pace"></td>
       <td class="col-goal"></td>
@@ -728,6 +788,9 @@
     <tr class="utm-row" data-parent="instagram">
       <td class="col-name col-utm">↳ 1825860041</td>
       <td class="col-num">—</td>
+      <td class="col-num col-setter">—</td>
+      <td class="col-num col-stuck">—</td>
+      <td class="col-pct ">—</td>
       <td class="col-num">1</td>
       <td class="col-pace"></td>
       <td class="col-goal"></td>
@@ -744,6 +807,9 @@
     <tr class="utm-row" data-parent="instagram">
       <td class="col-name col-utm">↳ 1316264587</td>
       <td class="col-num">—</td>
+      <td class="col-num col-setter">—</td>
+      <td class="col-num col-stuck">—</td>
+      <td class="col-pct ">—</td>
       <td class="col-num">1</td>
       <td class="col-pace"></td>
       <td class="col-goal"></td>
@@ -760,6 +826,9 @@
     <tr class="utm-row" data-parent="instagram">
       <td class="col-name col-utm">↳ 225906978</td>
       <td class="col-num">—</td>
+      <td class="col-num col-setter">—</td>
+      <td class="col-num col-stuck">—</td>
+      <td class="col-pct ">—</td>
       <td class="col-num">1</td>
       <td class="col-pace"></td>
       <td class="col-goal"></td>
@@ -776,6 +845,9 @@
     <tr class="utm-row" data-parent="instagram">
       <td class="col-name col-utm">↳ 182053804</td>
       <td class="col-num">—</td>
+      <td class="col-num col-setter">—</td>
+      <td class="col-num col-stuck">—</td>
+      <td class="col-pct ">—</td>
       <td class="col-num">1</td>
       <td class="col-pace"></td>
       <td class="col-goal"></td>
@@ -792,6 +864,9 @@
     <tr class="utm-row" data-parent="instagram">
       <td class="col-name col-utm">↳ 421109756</td>
       <td class="col-num">—</td>
+      <td class="col-num col-setter">—</td>
+      <td class="col-num col-stuck">—</td>
+      <td class="col-pct ">—</td>
       <td class="col-num">1</td>
       <td class="col-pace"></td>
       <td class="col-goal"></td>
@@ -808,6 +883,9 @@
     <tr class="utm-row" data-parent="instagram">
       <td class="col-name col-utm">↳ 1427107814</td>
       <td class="col-num">—</td>
+      <td class="col-num col-setter">—</td>
+      <td class="col-num col-stuck">—</td>
+      <td class="col-pct ">—</td>
       <td class="col-num">1</td>
       <td class="col-pace"></td>
       <td class="col-goal"></td>
@@ -824,6 +902,9 @@
     <tr class="utm-row" data-parent="instagram">
       <td class="col-name col-utm">↳ 1053192768</td>
       <td class="col-num">—</td>
+      <td class="col-num col-setter">—</td>
+      <td class="col-num col-stuck">—</td>
+      <td class="col-pct ">—</td>
       <td class="col-num">1</td>
       <td class="col-pace"></td>
       <td class="col-goal"></td>
@@ -840,6 +921,9 @@
     <tr class="utm-row" data-parent="instagram">
       <td class="col-name col-utm">↳ 190701493</td>
       <td class="col-num">—</td>
+      <td class="col-num col-setter">—</td>
+      <td class="col-num col-stuck">—</td>
+      <td class="col-pct ">—</td>
       <td class="col-num">1</td>
       <td class="col-pace"></td>
       <td class="col-goal"></td>
@@ -856,6 +940,9 @@
     <tr class="utm-row" data-parent="instagram">
       <td class="col-name col-utm">↳ 867258412</td>
       <td class="col-num">—</td>
+      <td class="col-num col-setter">—</td>
+      <td class="col-num col-stuck">—</td>
+      <td class="col-pct ">—</td>
       <td class="col-num">1</td>
       <td class="col-pace"></td>
       <td class="col-goal"></td>
@@ -872,6 +959,9 @@
     <tr class="utm-row" data-parent="instagram">
       <td class="col-name col-utm">↳ 212555573</td>
       <td class="col-num">—</td>
+      <td class="col-num col-setter">—</td>
+      <td class="col-num col-stuck">—</td>
+      <td class="col-pct ">—</td>
       <td class="col-num">1</td>
       <td class="col-pace"></td>
       <td class="col-goal"></td>
@@ -888,6 +978,9 @@
     <tr class="utm-row" data-parent="instagram">
       <td class="col-name col-utm">↳ 355416395</td>
       <td class="col-num">—</td>
+      <td class="col-num col-setter">—</td>
+      <td class="col-num col-stuck">—</td>
+      <td class="col-pct ">—</td>
       <td class="col-num">1</td>
       <td class="col-pace"></td>
       <td class="col-goal"></td>
@@ -904,6 +997,9 @@
     <tr class="utm-row" data-parent="instagram">
       <td class="col-name col-utm">↳ 945357127</td>
       <td class="col-num">—</td>
+      <td class="col-num col-setter">—</td>
+      <td class="col-num col-stuck">—</td>
+      <td class="col-pct ">—</td>
       <td class="col-num">1</td>
       <td class="col-pace"></td>
       <td class="col-goal"></td>
@@ -920,6 +1016,9 @@
     <tr class="utm-row" data-parent="instagram">
       <td class="col-name col-utm">↳ 1463788152</td>
       <td class="col-num">—</td>
+      <td class="col-num col-setter">—</td>
+      <td class="col-num col-stuck">—</td>
+      <td class="col-pct ">—</td>
       <td class="col-num">1</td>
       <td class="col-pace"></td>
       <td class="col-goal"></td>
@@ -934,8 +1033,144 @@
     </tr>
 
     <tr class="utm-row" data-parent="instagram">
+      <td class="col-name col-utm">↳ 2012950396</td>
+      <td class="col-num">—</td>
+      <td class="col-num col-setter">1</td>
+      <td class="col-num col-stuck">1</td>
+      <td class="col-pct bad">0%</td>
+      <td class="col-num">—</td>
+      <td class="col-pace"></td>
+      <td class="col-goal"></td>
+      <td class="col-num">—</td>
+      <td class="col-pct ">—</td>
+      <td class="col-num">—</td>
+      <td class="col-pct ">—</td>
+      <td class="col-num">—</td>
+      <td class="col-pct ">—</td>
+      <td class="col-rev">$0</td>
+      <td class="col-num">—</td>
+    </tr>
+
+    <tr class="utm-row" data-parent="instagram">
+      <td class="col-name col-utm">↳ 337861786</td>
+      <td class="col-num">—</td>
+      <td class="col-num col-setter">1</td>
+      <td class="col-num col-stuck">1</td>
+      <td class="col-pct bad">0%</td>
+      <td class="col-num">—</td>
+      <td class="col-pace"></td>
+      <td class="col-goal"></td>
+      <td class="col-num">—</td>
+      <td class="col-pct ">—</td>
+      <td class="col-num">—</td>
+      <td class="col-pct ">—</td>
+      <td class="col-num">—</td>
+      <td class="col-pct ">—</td>
+      <td class="col-rev">$0</td>
+      <td class="col-num">—</td>
+    </tr>
+
+    <tr class="utm-row" data-parent="instagram">
+      <td class="col-name col-utm">↳ 1347983538</td>
+      <td class="col-num">—</td>
+      <td class="col-num col-setter">1</td>
+      <td class="col-num col-stuck">1</td>
+      <td class="col-pct bad">0%</td>
+      <td class="col-num">—</td>
+      <td class="col-pace"></td>
+      <td class="col-goal"></td>
+      <td class="col-num">—</td>
+      <td class="col-pct ">—</td>
+      <td class="col-num">—</td>
+      <td class="col-pct ">—</td>
+      <td class="col-num">—</td>
+      <td class="col-pct ">—</td>
+      <td class="col-rev">$0</td>
+      <td class="col-num">—</td>
+    </tr>
+
+    <tr class="utm-row" data-parent="instagram">
+      <td class="col-name col-utm">↳ 266570178</td>
+      <td class="col-num">—</td>
+      <td class="col-num col-setter">1</td>
+      <td class="col-num col-stuck">1</td>
+      <td class="col-pct bad">0%</td>
+      <td class="col-num">—</td>
+      <td class="col-pace"></td>
+      <td class="col-goal"></td>
+      <td class="col-num">—</td>
+      <td class="col-pct ">—</td>
+      <td class="col-num">—</td>
+      <td class="col-pct ">—</td>
+      <td class="col-num">—</td>
+      <td class="col-pct ">—</td>
+      <td class="col-rev">$0</td>
+      <td class="col-num">—</td>
+    </tr>
+
+    <tr class="utm-row" data-parent="instagram">
+      <td class="col-name col-utm">↳ 1359356395</td>
+      <td class="col-num">—</td>
+      <td class="col-num col-setter">1</td>
+      <td class="col-num col-stuck">1</td>
+      <td class="col-pct bad">0%</td>
+      <td class="col-num">—</td>
+      <td class="col-pace"></td>
+      <td class="col-goal"></td>
+      <td class="col-num">—</td>
+      <td class="col-pct ">—</td>
+      <td class="col-num">—</td>
+      <td class="col-pct ">—</td>
+      <td class="col-num">—</td>
+      <td class="col-pct ">—</td>
+      <td class="col-rev">$0</td>
+      <td class="col-num">—</td>
+    </tr>
+
+    <tr class="utm-row" data-parent="instagram">
+      <td class="col-name col-utm">↳ 1754192142</td>
+      <td class="col-num">—</td>
+      <td class="col-num col-setter">1</td>
+      <td class="col-num col-stuck">1</td>
+      <td class="col-pct bad">0%</td>
+      <td class="col-num">—</td>
+      <td class="col-pace"></td>
+      <td class="col-goal"></td>
+      <td class="col-num">—</td>
+      <td class="col-pct ">—</td>
+      <td class="col-num">—</td>
+      <td class="col-pct ">—</td>
+      <td class="col-num">—</td>
+      <td class="col-pct ">—</td>
+      <td class="col-rev">$0</td>
+      <td class="col-num">—</td>
+    </tr>
+
+    <tr class="utm-row" data-parent="instagram">
+      <td class="col-name col-utm">↳ 1711501219</td>
+      <td class="col-num">—</td>
+      <td class="col-num col-setter">1</td>
+      <td class="col-num col-stuck">—</td>
+      <td class="col-pct good">100%</td>
+      <td class="col-num">—</td>
+      <td class="col-pace"></td>
+      <td class="col-goal"></td>
+      <td class="col-num">—</td>
+      <td class="col-pct ">—</td>
+      <td class="col-num">—</td>
+      <td class="col-pct ">—</td>
+      <td class="col-num">—</td>
+      <td class="col-pct ">—</td>
+      <td class="col-rev">$0</td>
+      <td class="col-num">—</td>
+    </tr>
+
+    <tr class="utm-row" data-parent="instagram">
       <td class="col-name col-utm">↳ 1236990594</td>
       <td class="col-num">—</td>
+      <td class="col-num col-setter">—</td>
+      <td class="col-num col-stuck">—</td>
+      <td class="col-pct ">—</td>
       <td class="col-num">—</td>
       <td class="col-pace"></td>
       <td class="col-goal"></td>
@@ -954,6 +1189,9 @@
         <span class="chevron" id="chev-x">›</span>X
       </td>
       <td class="col-num">1</td>
+      <td class="col-num col-setter">—</td>
+      <td class="col-num col-stuck">—</td>
+      <td class="col-pct ">—</td>
       <td class="col-num">2</td>
       <td class="col-pace pace-behind">7</td>
       <td class="col-goal">20% (10)</td>
@@ -970,6 +1208,9 @@
     <tr class="utm-row" data-parent="x">
       <td class="col-name col-utm">↳ vp_setter</td>
       <td class="col-num">—</td>
+      <td class="col-num col-setter">—</td>
+      <td class="col-num col-stuck">—</td>
+      <td class="col-pct ">—</td>
       <td class="col-num">2</td>
       <td class="col-pace"></td>
       <td class="col-goal"></td>
@@ -988,6 +1229,9 @@
         <span class="chevron" id="chev-linkedin">›</span>Linkedin
       </td>
       <td class="col-num">3</td>
+      <td class="col-num col-setter">—</td>
+      <td class="col-num col-stuck">—</td>
+      <td class="col-pct ">—</td>
       <td class="col-num">3</td>
       <td class="col-pace pace-on">10</td>
       <td class="col-goal">30% (10)</td>
@@ -1005,6 +1249,9 @@
       <td class="col-name col-pkg">↳ Bronze - $5,997</td>
       <td class="col-num">—</td>
       <td class="col-num">—</td>
+      <td class="col-num">—</td>
+      <td class="col-pct"></td>
+      <td class="col-num">—</td>
       <td class="col-pace"></td>
       <td class="col-goal"></td>
       <td class="col-num">—</td>
@@ -1020,6 +1267,9 @@
     <tr class="utm-row" data-parent="linkedin">
       <td class="col-name col-utm">↳ vp_setter</td>
       <td class="col-num">—</td>
+      <td class="col-num col-setter">—</td>
+      <td class="col-num col-stuck">—</td>
+      <td class="col-pct ">—</td>
       <td class="col-num">3</td>
       <td class="col-pace"></td>
       <td class="col-goal"></td>
@@ -1038,6 +1288,9 @@
         <span class="chevron" id="chev-anthony_x">›</span>Anthony X
       </td>
       <td class="col-num">2</td>
+      <td class="col-num col-setter">—</td>
+      <td class="col-num col-stuck">—</td>
+      <td class="col-pct ">—</td>
       <td class="col-num">1</td>
       <td class="col-pace pace-muted">3</td>
       <td class="col-goal">—</td>
@@ -1054,6 +1307,9 @@
     <tr class="utm-row" data-parent="anthony_x">
       <td class="col-name col-utm">↳ vp_setter</td>
       <td class="col-num">—</td>
+      <td class="col-num col-setter">—</td>
+      <td class="col-num col-stuck">—</td>
+      <td class="col-pct ">—</td>
       <td class="col-num">1</td>
       <td class="col-pace"></td>
       <td class="col-goal"></td>
@@ -1072,6 +1328,9 @@
         <span class="chevron" id="chev-anthony_ig">›</span>Anthony IG
       </td>
       <td class="col-num">—</td>
+      <td class="col-num col-setter">—</td>
+      <td class="col-num col-stuck">—</td>
+      <td class="col-pct ">—</td>
       <td class="col-num">—</td>
       <td class="col-pace pace-muted">—</td>
       <td class="col-goal">—</td>
@@ -1087,16 +1346,19 @@
 
     <tr class="total-row">
       <td class="col-name">TOTAL</td>
-      <td class="col-num">50</td>
-      <td class="col-num">42</td>
+      <td class="col-num">49</td>
+      <td class="col-num col-setter">8</td>
+      <td class="col-num col-stuck">7</td>
+      <td class="col-pct bad">12%</td>
+      <td class="col-num">41</td>
       <td class="col-pace">—</td>
       <td class="col-goal">—</td>
-      <td class="col-num">22</td>
-      <td class="col-pct mid">52.4%</td>
       <td class="col-num">23</td>
-      <td class="col-pct mid">54.8%</td>
+      <td class="col-pct mid">56.1%</td>
+      <td class="col-num">24</td>
+      <td class="col-pct mid">58.5%</td>
       <td class="col-num">4</td>
-      <td class="col-pct mid">9.5%</td>
+      <td class="col-pct mid">9.8%</td>
       <td class="col-rev">$29,688</td>
       <td class="col-num">$7,422</td>
     </tr>
@@ -1210,6 +1472,17 @@
   <p style="font-size: 11px; color: var(--muted); line-height: 1.7; max-width: 680px;">
     <strong style="color: var(--muted2);">Scope</strong> — This dashboard covers only the five agency-managed funnels
     (Instagram, X, Linkedin, Anthony X, Anthony IG). No other funnel data is fetched or published.
+    &nbsp;·&nbsp;
+    <strong style="color: var(--muted2);">Setter / Closer</strong> — two independent counts, not a split.
+    <em>Setter</em> is discovery calls held this period; leads that score below the bar are vetted by a setter
+    before a closer's calendar opens up. <em>Closer</em> is first sales calls. A lead with a discovery on the 19th
+    and a sales call on the 22nd is counted once in each — they are two separate calls, so the columns do not add up.
+    &nbsp;·&nbsp;
+    <strong style="color: var(--muted2);">Stuck</strong> — discovery calls that have produced no closer call at all.
+    A discovery held in the last few days may simply not have converted yet. Re-running an archive refreshes this.
+    &nbsp;·&nbsp;
+    <strong style="color: var(--muted2);">Show %, Qual %, CW %</strong> are all measured against
+    <em>Closer</em>, never Setter.
     &nbsp;·&nbsp;
     <strong style="color: var(--muted2);">Projected</strong> — End-of-month estimate based on current daily booking pace:
     <em>(Booked ÷ Days Elapsed) × Days in Month</em>.

@@ -189,6 +189,15 @@ def fetch_users():
     return users
 
 
+def fetch_lead_statuses():
+    """Map status_id → human label. One call. Powers the Status column."""
+    print("Fetching lead statuses...", flush=True)
+    data = close_get("status/lead/", {"_limit": 100})
+    out = {st["id"]: (st.get("label") or "—") for st in data.get("data", [])}
+    print(f"  Statuses: {len(out)}", flush=True)
+    return out
+
+
 # ── Lead Data ──────────────────────────────────────────────────────────────────
 
 LEAD_FIELDS = (f"id,display_name,status_id,"
@@ -431,7 +440,7 @@ def advanced_to_closer(lead):
     return bool(_d(lead.get(f"custom.{CF_FIRST_SALES}")))
 
 
-def _fmt_won_date(raw):
+def _fmt_date(raw):
     if not raw:
         return "—"
     s = str(raw)[:10]
@@ -442,7 +451,7 @@ def _fmt_won_date(raw):
 
 
 def aggregate_data(start_date, end_date, month_label,
-                   won_opps, users,
+                   won_opps, users, statuses,
                    lead_cache=None, contact_cache=None):
     """
     Aggregate in-scope booked leads and won opps.
@@ -465,7 +474,8 @@ def aggregate_data(start_date, end_date, month_label,
     # ── Booked leads ──────────────────────────────────────────────────────────
     booked_leads = fetch_leads_by_booked_date(start_date, end_date)
 
-    meeting_rows = []
+    meeting_rows  = []
+    closer_leads  = []   # ← powers the "Closer Calls" tab
     for lead in booked_leads:
         lid = lead.get("id")
         if not lid:
@@ -485,6 +495,17 @@ def aggregate_data(start_date, end_date, month_label,
               else (utm_campaign or "Unattributed")
         meeting_rows.append({"funnel": funnel, "show_up": show_up,
                              "qualified": qualified, "utm_campaign": utm})
+        _fs = _d(lead.get(f"custom.{CF_FIRST_SALES}"))
+        closer_leads.append({
+            "date":      _fs,
+            "date_disp": _fmt_date(_fs),
+            "client":    lead.get("display_name") or "—",
+            "email":     contact_cache[lid][2],
+            "funnel":    funnel,
+            "status":    statuses.get(lead.get("status_id"), "—"),
+            "showed":    show_up,
+            "qualified": qualified,
+        })
 
     print(f"  In-scope closer calls: {len(meeting_rows)}", flush=True)
 
@@ -495,7 +516,8 @@ def aggregate_data(start_date, end_date, month_label,
     # here; they are invisible to the booked query entirely.
     disco_leads = fetch_leads_by_disco_date(start_date, end_date)
 
-    disco_rows = []
+    disco_rows   = []
+    setter_leads = []   # ← powers the "Setter Calls" and "Stuck" tabs
     for lead in disco_leads:
         lid = lead.get("id")
         if not lid:
@@ -513,8 +535,21 @@ def aggregate_data(start_date, end_date, month_label,
         utm_campaign, utm_content, _masked = contact_cache[lid]
         utm = (utm_content or "Unattributed") if funnel in UTM_CONTENT_FUNNELS \
               else (utm_campaign or "Unattributed")
+        _fc  = _d(lead.get(f"custom.{CF_FIRST_CALL}"))
+        _adv = _d(lead.get(f"custom.{CF_FIRST_SALES}"))
         disco_rows.append({"funnel": funnel, "utm_campaign": utm,
-                           "stuck": not advanced_to_closer(lead)})
+                           "stuck": not _adv})
+        setter_leads.append({
+            "date":         _fc,
+            "date_disp":    _fmt_date(_fc),
+            "client":       lead.get("display_name") or "—",
+            "email":        contact_cache[lid][2],
+            "funnel":       funnel,
+            "status":       statuses.get(lead.get("status_id"), "—"),
+            "advanced":     _adv,
+            "advanced_disp": _fmt_date(_adv) if _adv else "—",
+            "stuck":        not _adv,
+        })
 
     _stuck_n = sum(1 for r in disco_rows if r["stuck"])
     print(f"  In-scope setter calls: {len(disco_rows)} ({_stuck_n} stuck)", flush=True)
@@ -555,7 +590,7 @@ def aggregate_data(start_date, end_date, month_label,
 
         closed_leads.append({
             "date_won":  str(opp.get("date_won") or "")[:10],
-            "date_disp": _fmt_won_date(opp.get("date_won")),
+            "date_disp": _fmt_date(opp.get("date_won")),
             "client":    lead.get("display_name") or "—",
             "email":     masked_email,
             "program":   tier,
@@ -571,6 +606,8 @@ def aggregate_data(start_date, end_date, month_label,
         tier_by_funnel[funnel][tier]["revenue"] += value
 
     closed_leads.sort(key=lambda r: (r["date_won"], -r["gross"]))
+    setter_leads.sort(key=lambda r: (r["date"], r["client"]))
+    closer_leads.sort(key=lambda r: (r["date"], r["client"]))
     print(f"  In-scope closed-won rows: {len(closed_rows)}", flush=True)
 
     # ── Aggregate ─────────────────────────────────────────────────────────────
@@ -631,6 +668,8 @@ def aggregate_data(start_date, end_date, month_label,
         "funnel_totals":  funnel_totals,
         "tier_by_funnel": tier_by_funnel,
         "closed_leads":   closed_leads,
+        "setter_leads":    setter_leads,
+        "closer_leads":    closer_leads,
         "grand":          grand,
         "grand_cash":     grand_cash,
         "cash_filled":    cash_filled,
@@ -855,6 +894,54 @@ def build_lead_rows(closed_leads):
     return "\n".join(rows)
 
 
+def _yn(flag):
+    return ('<span class="yn yes">Yes</span>' if flag
+            else '<span class="yn no">No</span>')
+
+
+def build_setter_rows(setter_leads):
+    """One tbody serves both the Setter and Stuck tabs; JS filters by row class."""
+    if not setter_leads:
+        return """
+    <tr><td colspan="6" class="lead-empty">No discovery calls in this period.</td></tr>"""
+    rows = []
+    for r in setter_leads:
+        fid = funnel_slug(r["funnel"])
+        cls = "lead-row stuck-row" if r["stuck"] else "lead-row advanced-row"
+        adv = ('<span class="adv-no">Stuck</span>' if r["stuck"]
+               else f'<span class="adv-yes">→ {esc(r["advanced_disp"])}</span>')
+        rows.append(f"""
+    <tr class="{cls}">
+      <td class="col-date">{esc(r["date_disp"])}</td>
+      <td class="col-client">{esc(r["client"])}</td>
+      <td class="col-email">{esc(r["email"])}</td>
+      <td class="col-funnel"><span class="funnel-chip chip-{fid}">{esc(r["funnel"])}</span></td>
+      <td class="col-status">{esc(r["status"])}</td>
+      <td class="col-adv">{adv}</td>
+    </tr>""")
+    return "\n".join(rows)
+
+
+def build_closer_rows(closer_leads):
+    if not closer_leads:
+        return """
+    <tr><td colspan="7" class="lead-empty">No closer calls in this period.</td></tr>"""
+    rows = []
+    for r in closer_leads:
+        fid = funnel_slug(r["funnel"])
+        rows.append(f"""
+    <tr class="lead-row">
+      <td class="col-date">{esc(r["date_disp"])}</td>
+      <td class="col-client">{esc(r["client"])}</td>
+      <td class="col-email">{esc(r["email"])}</td>
+      <td class="col-funnel"><span class="funnel-chip chip-{fid}">{esc(r["funnel"])}</span></td>
+      <td class="col-status">{esc(r["status"])}</td>
+      <td class="col-flag">{_yn(r["showed"])}</td>
+      <td class="col-flag">{_yn(r["qualified"])}</td>
+    </tr>""")
+    return "\n".join(rows)
+
+
 # ── HTML Generation ────────────────────────────────────────────────────────────
 
 def generate_html(data, month_picker_html="", week_picker_html=""):
@@ -864,11 +951,20 @@ def generate_html(data, month_picker_html="", week_picker_html=""):
     days_in_month  = data.get("days_in_month", 30)
     tier_by_funnel = data.get("tier_by_funnel", {})
     closed_leads   = data.get("closed_leads", [])
+    setter_leads   = data.get("setter_leads", [])
+    closer_leads   = data.get("closer_leads", [])
 
     funnel_rows = build_funnel_rows(data["funnel_data"], data["funnel_totals"],
                                     goals, day_of_month, days_in_month,
                                     tier_by_funnel)
     lead_rows   = build_lead_rows(closed_leads)
+    setter_rows = build_setter_rows(setter_leads)
+    closer_rows = build_closer_rows(closer_leads)
+
+    n_setter = len(setter_leads)
+    n_stuck  = sum(1 for r in setter_leads if r["stuck"])
+    n_closer = len(closer_leads)
+    n_closed = len(closed_leads)
 
     g_lc  = grand.get("leads_created", 0)
     g_bo  = grand["booked"]
@@ -1144,6 +1240,78 @@ def generate_html(data, month_picker_html="", week_picker_html=""):
   .col-cash    {{ text-align: right; color: var(--blue);  font-weight: 500; font-variant-numeric: tabular-nums; }}
   .col-cash.cash-missing {{ color: var(--muted); font-weight: 400; }}
   .lead-empty  {{ padding: 24px 12px; text-align: center; color: var(--muted); }}
+  .col-status  {{ color: var(--muted2); font-size: 12px; }}
+  .col-adv     {{ text-align: right; }}
+  .col-flag    {{ text-align: right; }}
+
+  .adv-yes {{ color: var(--green); font-weight: 500; font-variant-numeric: tabular-nums; }}
+  .adv-no  {{ color: var(--amber); font-weight: 600; }}
+  .yn      {{ font-weight: 500; }}
+  .yn.yes  {{ color: var(--green); }}
+  .yn.no   {{ color: var(--muted); font-weight: 400; }}
+
+  /* ── Lead tabs ── */
+  .lead-tabs {{
+    display: flex;
+    gap: 6px;
+    padding: 0 36px 12px;
+    flex-wrap: wrap;
+  }}
+  .lead-tab {{
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 7px;
+    padding: 7px 13px;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--muted2);
+    cursor: pointer;
+    font-family: inherit;
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    transition: all 0.12s;
+  }}
+  .lead-tab:hover {{ border-color: var(--accent); color: var(--text); }}
+  .lead-tab.active {{
+    background: var(--accent);
+    border-color: var(--accent);
+    color: #fff;
+  }}
+  .lead-tab .tab-n {{
+    background: var(--surface2);
+    color: var(--muted2);
+    border-radius: 20px;
+    padding: 1px 7px;
+    font-size: 10.5px;
+    font-weight: 600;
+  }}
+  .lead-tab.active .tab-n {{ background: rgba(255,255,255,0.22); color: #fff; }}
+  .lead-tab[data-tab="stuck"].active {{ background: var(--amber); border-color: var(--amber); }}
+
+  .pane-note {{
+    font-size: 11px;
+    color: var(--muted);
+    padding: 12px 2px 0;
+    line-height: 1.6;
+  }}
+
+  /* ── Clickable KPI tiles ── */
+  .kpi-clickable {{ cursor: pointer; transition: transform 0.1s, box-shadow 0.1s; }}
+  .kpi-clickable:hover {{
+    transform: translateY(-1px);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.09), 0 1px 2px rgba(0,0,0,0.05);
+  }}
+  .kpi-clickable:hover .kpi-jump {{ opacity: 1; }}
+  .kpi-jump {{
+    position: absolute;
+    top: 10px; right: 12px;
+    font-size: 9.5px;
+    color: var(--accent);
+    opacity: 0;
+    transition: opacity 0.12s;
+    letter-spacing: 0.03em;
+  }}
 
   .funnel-chip {{
     display: inline-block;
@@ -1229,13 +1397,18 @@ def generate_html(data, month_picker_html="", week_picker_html=""):
     <div class="value">{g_lc}</div>
     <div class="kpi-sub">new leads this period</div>
   </div>
-  <div class="kpi" style="--kpi-accent:#9333ea; --kpi-color:#9333ea;">
+  <div class="kpi kpi-clickable" data-tab="setter" onclick="showLeadTab('setter')"
+       style="--kpi-accent:#9333ea; --kpi-color:#9333ea;" title="Click to list these leads below">
+    <div class="kpi-jump">view leads ↓</div>
     <div class="label">Setter Calls</div>
     <div class="value">{g_se}</div>
     <div class="kpi-sub">{advance_pct(g_se, g_stk)} advanced to a closer</div>
-    <div class="kpi-cash {'partial' if g_stk else ''}">{g_stk} stuck · no closer call</div>
+    <div class="kpi-cash {'partial' if g_stk else ''}" onclick="event.stopPropagation();showLeadTab('stuck')"
+         style="cursor:pointer;">{g_stk} stuck · no closer call</div>
   </div>
-  <div class="kpi" style="--kpi-accent:#4f46e5; --kpi-color:var(--text);">
+  <div class="kpi kpi-clickable" data-tab="closer" onclick="showLeadTab('closer')"
+       style="--kpi-accent:#4f46e5; --kpi-color:var(--text);" title="Click to list these leads below">
+    <div class="kpi-jump">view leads ↓</div>
     <div class="label">Closer Calls</div>
     <div class="value">{g_bo}</div>
     <div class="kpi-sub">first sales calls</div>
@@ -1255,7 +1428,9 @@ def generate_html(data, month_picker_html="", week_picker_html=""):
     <div class="value">{g_cl}</div>
     <div class="kpi-sub">{pct(g_cl, g_bo)} booked→close · {pct(g_cl, g_qu)} qual→close</div>
   </div>
-  <div class="kpi" style="--kpi-accent:#0e9f6e; --kpi-color:#0e9f6e;">
+  <div class="kpi kpi-clickable" data-tab="closed" onclick="showLeadTab('closed')"
+       style="--kpi-accent:#0e9f6e; --kpi-color:#0e9f6e;" title="Click to list these leads below">
+    <div class="kpi-jump">view leads ↓</div>
     <div class="label">Closed Revenue</div>
     <div class="value">{fmt_currency(g_rev)}</div>
     <div class="kpi-sub">{rev_per_close(g_rev, g_cl)} avg deal</div>
@@ -1313,13 +1488,61 @@ def generate_html(data, month_picker_html="", week_picker_html=""):
   </table>
 </div>
 
-<!-- Closed-Won Lead Detail -->
+<!-- Lead Detail — tabbed -->
 <div class="section-label">
-  Closed-Won Deal Line Items
-  <span class="count-pill">{lead_count_label}</span>
+  Lead Line Items
+  <span class="count-pill" id="lead-count">{n_closed} deals</span>
 </div>
 
-<div class="table-wrap">
+<div class="lead-tabs">
+  <button class="lead-tab" data-tab="setter" onclick="showLeadTab('setter')">Setter Calls <span class="tab-n">{n_setter}</span></button>
+  <button class="lead-tab" data-tab="stuck"  onclick="showLeadTab('stuck')">Stuck <span class="tab-n">{n_stuck}</span></button>
+  <button class="lead-tab" data-tab="closer" onclick="showLeadTab('closer')">Closer Calls <span class="tab-n">{n_closer}</span></button>
+  <button class="lead-tab active" data-tab="closed" onclick="showLeadTab('closed')">Closed-Won <span class="tab-n">{n_closed}</span></button>
+</div>
+
+<!-- Setter + Stuck share one table; Stuck hides advanced rows -->
+<div class="table-wrap lead-pane" id="pane-setter" style="display:none">
+  <table>
+    <thead>
+      <tr>
+        <th class="col-date">Discovery Date</th>
+        <th class="col-client">Client</th>
+        <th class="col-email">Email</th>
+        <th class="col-funnel">Funnel</th>
+        <th class="col-status">Lead Status</th>
+        <th class="col-adv">Advanced to Closer</th>
+      </tr>
+    </thead>
+    <tbody>
+{setter_rows}
+    </tbody>
+  </table>
+  <p class="pane-note" id="note-setter">Every discovery call held this period. <strong>Advanced</strong> shows the date the lead reached a closer.</p>
+  <p class="pane-note" id="note-stuck" style="display:none">Discovery calls with no closer call booked. A call held in the last few days may simply not have converted yet.</p>
+</div>
+
+<div class="table-wrap lead-pane" id="pane-closer" style="display:none">
+  <table>
+    <thead>
+      <tr>
+        <th class="col-date">Sales Call Date</th>
+        <th class="col-client">Client</th>
+        <th class="col-email">Email</th>
+        <th class="col-funnel">Funnel</th>
+        <th class="col-status">Lead Status</th>
+        <th class="col-flag">Showed</th>
+        <th class="col-flag">Qualified</th>
+      </tr>
+    </thead>
+    <tbody>
+{closer_rows}
+    </tbody>
+  </table>
+  <p class="pane-note">First sales calls with a closer. Some were preceded by a discovery call, some went direct.</p>
+</div>
+
+<div class="table-wrap lead-pane" id="pane-closed">
   <table>
     <thead>
       <tr>
@@ -1361,6 +1584,39 @@ def generate_html(data, month_picker_html="", week_picker_html=""):
       r.classList.toggle("open", !isOpen);
     }});
     if (chevron) chevron.classList.toggle("open", !isOpen);
+  }}
+
+  const LEAD_COUNTS = {{
+    setter: "{n_setter} calls",
+    stuck:  "{n_stuck} stuck",
+    closer: "{n_closer} calls",
+    closed: "{n_closed} deals",
+  }};
+
+  function showLeadTab(tab) {{
+    // Stuck reuses the setter pane, filtered to non-advanced rows.
+    const paneId = (tab === "stuck") ? "setter" : tab;
+
+    document.querySelectorAll(".lead-pane").forEach(p => {{
+      p.style.display = (p.id === "pane-" + paneId) ? "" : "none";
+    }});
+    document.querySelectorAll(".lead-tab").forEach(b => {{
+      b.classList.toggle("active", b.dataset.tab === tab);
+    }});
+
+    const onlyStuck = (tab === "stuck");
+    document.querySelectorAll("#pane-setter .advanced-row").forEach(r => {{
+      r.style.display = onlyStuck ? "none" : "";
+    }});
+    const nSetter = document.getElementById("note-setter");
+    const nStuck  = document.getElementById("note-stuck");
+    if (nSetter) nSetter.style.display = onlyStuck ? "none" : "";
+    if (nStuck)  nStuck.style.display  = onlyStuck ? "" : "none";
+
+    const pill = document.getElementById("lead-count");
+    if (pill) pill.textContent = LEAD_COUNTS[tab] || "";
+
+    document.querySelector(".lead-tabs").scrollIntoView({{behavior: "smooth", block: "nearest"}});
   }}
 
   function toggleUTM(fid) {{
@@ -1687,7 +1943,8 @@ if __name__ == "__main__":
     print("Agency Funnel Performance Dashboard — Build Start", flush=True)
     print(f"  Scope: {', '.join(ALLOWED_FUNNELS)}", flush=True)
 
-    users = fetch_users()
+    users    = fetch_users()
+    statuses = fetch_lead_statuses()
     lead_cache, contact_cache = {}, {}
 
     ARCHIVES_DIR.mkdir(exist_ok=True)
@@ -1708,7 +1965,7 @@ if __name__ == "__main__":
         won_opps = fetch_won_opps_by_range(m_start, m_end)
         data, lead_cache, contact_cache = aggregate_data(
             m_start, m_end, parsed.strftime("%B %Y"),
-            won_opps, users, lead_cache, contact_cache)
+            won_opps, users, statuses, lead_cache, contact_cache)
 
         out_path     = ARCHIVES_DIR / f"{args.month}.html"
         weekly_arcs  = scan_weekly_archives(args.month)
@@ -1735,7 +1992,7 @@ if __name__ == "__main__":
         print(f"\n=== Building weekly archive: {args.week} ===", flush=True)
         won_opps = fetch_won_opps_by_range(w_monday, w_end)
         data, lead_cache, contact_cache = aggregate_data(
-            w_monday, w_end, label, won_opps, users, lead_cache, contact_cache)
+            w_monday, w_end, label, won_opps, users, statuses, lead_cache, contact_cache)
         data["week_range_label"] = ""
 
         out_path     = ARCHIVES_DIR / f"week-{args.week}.html"
@@ -1760,7 +2017,7 @@ if __name__ == "__main__":
         print(f"\n=== Building live month: {m_label} ===", flush=True)
         won_month = fetch_won_opps_by_range(m_start, m_end)
         data_month, lead_cache, contact_cache = aggregate_data(
-            m_start, m_end, m_label, won_month, users, lead_cache, contact_cache)
+            m_start, m_end, m_label, won_month, users, statuses, lead_cache, contact_cache)
         data_month["week_range_label"] = ""
 
         weekly_arcs  = scan_weekly_archives(live_month)
@@ -1775,7 +2032,7 @@ if __name__ == "__main__":
         won_week = fetch_won_opps_by_range(w_monday, w_end)
         w_label  = f"{m_label} · {week_display_label(w_monday, w_sunday)}"
         data_week, lead_cache, contact_cache = aggregate_data(
-            w_monday, w_end, w_label, won_week, users, lead_cache, contact_cache)
+            w_monday, w_end, w_label, won_week, users, statuses, lead_cache, contact_cache)
         data_week["week_range_label"] = ""
 
         week_picker_cur  = build_week_picker("week-current", live_month, weekly_arcs,

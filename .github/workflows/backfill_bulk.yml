@@ -1,0 +1,148 @@
+name: Bulk Backfill
+
+# Builds a monthly archive plus any number of weekly archives in ONE job,
+# sequentially, then commits everything in a single push.
+#
+# Why one job instead of N dispatches: each build ends in a
+# `git pull --rebase --strategy-option=ours` + `git push`. Two concurrent runs
+# race, and the loser's archive is silently dropped by the `ours` strategy.
+# Serializing inside a single job makes that impossible.
+#
+# Defaults are set up for the June 2026 backfill. Override the inputs to reuse.
+
+on:
+  workflow_dispatch:
+    inputs:
+      month:
+        description: 'Month to backfill (YYYY-MM). Blank = skip the month build.'
+        required: false
+        default: '2026-06'
+      weeks:
+        description: 'Space-separated Monday dates (YYYY-MM-DD). Blank = skip weeks.'
+        required: false
+        default: '2026-06-01 2026-06-08 2026-06-15 2026-06-22 2026-06-29'
+      skip_commit:
+        description: 'Build only, do not commit. Use for a dry run.'
+        type: boolean
+        required: false
+        default: false
+
+concurrency:
+  # Shares a group with update.yml so a 15-min refresh cannot push mid-backfill.
+  group: agency-funnel-build
+  cancel-in-progress: false
+
+jobs:
+  backfill:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    permissions:
+      contents: write
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - run: pip install requests
+
+      - name: Validate inputs
+        env:
+          MONTH: ${{ inputs.month }}
+          WEEKS: ${{ inputs.weeks }}
+        run: |
+          set -euo pipefail
+
+          if [ -z "${MONTH// /}" ] && [ -z "${WEEKS// /}" ]; then
+            echo "::error::Provide a month, weeks, or both. Nothing to do."
+            exit 1
+          fi
+
+          LIVE_MONTH=$(TZ=America/Los_Angeles date +%Y-%m)
+
+          if [ -n "${MONTH// /}" ]; then
+            if ! [[ "$MONTH" =~ ^[0-9]{4}-[0-9]{2}$ ]]; then
+              echo "::error::month must be YYYY-MM, got '$MONTH'"
+              exit 1
+            fi
+            if [ "$MONTH" = "$LIVE_MONTH" ]; then
+              echo "::error::'$MONTH' is the live month. index.html already covers it;"
+              echo "::error::freezing it would create a duplicate entry in the month picker."
+              exit 1
+            fi
+            if [[ "$MONTH" < "2026-04" ]]; then
+              echo "::warning::WEEKLY_FEATURE_START is 2026-04 — the week picker is hidden"
+              echo "::warning::for months before that. Weekly files would build but not link."
+            fi
+          fi
+
+          for W in $WEEKS; do
+            if ! [[ "$W" =~ ^[0-9]{4}-[0-9]{2}-[0-9]{2}$ ]]; then
+              echo "::error::week must be YYYY-MM-DD, got '$W'"
+              exit 1
+            fi
+            DOW=$(date -u -d "$W" +%u)   # 1 = Monday
+            if [ "$DOW" != "1" ]; then
+              echo "::error::'$W' is a $(date -u -d "$W" +%A), not a Monday."
+              echo "::error::Weekly archives are keyed by the Monday of the week."
+              exit 1
+            fi
+            if [ "$(date -u -d "$W" +%s)" -gt "$(date -u +%s)" ]; then
+              echo "::error::'$W' is in the future."
+              exit 1
+            fi
+          done
+
+          echo "Month: ${MONTH:-<skipped>}"
+          echo "Weeks: ${WEEKS:-<skipped>}"
+
+      - name: Build monthly archive
+        if: ${{ inputs.month != '' }}
+        env:
+          CLOSE_API_KEY: ${{ secrets.CLOSE_API_KEY }}
+        run: |
+          set -euo pipefail
+          echo "::group::Month ${{ inputs.month }}"
+          python fetch_and_build.py --month "${{ inputs.month }}"
+          echo "::endgroup::"
+
+      - name: Build weekly archives
+        if: ${{ inputs.weeks != '' }}
+        env:
+          CLOSE_API_KEY: ${{ secrets.CLOSE_API_KEY }}
+          WEEKS: ${{ inputs.weeks }}
+        run: |
+          set -euo pipefail
+          for W in $WEEKS; do
+            echo "::group::Week $W"
+            python fetch_and_build.py --week "$W"
+            echo "::endgroup::"
+          done
+
+      - name: Show what was written
+        run: |
+          echo "--- archives/ ---"
+          ls -la archives/
+          echo "--- git status ---"
+          git status --porcelain
+
+      - name: Commit and push
+        if: ${{ !inputs.skip_commit }}
+        run: |
+          set -euo pipefail
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add archives/
+          if git diff --staged --quiet; then
+            echo "No changes to commit."
+            exit 0
+          fi
+          git commit -m "Bulk backfill — month=${{ inputs.month }} weeks=${{ inputs.weeks }}"
+          git pull --rebase --strategy-option=ours origin main
+          git push
+
+      - name: Dry run notice
+        if: ${{ inputs.skip_commit }}
+        run: echo "::notice::skip_commit was set. Files were built but not committed."

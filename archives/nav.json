@@ -1,0 +1,21 @@
+{
+  "live_month": "2026-07",
+  "live_month_label": "July 2026",
+  "months": [
+    {
+      "key": "2026-07",
+      "label": "July 2026",
+      "is_live": true
+    }
+  ],
+  "weeks": {
+    "2026-07": [
+      {
+        "key": "week-current",
+        "label": "Jul 6\u20139 \u25b6",
+        "is_current": true
+      }
+    ]
+  },
+  "updated_at": "2026-07-09T13:03:43"
+}

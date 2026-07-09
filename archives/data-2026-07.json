@@ -1,0 +1,77 @@
+{
+  "month_key": "2026-07",
+  "month_label": "July 2026",
+  "grand": {
+    "leads_created": 50,
+    "booked": 42,
+    "showed": 22,
+    "qualified": 23,
+    "closed": 4,
+    "revenue": 29688.0
+  },
+  "cash_collected": 0,
+  "cash_filled": 0,
+  "cash_total_n": 4,
+  "funnels": {
+    "Instagram": {
+      "leads_created": 44,
+      "booked": 36,
+      "book_pct": 81.8,
+      "showed": 17,
+      "show_pct": 47.2,
+      "qualified": 17,
+      "qual_pct": 47.2,
+      "closed": 3,
+      "cw_pct": 8.3,
+      "revenue": 23991.0
+    },
+    "X": {
+      "leads_created": 1,
+      "booked": 2,
+      "book_pct": 200.0,
+      "showed": 2,
+      "show_pct": 100.0,
+      "qualified": 2,
+      "qual_pct": 100.0,
+      "closed": 0,
+      "cw_pct": 0.0,
+      "revenue": 0.0
+    },
+    "Linkedin": {
+      "leads_created": 3,
+      "booked": 3,
+      "book_pct": 100.0,
+      "showed": 2,
+      "show_pct": 66.7,
+      "qualified": 3,
+      "qual_pct": 100.0,
+      "closed": 1,
+      "cw_pct": 33.3,
+      "revenue": 5697.0
+    },
+    "Anthony X": {
+      "leads_created": 2,
+      "booked": 1,
+      "book_pct": 50.0,
+      "showed": 1,
+      "show_pct": 100.0,
+      "qualified": 1,
+      "qual_pct": 100.0,
+      "closed": 0,
+      "cw_pct": 0.0,
+      "revenue": 0.0
+    },
+    "Anthony IG": {
+      "leads_created": 0,
+      "booked": 0,
+      "book_pct": 0,
+      "showed": 0,
+      "show_pct": 0,
+      "qualified": 0,
+      "qual_pct": 0,
+      "closed": 0,
+      "cw_pct": 0,
+      "revenue": 0.0
+    }
+  }
+}

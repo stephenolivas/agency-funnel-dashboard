@@ -44,6 +44,18 @@ CF_UTM_CAMPAIGN = "cf_jnbd0xzUY3tuxzxiGxBs2hONuExeXMvAoTUM2R64Lq3"  # utm_campai
 CF_UTM_CONTENT  = "cf_R7o66i0XPycLQHlxOLbIqk6c6j3oB8CzxF3e3apI1hn"  # utm_content (contact)
 CF_FIRST_SALES  = "cf_LFdYEQ6bsgp49YjZzefypDmdVx8iwuakWDSLPLpVrBq"  # First Sales Call Booked Date (lead)
 
+# First Call Booked Date stamps on the FIRST meeting of any kind, including a
+# setter-run "Quick Discovery". First Sales Call Booked Date stamps only on the
+# closer call. Comparing the two tells you whether a discovery call happened:
+#
+#   FCBD <  FSCBD          -> discovery, then advanced to a closer
+#   FCBD == FSCBD          -> no discovery; lead went straight to a closer
+#   FCBD set, FSCBD unset  -> discovery held, no closer call  ("stuck")
+#   FCBD unset             -> no meeting recorded
+#
+# Both fields hold the MEETING date, not the date the meeting was booked.
+CF_FIRST_CALL   = "cf_JsJZIVh7QDcFQBXr4cTRBxf1AkREpLdsKiZB4AEJ8Xh"  # First Call Booked Date (lead)
+
 # 💰 Cash Collected — OPPORTUNITY field, type=number.
 # NOT stored in cents. Do not divide by 100. (opp.value IS in cents — it is.)
 CF_CASH_COLLECTED = "cf_JP6Zdnv1ClODfctK5iwY9XseSeXEE9ZXbyopPw45OqZ"
@@ -181,6 +193,8 @@ def fetch_users():
 
 LEAD_FIELDS = (f"id,display_name,status_id,"
                f"custom.{CF_FUNNEL_NAME},"
+               f"custom.{CF_FIRST_CALL},"
+               f"custom.{CF_FIRST_SALES},"
                f"custom.{CF_SHOW_UP},"
                f"custom.{CF_QUALIFIED},"
                f"custom.{CF_PROGRAM_TIER}")
@@ -320,6 +334,35 @@ def fetch_leads_by_booked_date(start_date, end_date):
     return leads
 
 
+def fetch_leads_by_disco_date(start_date, end_date):
+    """
+    Leads where First Call Booked Date falls in range. Superset of the booked
+    query: it also returns leads that had a discovery call and never reached a
+    closer — the ones this dashboard was previously blind to.
+    """
+    start_str = start_date.strftime("%Y-%m-%d")
+    end_str   = end_date.strftime("%Y-%m-%d")
+    query     = f'custom.{CF_FIRST_CALL} >= "{start_str}" AND custom.{CF_FIRST_CALL} <= "{end_str}"'
+    print(f"Fetching discovery-call leads ({start_str} → {end_str})...", flush=True)
+
+    leads, skip = [], 0
+    while True:
+        data = close_get("lead/", {
+            "query":   query,
+            "_fields": LEAD_FIELDS,
+            "_limit":  200,
+            "_skip":   skip,
+        })
+        batch = data.get("data", [])
+        leads.extend(batch)
+        if not data.get("has_more"):
+            break
+        skip += 200
+
+    print(f"  Total first-call leads (all funnels): {len(leads)}", flush=True)
+    return leads
+
+
 def fetch_leads_created(start_date, end_date):
     """All leads created in range (Pacific). Filtered to scope downstream."""
     start_utc = datetime(start_date.year, start_date.month, start_date.day,
@@ -356,6 +399,36 @@ def _is_yes(val):
     if val is None or val is False: return False
     if val is True: return True
     return str(val).strip().lower() in ("yes", "true", "1")
+
+
+def _d(val):
+    """Normalize a Close date field to a YYYY-MM-DD string, or '' if unset."""
+    if not val:
+        return ""
+    return str(val).strip()[:10]
+
+
+def had_disco(lead):
+    """
+    True if this lead sat on a setter's calendar before (or instead of) a closer.
+
+    Caveat: a lead with FCBD set and FSCBD unset is assumed to be a discovery
+    call. In the rare window between a direct closer booking and the field
+    updater's next pass, that lead would be misread as a discovery. A dedicated
+    'Quick Discovery Booked Date' field would remove the inference entirely.
+    """
+    fcbd  = _d(lead.get(f"custom.{CF_FIRST_CALL}"))
+    fscbd = _d(lead.get(f"custom.{CF_FIRST_SALES}"))
+    if not fcbd:
+        return False
+    if not fscbd:
+        return True          # first meeting happened, no sales call ever booked
+    return fcbd < fscbd      # equal => the first meeting WAS the sales call
+
+
+def advanced_to_closer(lead):
+    """Did this discovery lead ever reach a closer? Any date, not just this period."""
+    return bool(_d(lead.get(f"custom.{CF_FIRST_SALES}")))
 
 
 def _fmt_won_date(raw):
@@ -413,7 +486,38 @@ def aggregate_data(start_date, end_date, month_label,
         meeting_rows.append({"funnel": funnel, "show_up": show_up,
                              "qualified": qualified, "utm_campaign": utm})
 
-    print(f"  In-scope booked rows: {len(meeting_rows)}", flush=True)
+    print(f"  In-scope closer calls: {len(meeting_rows)}", flush=True)
+
+    # ── Discovery (setter) calls ──────────────────────────────────────────────
+    # Counted independently of the booked set. A lead with a discovery on 6/19
+    # and a closer call on 6/22 appears in BOTH columns — they are two calls.
+    # Leads whose discovery never produced a closer call ("stuck") appear ONLY
+    # here; they are invisible to the booked query entirely.
+    disco_leads = fetch_leads_by_disco_date(start_date, end_date)
+
+    disco_rows = []
+    for lead in disco_leads:
+        lid = lead.get("id")
+        if not lid:
+            continue
+        lead_cache[lid] = lead
+        if lead.get("status_id") in EXCLUDED_LEAD_STATUS_IDS:
+            continue
+        if not in_scope(lead):
+            continue
+        if not had_disco(lead):
+            continue     # first meeting WAS the closer call — not a setter call
+        funnel = get_funnel_name(lead)
+        if lid not in contact_cache:
+            contact_cache[lid] = fetch_contact_data(lid)
+        utm_campaign, utm_content, _masked = contact_cache[lid]
+        utm = (utm_content or "Unattributed") if funnel in UTM_CONTENT_FUNNELS \
+              else (utm_campaign or "Unattributed")
+        disco_rows.append({"funnel": funnel, "utm_campaign": utm,
+                           "stuck": not advanced_to_closer(lead)})
+
+    _stuck_n = sum(1 for r in disco_rows if r["stuck"])
+    print(f"  In-scope setter calls: {len(disco_rows)} ({_stuck_n} stuck)", flush=True)
 
     # ── Closed-won ────────────────────────────────────────────────────────────
     closed_rows    = []
@@ -474,7 +578,8 @@ def aggregate_data(start_date, end_date, month_label,
     def slot(funnel, utm):
         funnel_data.setdefault(funnel, {})
         funnel_data[funnel].setdefault(utm, {
-            "booked": 0, "showed": 0, "qualified": 0, "closed": 0, "revenue": 0.0})
+            "booked": 0, "setter": 0, "stuck": 0,
+            "showed": 0, "qualified": 0, "closed": 0, "revenue": 0.0})
         return funnel_data[funnel][utm]
 
     for row in meeting_rows:
@@ -482,6 +587,10 @@ def aggregate_data(start_date, end_date, month_label,
         s["booked"]    += 1
         s["showed"]    += 1 if row["show_up"]   else 0
         s["qualified"] += 1 if row["qualified"] else 0
+    for row in disco_rows:
+        s = slot(row["funnel"], row["utm_campaign"])
+        s["setter"] += 1
+        s["stuck"]  += 1 if row["stuck"] else 0
     for row in closed_rows:
         s = slot(row["funnel"], row["utm_campaign"])
         s["closed"]  += 1
@@ -494,14 +603,15 @@ def aggregate_data(start_date, end_date, month_label,
     funnel_totals = {}
     for funnel in ALLOWED_FUNNELS:
         t = {"leads_created": leads_created_by_funnel.get(funnel, 0),
-             "booked": 0, "showed": 0, "qualified": 0, "closed": 0, "revenue": 0.0}
+             "booked": 0, "setter": 0, "stuck": 0,
+             "showed": 0, "qualified": 0, "closed": 0, "revenue": 0.0}
         for v in funnel_data.get(funnel, {}).values():
-            for k in ("booked", "showed", "qualified", "closed", "revenue"):
+            for k in ("booked", "setter", "stuck", "showed", "qualified", "closed", "revenue"):
                 t[k] += v[k]
         funnel_totals[funnel] = t
 
-    grand = {"leads_created": 0, "booked": 0, "showed": 0,
-             "qualified": 0, "closed": 0, "revenue": 0.0}
+    grand = {"leads_created": 0, "booked": 0, "setter": 0, "stuck": 0,
+             "showed": 0, "qualified": 0, "closed": 0, "revenue": 0.0}
     for funnel, t in funnel_totals.items():
         for k in grand:
             grand[k] += t.get(k, 0)
@@ -569,6 +679,22 @@ def rev_per_close(revenue, closed):
         return "—"
     return f"${revenue / closed:,.0f}"
 
+def advance_pct(setter, stuck):
+    """Share of discovery calls that went on to reach a closer."""
+    if not setter:
+        return "—"
+    return f"{(setter - stuck) / setter * 100:.0f}%"
+
+
+def advance_class(setter, stuck):
+    if not setter:
+        return ""
+    r = (setter - stuck) / setter
+    if r >= 0.60: return "good"
+    if r <  0.35: return "bad"
+    return "mid"
+
+
 def funnel_slug(name):
     return re.sub(r"[^a-z0-9]", "_", name.lower())
 
@@ -614,6 +740,8 @@ def build_funnel_rows(funnel_data, funnel_totals, goals=None,
     for funnel in ALLOWED_FUNNELS:
         t   = funnel_totals.get(funnel, {})
         bo  = t.get("booked", 0)
+        se  = t.get("setter", 0)
+        stk = t.get("stuck", 0)
         sh  = t.get("showed", 0)
         qu  = t.get("qualified", 0)
         cl  = t.get("closed", 0)
@@ -633,6 +761,9 @@ def build_funnel_rows(funnel_data, funnel_totals, goals=None,
         <span class="chevron" id="chev-{fid}">›</span>{esc(funnel)}
       </td>
       <td class="col-num">{lc_disp}</td>
+      <td class="col-num col-setter">{se if se else "—"}</td>
+      <td class="col-num col-stuck">{stk if stk else "—"}</td>
+      <td class="col-pct {advance_class(se, stk)}">{advance_pct(se, stk)}</td>
       <td class="col-num">{bo if bo else "—"}</td>
       <td class="col-pace {_pc}">{pace_label(bo, _on_pace, _goal)}</td>
       <td class="col-goal">{goal_pct_label(bo, _goal)}</td>
@@ -655,6 +786,9 @@ def build_funnel_rows(funnel_data, funnel_totals, goals=None,
       <td class="col-name col-pkg">↳ {esc(tier_name)}</td>
       <td class="col-num">—</td>
       <td class="col-num">—</td>
+      <td class="col-num">—</td>
+      <td class="col-pct"></td>
+      <td class="col-num">—</td>
       <td class="col-pace"></td>
       <td class="col-goal"></td>
       <td class="col-num">—</td>
@@ -668,13 +802,19 @@ def build_funnel_rows(funnel_data, funnel_totals, goals=None,
     </tr>""")
 
         utms = funnel_data.get(funnel, {})
-        for utm_label, vals in sorted(utms.items(), key=lambda x: -x[1]["booked"]):
+        for utm_label, vals in sorted(
+                utms.items(),
+                key=lambda x: (-x[1]["booked"], -x[1].get("setter", 0))):
             b, s, q, c, r = (vals["booked"], vals["showed"], vals["qualified"],
                              vals["closed"], vals["revenue"])
+            use, ustk = vals.get("setter", 0), vals.get("stuck", 0)
             rows.append(f"""
     <tr class="utm-row" data-parent="{fid}">
       <td class="col-name col-utm">↳ {esc(utm_label)}</td>
       <td class="col-num">—</td>
+      <td class="col-num col-setter">{use if use else "—"}</td>
+      <td class="col-num col-stuck">{ustk if ustk else "—"}</td>
+      <td class="col-pct {advance_class(use, ustk)}">{advance_pct(use, ustk)}</td>
       <td class="col-num">{b if b else "—"}</td>
       <td class="col-pace"></td>
       <td class="col-goal"></td>
@@ -732,6 +872,8 @@ def generate_html(data, month_picker_html="", week_picker_html=""):
 
     g_lc  = grand.get("leads_created", 0)
     g_bo  = grand["booked"]
+    g_se  = grand.get("setter", 0)
+    g_stk = grand.get("stuck", 0)
     g_sh  = grand["showed"]
     g_qu  = grand["qualified"]
     g_cl  = grand["closed"]
@@ -823,9 +965,12 @@ def generate_html(data, month_picker_html="", week_picker_html=""):
   /* ── KPI Cards ── */
   .kpis {{
     display: grid;
-    grid-template-columns: repeat(6, 1fr);
-    gap: 14px;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 12px;
     padding: 24px 36px;
+  }}
+  @media (max-width: 1500px) {{
+    .kpis {{ grid-template-columns: repeat(4, 1fr); }}
   }}
   .kpi {{
     background: var(--surface);
@@ -966,6 +1111,9 @@ def generate_html(data, month_picker_html="", week_picker_html=""):
   .col-pct.bad  {{ color: var(--red); }}
   .col-pct.mid  {{ color: var(--amber); }}
 
+  .col-setter {{ color: var(--purple); }}
+  .col-stuck  {{ color: var(--amber); font-weight: 500; }}
+
   .col-pace  {{ text-align: right; font-size: 12px; color: var(--muted); }}
   .col-goal  {{ text-align: right; font-size: 12px; color: var(--muted); }}
   .col-pace.pace-exceed  {{ color: var(--green); font-weight: 600; }}
@@ -1081,10 +1229,16 @@ def generate_html(data, month_picker_html="", week_picker_html=""):
     <div class="value">{g_lc}</div>
     <div class="kpi-sub">new leads this period</div>
   </div>
+  <div class="kpi" style="--kpi-accent:#9333ea; --kpi-color:#9333ea;">
+    <div class="label">Setter Calls</div>
+    <div class="value">{g_se}</div>
+    <div class="kpi-sub">{advance_pct(g_se, g_stk)} advanced to a closer</div>
+    <div class="kpi-cash {'partial' if g_stk else ''}">{g_stk} stuck · no closer call</div>
+  </div>
   <div class="kpi" style="--kpi-accent:#4f46e5; --kpi-color:var(--text);">
-    <div class="label">Total Booked</div>
+    <div class="label">Closer Calls</div>
     <div class="value">{g_bo}</div>
-    <div class="kpi-sub">new first calls</div>
+    <div class="kpi-sub">first sales calls</div>
   </div>
   <div class="kpi" style="--kpi-accent:#2563eb; --kpi-color:#2563eb;">
     <div class="label">Showed</div>
@@ -1110,7 +1264,7 @@ def generate_html(data, month_picker_html="", week_picker_html=""):
 </div>
 
 <!-- Funnel Table -->
-<div class="section-label">Funnel Breakdown — Booked → Showed → Qualified → Closed Won → Revenue</div>
+<div class="section-label">Funnel Breakdown — Setter → Closer → Showed → Qualified → Closed Won → Revenue</div>
 
 <div class="table-wrap">
   <table>
@@ -1118,7 +1272,10 @@ def generate_html(data, month_picker_html="", week_picker_html=""):
       <tr>
         <th class="col-name">Funnel</th>
         <th class="col-num">Leads</th>
-        <th class="col-num">Booked</th>
+        <th class="col-num" title="Discovery calls held this period, converted or not">Setter</th>
+        <th class="col-num" title="Discovery calls with no closer call booked at all">Stuck</th>
+        <th class="col-pct" title="Share of discovery calls that reached a closer">Adv %</th>
+        <th class="col-num" title="First sales calls with a closer">Closer</th>
         <th class="col-pace">Projected</th>
         <th class="col-goal">Goal %</th>
         <th class="col-num">Showed</th>
@@ -1137,6 +1294,9 @@ def generate_html(data, month_picker_html="", week_picker_html=""):
     <tr class="total-row">
       <td class="col-name">TOTAL</td>
       <td class="col-num">{g_lc if g_lc else "—"}</td>
+      <td class="col-num col-setter">{g_se}</td>
+      <td class="col-num col-stuck">{g_stk}</td>
+      <td class="col-pct {advance_class(g_se, g_stk)}">{advance_pct(g_se, g_stk)}</td>
       <td class="col-num">{g_bo}</td>
       <td class="col-pace">—</td>
       <td class="col-goal">—</td>
@@ -1216,6 +1376,17 @@ def generate_html(data, month_picker_html="", week_picker_html=""):
   <p style="font-size: 11px; color: var(--muted); line-height: 1.7; max-width: 680px;">
     <strong style="color: var(--muted2);">Scope</strong> — This dashboard covers only the five agency-managed funnels
     (Instagram, X, Linkedin, Anthony X, Anthony IG). No other funnel data is fetched or published.
+    &nbsp;·&nbsp;
+    <strong style="color: var(--muted2);">Setter / Closer</strong> — two independent counts, not a split.
+    <em>Setter</em> is discovery calls held this period; leads that score below the bar are vetted by a setter
+    before a closer's calendar opens up. <em>Closer</em> is first sales calls. A lead with a discovery on the 19th
+    and a sales call on the 22nd is counted once in each — they are two separate calls, so the columns do not add up.
+    &nbsp;·&nbsp;
+    <strong style="color: var(--muted2);">Stuck</strong> — discovery calls that have produced no closer call at all.
+    A discovery held in the last few days may simply not have converted yet. Re-running an archive refreshes this.
+    &nbsp;·&nbsp;
+    <strong style="color: var(--muted2);">Show %, Qual %, CW %</strong> are all measured against
+    <em>Closer</em>, never Setter.
     &nbsp;·&nbsp;
     <strong style="color: var(--muted2);">Projected</strong> — End-of-month estimate based on current daily booking pace:
     <em>(Booked ÷ Days Elapsed) × Days in Month</em>.
@@ -1330,6 +1501,8 @@ def save_data_json(data, month_key):
     }
     for funnel, totals in data["funnel_totals"].items():
         bo  = totals.get("booked", 0)
+        se  = totals.get("setter", 0)
+        stk = totals.get("stuck", 0)
         sh  = totals.get("showed", 0)
         qu  = totals.get("qualified", 0)
         cl  = totals.get("closed", 0)
@@ -1337,6 +1510,9 @@ def save_data_json(data, month_key):
         lc  = totals.get("leads_created", 0)
         export["funnels"][funnel] = {
             "leads_created": lc,
+            "setter":    se,
+            "stuck":     stk,
+            "advance_pct": round((se - stk) / se * 100, 1) if se else 0,
             "booked":    bo,
             "book_pct":  round(bo / lc * 100, 1) if lc else 0,
             "showed":    sh,
@@ -1619,7 +1795,9 @@ if __name__ == "__main__":
     g = final_data["grand"]
     print(f"\n=== Build Summary ===", flush=True)
     print(f"  Period:    {final_data['month_label']}", flush=True)
-    print(f"  Booked:    {g['booked']}", flush=True)
+    print(f"  Setter:    {g.get('setter',0)}  "
+          f"({g.get('stuck',0)} stuck, {advance_pct(g.get('setter',0), g.get('stuck',0))} advanced)", flush=True)
+    print(f"  Closer:    {g['booked']}", flush=True)
     print(f"  Showed:    {g['showed']}  ({pct(g['showed'], g['booked'])})", flush=True)
     print(f"  Qualified: {g['qualified']}  ({pct(g['qualified'], g['booked'])})", flush=True)
     print(f"  Closed:    {g['closed']}  ({pct(g['closed'], g['booked'])})", flush=True)

@@ -2,7 +2,7 @@
   "month_key": "2026-07",
   "month_label": "July 2026",
   "grand": {
-    "leads_created": 66,
+    "leads_created": 67,
     "booked": 48,
     "setter": 8,
     "stuck": 7,
@@ -31,12 +31,12 @@
       "revenue": 23991.0
     },
     "X": {
-      "leads_created": 1,
+      "leads_created": 2,
       "setter": 0,
       "stuck": 0,
       "advance_pct": 0,
       "booked": 2,
-      "book_pct": 200.0,
+      "book_pct": 100.0,
       "showed": 2,
       "show_pct": 100.0,
       "qualified": 2,

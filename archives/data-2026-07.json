@@ -2,12 +2,12 @@
   "month_key": "2026-07",
   "month_label": "July 2026",
   "grand": {
-    "leads_created": 71,
+    "leads_created": 70,
     "booked": 60,
     "setter": 14,
     "stuck": 12,
     "showed": 37,
-    "qualified": 39,
+    "qualified": 40,
     "closed": 5,
     "revenue": 35685.0
   },
@@ -46,16 +46,16 @@
       "revenue": 5997.0
     },
     "Linkedin": {
-      "leads_created": 5,
+      "leads_created": 4,
       "setter": 1,
       "stuck": 1,
       "advance_pct": 0.0,
       "booked": 5,
-      "book_pct": 100.0,
+      "book_pct": 125.0,
       "showed": 3,
       "show_pct": 60.0,
-      "qualified": 3,
-      "qual_pct": 60.0,
+      "qualified": 4,
+      "qual_pct": 80.0,
       "closed": 1,
       "cw_pct": 20.0,
       "revenue": 5697.0

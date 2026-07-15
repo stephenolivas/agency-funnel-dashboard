@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 Agency Funnel Performance Dashboard
-Scoped fork of the MTD Funnel dashboard, limited to the five agency-managed
+Scoped fork of the MTD Funnel dashboard, limited to the four agency-managed
 funnels. Only in-scope funnel data is ever fetched into the output artifacts.
 
 Adds a Closed-Won lead detail table beneath the funnel breakdown, with
@@ -75,7 +75,6 @@ ALLOWED_FUNNELS = [
     "X",
     "Linkedin",
     "Anthony X",
-    "Anthony IG",
 ]
 ALLOWED_FUNNELS_SET = set(ALLOWED_FUNNELS)
 
@@ -1364,7 +1363,6 @@ def generate_html(data, month_picker_html="", week_picker_html=""):
   .chip-x         {{ background:#e5e7eb; color:#1f2937; border-color:#d1d5db; }}
   .chip-linkedin  {{ background:#dbeafe; color:#1e40af; border-color:#bfdbfe; }}
   .chip-anthony_x  {{ background:#ede9fe; color:#5b21b6; border-color:#ddd6fe; }}
-  .chip-anthony_ig {{ background:#fef3c7; color:#92400e; border-color:#fde68a; }}
 
   /* ── Pickers ── */
   .pickers-row {{
@@ -1415,7 +1413,7 @@ def generate_html(data, month_picker_html="", week_picker_html=""):
 <div class="header">
   <div class="header-left">
     <h1>Agency Funnel Performance</h1>
-    <p class="sub">Vendingpreneurs · Instagram · X · Linkedin · Anthony X · Anthony IG · {data['month_label']}{data.get('week_range_label','')}</p>
+    <p class="sub">Vendingpreneurs · Instagram · X · Linkedin · Anthony X · {data['month_label']}{data.get('week_range_label','')}</p>
   </div>
   <div class="header-right">
     <div class="pickers-row">
@@ -1668,7 +1666,7 @@ def generate_html(data, month_picker_html="", week_picker_html=""):
 <details class="methodology">
   <summary>Definitions &amp; methodology</summary>
   <div class="methodology-body">
-    <p><strong>Scope</strong> — Only the five agency-managed funnels (Instagram, X, Linkedin, Anthony X, Anthony IG).
+    <p><strong>Scope</strong> — Only the four agency-managed funnels (Instagram, X, Linkedin, Anthony X).
     No other funnel data is fetched or published.</p>
 
     <p><strong>Setter and Closer are two independent counts, not a split of one number.</strong>

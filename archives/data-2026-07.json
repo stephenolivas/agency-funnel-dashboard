@@ -2,8 +2,8 @@
   "month_key": "2026-07",
   "month_label": "July 2026",
   "grand": {
-    "leads_created": 78,
-    "booked": 75,
+    "leads_created": 79,
+    "booked": 76,
     "setter": 19,
     "stuck": 15,
     "showed": 50,
@@ -46,18 +46,18 @@
       "revenue": 5997.0
     },
     "Linkedin": {
-      "leads_created": 4,
+      "leads_created": 5,
       "setter": 0,
       "stuck": 0,
       "advance_pct": 0,
-      "booked": 5,
-      "book_pct": 125.0,
+      "booked": 6,
+      "book_pct": 120.0,
       "showed": 4,
-      "show_pct": 80.0,
+      "show_pct": 66.7,
       "qualified": 5,
-      "qual_pct": 100.0,
+      "qual_pct": 83.3,
       "closed": 1,
-      "cw_pct": 20.0,
+      "cw_pct": 16.7,
       "revenue": 5697.0
     },
     "Anthony X": {

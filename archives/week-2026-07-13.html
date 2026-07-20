@@ -1,0 +1,1638 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>Agency Funnel Performance — July 2026 · Jul 13–19</title>
+<style>
+  :root {
+    --bg:        #f4f6f9;
+    --surface:   #ffffff;
+    --surface2:  #f0f2f7;
+    --border:    #dde1ea;
+    --border2:   #e8eaf0;
+    --text:      #1a1f36;
+    --muted:     #8792a2;
+    --muted2:    #5c6680;
+    --green:     #0e9f6e;
+    --red:       #e02424;
+    --amber:     #d97706;
+    --blue:      #2563eb;
+    --purple:    #7c3aed;
+    --accent:    #4f46e5;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Inter, sans-serif;
+    font-size: 13px;
+    min-height: 100vh;
+  }
+
+  .kpi { box-shadow: 0 1px 3px rgba(0,0,0,0.07), 0 1px 2px rgba(0,0,0,0.04); }
+  table {
+    box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+    border-radius: 8px;
+    overflow: hidden;
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  /* ── Header ── */
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: 28px 36px 0;
+  }
+  .header-left h1 {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--text);
+    letter-spacing: -0.01em;
+  }
+  .header-left .sub {
+    font-size: 11.5px;
+    color: var(--muted2);
+    margin-top: 3px;
+  }
+  .header-right {
+    text-align: right;
+    font-size: 11px;
+    color: var(--muted2);
+    line-height: 1.6;
+  }
+  .header-right .snapshot-label {
+    font-weight: 600;
+    color: var(--muted2);
+    display: block;
+  }
+
+  /* ── KPI Cards ── */
+  .kpis {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 12px;
+    padding: 24px 36px;
+  }
+  @media (max-width: 1500px) {
+    .kpis { grid-template-columns: repeat(4, 1fr); }
+  }
+  .kpi {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 18px 20px;
+    position: relative;
+    overflow: hidden;
+  }
+  .kpi::before {
+    content: "";
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: var(--kpi-accent, var(--accent));
+    opacity: 0.6;
+  }
+  .kpi .label {
+    font-size: 10.5px;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    color: var(--muted2);
+    margin-bottom: 8px;
+  }
+  .kpi .value {
+    font-size: 34px;
+    font-weight: 700;
+    line-height: 1;
+    color: var(--kpi-color, var(--text));
+  }
+  .kpi .kpi-sub {
+    font-size: 11px;
+    color: var(--muted2);
+    margin-top: 5px;
+  }
+  .kpi .kpi-cash {
+    font-size: 10.5px;
+    color: var(--muted);
+    margin-top: 7px;
+    padding-top: 7px;
+    border-top: 1px solid var(--border);
+  }
+  .kpi .kpi-cash.partial { color: var(--amber); }
+
+  /* ── Section label ── */
+  .section-label {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 6px 36px 10px;
+    font-size: 10.5px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--muted);
+  }
+  .section-label::after {
+    content: "";
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+  .section-label .count-pill {
+    background: var(--accent);
+    color: #fff;
+    border-radius: 20px;
+    padding: 2px 10px;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.03em;
+  }
+
+  /* ── Table ── */
+  .table-wrap {
+    padding: 0 36px 40px;
+    overflow-x: auto;
+  }
+
+  thead th {
+    font-size: 10.5px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--muted);
+    padding: 8px 12px;
+    border-bottom: 1px solid var(--border);
+    white-space: nowrap;
+    font-weight: 500;
+    text-align: left;
+  }
+  thead th.col-num,
+  thead th.col-pct,
+  thead th.col-rev,
+  thead th.col-gross,
+  thead th.col-cash { text-align: right; }
+
+  .funnel-row {
+    cursor: pointer;
+    border-top: 1px solid var(--border2);
+    transition: background 0.1s;
+  }
+  .funnel-row:hover { background: rgba(79,70,229,0.04); }
+  .funnel-row td { padding: 11px 12px; }
+
+  .utm-row { display: none; background: rgba(79,70,229,0.025); }
+  .utm-row.open { display: table-row; }
+  .utm-row td { padding: 7px 12px; }
+  .utm-row + .utm-row td { border-top: 1px solid var(--border2); }
+
+  .pkg-row { display: none; background: #faf9ff; }
+  .pkg-row.open { display: table-row; }
+  .pkg-row td { padding: 10px 12px; color: var(--muted) !important; font-weight: 400 !important; }
+  .pkg-row + .pkg-row td { border-top: 1px solid var(--border2); }
+  .pkg-row .col-rev  { color: #7bc4a0 !important; font-weight: 400 !important; }
+  .pkg-row .col-num  { color: var(--muted) !important; }
+  .col-pkg { color: var(--muted2) !important; font-size: 12px; padding-left: 28px !important; }
+  .pkg-trigger { cursor: pointer; user-select: none; }
+  .pkg-trigger:hover { opacity: 0.75; }
+  .pkg-chevron {
+    font-size: 11px; color: #c0c8d4; margin-left: 4px;
+    display: inline-block; transition: transform 0.15s;
+  }
+  .pkg-chevron.open { transform: rotate(90deg); color: var(--muted2); }
+
+  .total-row {
+    border-top: 2px solid var(--border);
+    font-weight: 700;
+    background: var(--surface2);
+    color: var(--text);
+  }
+  .total-row td { padding: 12px 12px; }
+
+  .col-name   { min-width: 190px; font-weight: 500; white-space: nowrap; }
+  .col-utm    { color: var(--muted2); padding-left: 32px !important; font-weight: 400; }
+  .col-num    { text-align: right; color: var(--text); }
+  .col-pct    { text-align: right; font-weight: 500; }
+  .col-rev    { text-align: right; color: var(--green); font-weight: 500; }
+
+  .col-pct.good { color: var(--green); }
+  .col-pct.bad  { color: var(--red); }
+  .col-pct.mid  { color: var(--amber); }
+
+  .col-setter { color: var(--purple); }
+  .col-stuck  { color: var(--amber); font-weight: 500; }
+
+  .col-pace  { text-align: right; font-size: 12px; color: var(--muted); }
+  .col-goal  { text-align: right; font-size: 12px; color: var(--muted); }
+  .col-pace.pace-exceed  { color: var(--green); font-weight: 600; }
+  .col-pace.pace-on      { color: #ca8a04;      font-weight: 500; }
+  .col-pace.pace-behind  { color: var(--red);   font-weight: 500; }
+
+  .chevron {
+    display: inline-block;
+    width: 16px;
+    color: var(--muted);
+    font-size: 14px;
+    transition: transform 0.15s ease;
+    transform: rotate(0deg);
+    line-height: 1;
+  }
+  .chevron.open { transform: rotate(90deg); color: var(--accent); }
+
+  /* ── Lead Detail Table ── */
+  .lead-row { border-top: 1px solid var(--border2); }
+  .lead-row td { padding: 10px 12px; white-space: nowrap; }
+  .lead-row:hover { background: rgba(79,70,229,0.03); }
+  .col-date    { color: var(--muted2); font-variant-numeric: tabular-nums; }
+  .col-client  { font-weight: 500; }
+  .col-email   { color: var(--muted); font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 11.5px; }
+  .col-program { color: var(--muted2); }
+  .col-closer  { color: var(--muted2); }
+  .col-gross   { text-align: right; color: var(--green); font-weight: 500; font-variant-numeric: tabular-nums; }
+  .col-cash    { text-align: right; color: var(--blue);  font-weight: 500; font-variant-numeric: tabular-nums; }
+  .col-cash.cash-missing { color: var(--muted); font-weight: 400; }
+  .lead-empty  { padding: 24px 12px; text-align: center; color: var(--muted); }
+  .col-status  { color: var(--muted2); font-size: 12px; }
+  .col-adv     { text-align: right; }
+  .col-flag    { text-align: right; }
+
+  .adv-yes { color: var(--green); font-weight: 500; font-variant-numeric: tabular-nums; }
+  .adv-no  { color: var(--amber); font-weight: 600; }
+  .yn      { font-weight: 500; }
+  .yn.yes  { color: var(--green); }
+  .yn.no   { color: var(--muted); font-weight: 400; }
+
+  /* ── Lead tabs ── */
+  .lead-tabs {
+    display: flex;
+    gap: 6px;
+    padding: 0 36px 12px;
+    flex-wrap: wrap;
+  }
+  .lead-tab {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 7px;
+    padding: 7px 13px;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--muted2);
+    cursor: pointer;
+    font-family: inherit;
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    transition: all 0.12s;
+  }
+  .lead-tab:hover { border-color: var(--accent); color: var(--text); }
+  .lead-tab.active {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: #fff;
+  }
+  .lead-tab .tab-n {
+    background: var(--surface2);
+    color: var(--muted2);
+    border-radius: 20px;
+    padding: 1px 7px;
+    font-size: 10.5px;
+    font-weight: 600;
+  }
+  .lead-tab.active .tab-n { background: rgba(255,255,255,0.22); color: #fff; }
+  .lead-tab[data-tab="stuck"].active { background: var(--amber); border-color: var(--amber); }
+
+  .pane-note {
+    font-size: 11px;
+    color: var(--muted);
+    padding: 12px 2px 0;
+    line-height: 1.6;
+  }
+
+  /* ── Collapsible methodology ── */
+  .methodology {
+    margin: 8px 36px 40px;
+    border-top: 1px solid var(--border);
+    padding-top: 14px;
+  }
+  .methodology summary {
+    font-size: 11px;
+    color: var(--muted);
+    cursor: pointer;
+    list-style: none;
+    user-select: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .methodology summary::-webkit-details-marker { display: none; }
+  .methodology summary::before {
+    content: "›";
+    display: inline-block;
+    transition: transform 0.15s ease;
+    font-size: 13px;
+  }
+  .methodology[open] summary::before { transform: rotate(90deg); }
+  .methodology summary:hover { color: var(--accent); }
+  .methodology-body {
+    max-width: 700px;
+    padding-top: 10px;
+  }
+  .methodology-body p {
+    font-size: 11px;
+    color: var(--muted);
+    line-height: 1.7;
+    margin-bottom: 8px;
+  }
+  .methodology-body strong { color: var(--muted2); }
+
+  /* ── Clickable KPI tiles ── */
+  .kpi-clickable { cursor: pointer; transition: transform 0.1s, box-shadow 0.1s; }
+  .kpi-clickable:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.09), 0 1px 2px rgba(0,0,0,0.05);
+  }
+  .kpi-clickable:hover .kpi-jump { opacity: 1; }
+  .kpi-jump {
+    position: absolute;
+    top: 10px; right: 12px;
+    font-size: 9.5px;
+    color: var(--accent);
+    opacity: 0;
+    transition: opacity 0.12s;
+    letter-spacing: 0.03em;
+  }
+
+  .funnel-chip {
+    display: inline-block;
+    font-size: 10.5px;
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 4px;
+    background: var(--surface2);
+    color: var(--muted2);
+    border: 1px solid var(--border);
+  }
+  .chip-instagram { background:#fce7f3; color:#9d174d; border-color:#fbcfe8; }
+  .chip-x         { background:#e5e7eb; color:#1f2937; border-color:#d1d5db; }
+  .chip-linkedin  { background:#dbeafe; color:#1e40af; border-color:#bfdbfe; }
+  .chip-anthony_x  { background:#ede9fe; color:#5b21b6; border-color:#ddd6fe; }
+
+  /* ── Pickers ── */
+  .pickers-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 6px;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+  }
+  .month-picker, .week-picker { display: flex; align-items: center; gap: 7px; }
+  .month-picker select, .week-picker select {
+    background: var(--surface);
+    color: var(--text);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 5px 10px;
+    font-size: 12px;
+    cursor: pointer;
+    outline: none;
+  }
+  .month-picker select:hover, .week-picker select:hover { border-color: var(--accent); }
+  .picker-divider { color: var(--border); font-size: 16px; line-height: 1; margin: 0 2px; }
+  .archive-badge {
+    display: inline-block;
+    background: #fef3c7;
+    color: #92400e;
+    border: 1px solid #fcd34d;
+    border-radius: 4px;
+    font-size: 10px;
+    font-weight: 600;
+    padding: 2px 7px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    white-space: nowrap;
+  }
+
+  @media (max-width: 960px) {
+    .kpis { grid-template-columns: repeat(2, 1fr); }
+    .header { flex-direction: column; gap: 12px; }
+    .header-right { text-align: left; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Header -->
+<div class="header">
+  <div class="header-left">
+    <h1>Agency Funnel Performance</h1>
+    <p class="sub">Vendingpreneurs · Instagram · X · Linkedin · Anthony X · July 2026 · Jul 13–19</p>
+  </div>
+  <div class="header-right">
+    <div class="pickers-row">
+      <div class="month-picker"><select onchange="window.location.href=this.value"><option value="/agency-funnel-dashboard/index.html" selected>July 2026</option>
+      <option value="/agency-funnel-dashboard/archives/2026-06.html" >June 2026</option>
+      </select></div><span class="picker-divider">|</span><div class="week-picker"><select onchange="window.location.href=this.value"><option value="/agency-funnel-dashboard/index.html" >Full Month</option>
+      <option value="/agency-funnel-dashboard/archives/week-2026-07-06.html" >Jul 6–12</option>
+      <option value="/agency-funnel-dashboard/archives/week-current.html" >Jul 20–20 ▶</option></select></div>
+    </div>
+    <span class="snapshot-label"><span class="archive-badge">Week View</span></span>
+    July 20, 2026 at 09:38 AM PT<br>
+    Source · Close CRM
+  </div>
+</div>
+
+<!-- KPI Cards -->
+<div class="kpis">
+  <div class="kpi" style="--kpi-accent:#6366f1; --kpi-color:#6366f1;">
+    <div class="label">Leads Created</div>
+    <div class="value">12</div>
+    <div class="kpi-sub">new leads this period</div>
+  </div>
+  <div class="kpi kpi-clickable" data-tab="setter" onclick="showLeadTab('setter')"
+       style="--kpi-accent:#9333ea; --kpi-color:#9333ea;" title="Click to list these leads below">
+    <div class="kpi-jump">view leads ↓</div>
+    <div class="label">Setter Calls</div>
+    <div class="value">8</div>
+    <div class="kpi-sub">25% advanced to a closer</div>
+    <div class="kpi-cash partial" onclick="event.stopPropagation();showLeadTab('stuck')"
+         style="cursor:pointer;">6 stuck · no closer call</div>
+  </div>
+  <div class="kpi kpi-clickable" data-tab="closer" onclick="showLeadTab('closer')"
+       style="--kpi-accent:#4f46e5; --kpi-color:var(--text);" title="Click to list these leads below">
+    <div class="kpi-jump">view leads ↓</div>
+    <div class="label">Closer Calls</div>
+    <div class="value">22</div>
+    <div class="kpi-sub">first sales calls</div>
+  </div>
+  <div class="kpi" style="--kpi-accent:#2563eb; --kpi-color:#2563eb;">
+    <div class="label">Showed</div>
+    <div class="value">14</div>
+    <div class="kpi-sub">63.6% show rate</div>
+  </div>
+  <div class="kpi" style="--kpi-accent:#7c3aed; --kpi-color:#7c3aed;">
+    <div class="label">Qualified</div>
+    <div class="value">11</div>
+    <div class="kpi-sub">50.0% qual rate</div>
+  </div>
+  <div class="kpi" style="--kpi-accent:#d97706; --kpi-color:#d97706;">
+    <div class="label">Closed Won</div>
+    <div class="value">2</div>
+    <div class="kpi-sub">9.1% booked→close · 18.2% qual→close</div>
+  </div>
+  <div class="kpi kpi-clickable" data-tab="closed" onclick="showLeadTab('closed')"
+       style="--kpi-accent:#0e9f6e; --kpi-color:#0e9f6e;" title="Click to list these leads below">
+    <div class="kpi-jump">view leads ↓</div>
+    <div class="label">Closed Revenue</div>
+    <div class="value">$11,994</div>
+    <div class="kpi-sub">$5,997 avg deal</div>
+    <div class="kpi-cash partial">$0 cash · 0 of 2 deals</div>
+  </div>
+</div>
+
+<!-- Funnel Table -->
+<div class="section-label">Funnel Breakdown — Setter → Closer → Showed → Qualified → Closed Won → Revenue</div>
+
+<div class="table-wrap">
+  <table>
+    <thead>
+      <tr>
+        <th class="col-name">Funnel</th>
+        <th class="col-num">Leads</th>
+        <th class="col-num" title="Discovery calls held this period, converted or not">Setter</th>
+        <th class="col-num" title="Discovery calls with no closer call booked at all">Stuck</th>
+        <th class="col-pct" title="Share of discovery calls that reached a closer">Adv %</th>
+        <th class="col-num" title="First sales calls with a closer">Closer</th>
+        <th class="col-pace">Projected</th>
+        <th class="col-goal">Goal %</th>
+        <th class="col-num">Showed</th>
+        <th class="col-pct">Show %</th>
+        <th class="col-num">Qualified</th>
+        <th class="col-pct">Qual %</th>
+        <th class="col-num">Closed</th>
+        <th class="col-pct">CW %</th>
+        <th class="col-rev">Revenue</th>
+        <th class="col-num">Rev / Close</th>
+      </tr>
+    </thead>
+    <tbody>
+
+    <tr class="funnel-row" onclick="toggleUTM('instagram')" data-fid="instagram">
+      <td class="col-name">
+        <span class="chevron" id="chev-instagram">›</span>Instagram
+      </td>
+      <td class="col-num">11</td>
+      <td class="col-num col-setter">8</td>
+      <td class="col-num col-stuck">6</td>
+      <td class="col-pct bad">25%</td>
+      <td class="col-num">18</td>
+      <td class="col-pace pace-behind">29</td>
+      <td class="col-goal">6% (300)</td>
+      <td class="col-num">11</td>
+      <td class="col-pct mid">61.1%</td>
+      <td class="col-num">8</td>
+      <td class="col-pct bad">44.4%</td>
+      <td class="col-num">1</td>
+      <td class="col-pct bad">5.6%</td>
+      <td class="col-rev pkg-trigger" onclick="event.stopPropagation();togglePkg('instagram')" title="Click to see package breakdown">$5,997 <span class="pkg-chevron" id="pkgchev-instagram">›</span></td>
+      <td class="col-num">$5,997</td>
+    </tr>
+
+    <tr class="pkg-row" data-parent="instagram" style="display:none">
+      <td class="col-name col-pkg">↳ Bronze - $5,997</td>
+      <td class="col-num">—</td>
+      <td class="col-num">—</td>
+      <td class="col-num">—</td>
+      <td class="col-pct"></td>
+      <td class="col-num">—</td>
+      <td class="col-pace"></td>
+      <td class="col-goal"></td>
+      <td class="col-num">—</td>
+      <td class="col-pct"></td>
+      <td class="col-num">—</td>
+      <td class="col-pct"></td>
+      <td class="col-num">1</td>
+      <td class="col-pct"></td>
+      <td class="col-rev">$5,997</td>
+      <td class="col-num">$5,997</td>
+    </tr>
+
+    <tr class="utm-row" data-parent="instagram">
+      <td class="col-name col-utm">↳ _____</td>
+      <td class="col-num">—</td>
+      <td class="col-num col-setter">1</td>
+      <td class="col-num col-stuck">—</td>
+      <td class="col-pct good">100%</td>
+      <td class="col-num">1</td>
+      <td class="col-pace"></td>
+      <td class="col-goal"></td>
+      <td class="col-num">1</td>
+      <td class="col-pct good">100.0%</td>
+      <td class="col-num">1</td>
+      <td class="col-pct good">100.0%</td>
+      <td class="col-num">—</td>
+      <td class="col-pct bad">0.0%</td>
+      <td class="col-rev">$0</td>
+      <td class="col-num">—</td>
+    </tr>
+
+    <tr class="utm-row" data-parent="instagram">
+      <td class="col-name col-utm">↳ 1282046402</td>
+      <td class="col-num">—</td>
+      <td class="col-num col-setter">1</td>
+      <td class="col-num col-stuck">—</td>
+      <td class="col-pct good">100%</td>
+      <td class="col-num">1</td>
+      <td class="col-pace"></td>
+      <td class="col-goal"></td>
+      <td class="col-num">1</td>
+      <td class="col-pct good">100.0%</td>
+      <td class="col-num">1</td>
+      <td class="col-pct good">100.0%</td>
+      <td class="col-num">—</td>
+      <td class="col-pct bad">0.0%</td>
+      <td class="col-rev">$0</td>
+      <td class="col-num">—</td>
+    </tr>
+
+    <tr class="utm-row" data-parent="instagram">
+      <td class="col-name col-utm">↳ 1254108322</td>
+      <td class="col-num">—</td>
+      <td class="col-num col-setter">—</td>
+      <td class="col-num col-stuck">—</td>
+      <td class="col-pct ">—</td>
+      <td class="col-num">1</td>
+      <td class="col-pace"></td>
+      <td class="col-goal"></td>
+      <td class="col-num">1</td>
+      <td class="col-pct good">100.0%</td>
+      <td class="col-num">—</td>
+      <td class="col-pct bad">0.0%</td>
+      <td class="col-num">—</td>
+      <td class="col-pct bad">0.0%</td>
+      <td class="col-rev">$0</td>
+      <td class="col-num">—</td>
+    </tr>
+
+    <tr class="utm-row" data-parent="instagram">
+      <td class="col-name col-utm">↳ 987305080</td>
+      <td class="col-num">—</td>
+      <td class="col-num col-setter">—</td>
+      <td class="col-num col-stuck">—</td>
+      <td class="col-pct ">—</td>
+      <td class="col-num">1</td>
+      <td class="col-pace"></td>
+      <td class="col-goal"></td>
+      <td class="col-num">—</td>
+      <td class="col-pct bad">0.0%</td>
+      <td class="col-num">—</td>
+      <td class="col-pct bad">0.0%</td>
+      <td class="col-num">—</td>
+      <td class="col-pct bad">0.0%</td>
+      <td class="col-rev">$0</td>
+      <td class="col-num">—</td>
+    </tr>
+
+    <tr class="utm-row" data-parent="instagram">
+      <td class="col-name col-utm">↳ 300258569</td>
+      <td class="col-num">—</td>
+      <td class="col-num col-setter">—</td>
+      <td class="col-num col-stuck">—</td>
+      <td class="col-pct ">—</td>
+      <td class="col-num">1</td>
+      <td class="col-pace"></td>
+      <td class="col-goal"></td>
+      <td class="col-num">1</td>
+      <td class="col-pct good">100.0%</td>
+      <td class="col-num">—</td>
+      <td class="col-pct bad">0.0%</td>
+      <td class="col-num">—</td>
+      <td class="col-pct bad">0.0%</td>
+      <td class="col-rev">$0</td>
+      <td class="col-num">—</td>
+    </tr>
+
+    <tr class="utm-row" data-parent="instagram">
+      <td class="col-name col-utm">↳ 1228085476</td>
+      <td class="col-num">—</td>
+      <td class="col-num col-setter">—</td>
+      <td class="col-num col-stuck">—</td>
+      <td class="col-pct ">—</td>
+      <td class="col-num">1</td>
+      <td class="col-pace"></td>
+      <td class="col-goal"></td>
+      <td class="col-num">1</td>
+      <td class="col-pct good">100.0%</td>
+      <td class="col-num">1</td>
+      <td class="col-pct good">100.0%</td>
+      <td class="col-num">—</td>
+      <td class="col-pct bad">0.0%</td>
+      <td class="col-rev">$0</td>
+      <td class="col-num">—</td>
+    </tr>
+
+    <tr class="utm-row" data-parent="instagram">
+      <td class="col-name col-utm">↳ 1700520300</td>
+      <td class="col-num">—</td>
+      <td class="col-num col-setter">—</td>
+      <td class="col-num col-stuck">—</td>
+      <td class="col-pct ">—</td>
+      <td class="col-num">1</td>
+      <td class="col-pace"></td>
+      <td class="col-goal"></td>
+      <td class="col-num">1</td>
+      <td class="col-pct good">100.0%</td>
+      <td class="col-num">1</td>
+      <td class="col-pct good">100.0%</td>
+      <td class="col-num">—</td>
+      <td class="col-pct bad">0.0%</td>
+      <td class="col-rev">$0</td>
+      <td class="col-num">—</td>
+    </tr>
+
+    <tr class="utm-row" data-parent="instagram">
+      <td class="col-name col-utm">↳ 21601763</td>
+      <td class="col-num">—</td>
+      <td class="col-num col-setter">—</td>
+      <td class="col-num col-stuck">—</td>
+      <td class="col-pct ">—</td>
+      <td class="col-num">1</td>
+      <td class="col-pace"></td>
+      <td class="col-goal"></td>
+      <td class="col-num">—</td>
+      <td class="col-pct bad">0.0%</td>
+      <td class="col-num">—</td>
+      <td class="col-pct bad">0.0%</td>
+      <td class="col-num">—</td>
+      <td class="col-pct bad">0.0%</td>
+      <td class="col-rev">$0</td>
+      <td class="col-num">—</td>
+    </tr>
+
+    <tr class="utm-row" data-parent="instagram">
+      <td class="col-name col-utm">↳ link-in-bio</td>
+      <td class="col-num">—</td>
+      <td class="col-num col-setter">—</td>
+      <td class="col-num col-stuck">—</td>
+      <td class="col-pct ">—</td>
+      <td class="col-num">1</td>
+      <td class="col-pace"></td>
+      <td class="col-goal"></td>
+      <td class="col-num">1</td>
+      <td class="col-pct good">100.0%</td>
+      <td class="col-num">1</td>
+      <td class="col-pct good">100.0%</td>
+      <td class="col-num">—</td>
+      <td class="col-pct bad">0.0%</td>
+      <td class="col-rev">$0</td>
+      <td class="col-num">—</td>
+    </tr>
+
+    <tr class="utm-row" data-parent="instagram">
+      <td class="col-name col-utm">↳ 67868771</td>
+      <td class="col-num">—</td>
+      <td class="col-num col-setter">—</td>
+      <td class="col-num col-stuck">—</td>
+      <td class="col-pct ">—</td>
+      <td class="col-num">1</td>
+      <td class="col-pace"></td>
+      <td class="col-goal"></td>
+      <td class="col-num">1</td>
+      <td class="col-pct good">100.0%</td>
+      <td class="col-num">1</td>
+      <td class="col-pct good">100.0%</td>
+      <td class="col-num">—</td>
+      <td class="col-pct bad">0.0%</td>
+      <td class="col-rev">$0</td>
+      <td class="col-num">—</td>
+    </tr>
+
+    <tr class="utm-row" data-parent="instagram">
+      <td class="col-name col-utm">↳ 185526670</td>
+      <td class="col-num">—</td>
+      <td class="col-num col-setter">—</td>
+      <td class="col-num col-stuck">—</td>
+      <td class="col-pct ">—</td>
+      <td class="col-num">1</td>
+      <td class="col-pace"></td>
+      <td class="col-goal"></td>
+      <td class="col-num">—</td>
+      <td class="col-pct bad">0.0%</td>
+      <td class="col-num">—</td>
+      <td class="col-pct bad">0.0%</td>
+      <td class="col-num">—</td>
+      <td class="col-pct bad">0.0%</td>
+      <td class="col-rev">$0</td>
+      <td class="col-num">—</td>
+    </tr>
+
+    <tr class="utm-row" data-parent="instagram">
+      <td class="col-name col-utm">↳ 316912715</td>
+      <td class="col-num">—</td>
+      <td class="col-num col-setter">—</td>
+      <td class="col-num col-stuck">—</td>
+      <td class="col-pct ">—</td>
+      <td class="col-num">1</td>
+      <td class="col-pace"></td>
+      <td class="col-goal"></td>
+      <td class="col-num">1</td>
+      <td class="col-pct good">100.0%</td>
+      <td class="col-num">—</td>
+      <td class="col-pct bad">0.0%</td>
+      <td class="col-num">—</td>
+      <td class="col-pct bad">0.0%</td>
+      <td class="col-rev">$0</td>
+      <td class="col-num">—</td>
+    </tr>
+
+    <tr class="utm-row" data-parent="instagram">
+      <td class="col-name col-utm">↳ 1360244868</td>
+      <td class="col-num">—</td>
+      <td class="col-num col-setter">—</td>
+      <td class="col-num col-stuck">—</td>
+      <td class="col-pct ">—</td>
+      <td class="col-num">1</td>
+      <td class="col-pace"></td>
+      <td class="col-goal"></td>
+      <td class="col-num">—</td>
+      <td class="col-pct bad">0.0%</td>
+      <td class="col-num">1</td>
+      <td class="col-pct good">100.0%</td>
+      <td class="col-num">—</td>
+      <td class="col-pct bad">0.0%</td>
+      <td class="col-rev">$0</td>
+      <td class="col-num">—</td>
+    </tr>
+
+    <tr class="utm-row" data-parent="instagram">
+      <td class="col-name col-utm">↳ 1327568259</td>
+      <td class="col-num">—</td>
+      <td class="col-num col-setter">—</td>
+      <td class="col-num col-stuck">—</td>
+      <td class="col-pct ">—</td>
+      <td class="col-num">1</td>
+      <td class="col-pace"></td>
+      <td class="col-goal"></td>
+      <td class="col-num">—</td>
+      <td class="col-pct bad">0.0%</td>
+      <td class="col-num">—</td>
+      <td class="col-pct bad">0.0%</td>
+      <td class="col-num">—</td>
+      <td class="col-pct bad">0.0%</td>
+      <td class="col-rev">$0</td>
+      <td class="col-num">—</td>
+    </tr>
+
+    <tr class="utm-row" data-parent="instagram">
+      <td class="col-name col-utm">↳ 1369605260</td>
+      <td class="col-num">—</td>
+      <td class="col-num col-setter">—</td>
+      <td class="col-num col-stuck">—</td>
+      <td class="col-pct ">—</td>
+      <td class="col-num">1</td>
+      <td class="col-pace"></td>
+      <td class="col-goal"></td>
+      <td class="col-num">—</td>
+      <td class="col-pct bad">0.0%</td>
+      <td class="col-num">—</td>
+      <td class="col-pct bad">0.0%</td>
+      <td class="col-num">—</td>
+      <td class="col-pct bad">0.0%</td>
+      <td class="col-rev">$0</td>
+      <td class="col-num">—</td>
+    </tr>
+
+    <tr class="utm-row" data-parent="instagram">
+      <td class="col-name col-utm">↳ 1504978362</td>
+      <td class="col-num">—</td>
+      <td class="col-num col-setter">—</td>
+      <td class="col-num col-stuck">—</td>
+      <td class="col-pct ">—</td>
+      <td class="col-num">1</td>
+      <td class="col-pace"></td>
+      <td class="col-goal"></td>
+      <td class="col-num">—</td>
+      <td class="col-pct bad">0.0%</td>
+      <td class="col-num">—</td>
+      <td class="col-pct bad">0.0%</td>
+      <td class="col-num">—</td>
+      <td class="col-pct bad">0.0%</td>
+      <td class="col-rev">$0</td>
+      <td class="col-num">—</td>
+    </tr>
+
+    <tr class="utm-row" data-parent="instagram">
+      <td class="col-name col-utm">↳ 1031005252</td>
+      <td class="col-num">—</td>
+      <td class="col-num col-setter">—</td>
+      <td class="col-num col-stuck">—</td>
+      <td class="col-pct ">—</td>
+      <td class="col-num">1</td>
+      <td class="col-pace"></td>
+      <td class="col-goal"></td>
+      <td class="col-num">1</td>
+      <td class="col-pct good">100.0%</td>
+      <td class="col-num">—</td>
+      <td class="col-pct bad">0.0%</td>
+      <td class="col-num">—</td>
+      <td class="col-pct bad">0.0%</td>
+      <td class="col-rev">$0</td>
+      <td class="col-num">—</td>
+    </tr>
+
+    <tr class="utm-row" data-parent="instagram">
+      <td class="col-name col-utm">↳ 959113594</td>
+      <td class="col-num">—</td>
+      <td class="col-num col-setter">—</td>
+      <td class="col-num col-stuck">—</td>
+      <td class="col-pct ">—</td>
+      <td class="col-num">1</td>
+      <td class="col-pace"></td>
+      <td class="col-goal"></td>
+      <td class="col-num">1</td>
+      <td class="col-pct good">100.0%</td>
+      <td class="col-num">1</td>
+      <td class="col-pct good">100.0%</td>
+      <td class="col-num">1</td>
+      <td class="col-pct good">100.0%</td>
+      <td class="col-rev">$5,997</td>
+      <td class="col-num">$5,997</td>
+    </tr>
+
+    <tr class="utm-row" data-parent="instagram">
+      <td class="col-name col-utm">↳ 805470341</td>
+      <td class="col-num">—</td>
+      <td class="col-num col-setter">1</td>
+      <td class="col-num col-stuck">1</td>
+      <td class="col-pct bad">0%</td>
+      <td class="col-num">—</td>
+      <td class="col-pace"></td>
+      <td class="col-goal"></td>
+      <td class="col-num">—</td>
+      <td class="col-pct ">—</td>
+      <td class="col-num">—</td>
+      <td class="col-pct ">—</td>
+      <td class="col-num">—</td>
+      <td class="col-pct ">—</td>
+      <td class="col-rev">$0</td>
+      <td class="col-num">—</td>
+    </tr>
+
+    <tr class="utm-row" data-parent="instagram">
+      <td class="col-name col-utm">↳ 1529328838</td>
+      <td class="col-num">—</td>
+      <td class="col-num col-setter">1</td>
+      <td class="col-num col-stuck">1</td>
+      <td class="col-pct bad">0%</td>
+      <td class="col-num">—</td>
+      <td class="col-pace"></td>
+      <td class="col-goal"></td>
+      <td class="col-num">—</td>
+      <td class="col-pct ">—</td>
+      <td class="col-num">—</td>
+      <td class="col-pct ">—</td>
+      <td class="col-num">—</td>
+      <td class="col-pct ">—</td>
+      <td class="col-rev">$0</td>
+      <td class="col-num">—</td>
+    </tr>
+
+    <tr class="utm-row" data-parent="instagram">
+      <td class="col-name col-utm">↳ 1914248257</td>
+      <td class="col-num">—</td>
+      <td class="col-num col-setter">1</td>
+      <td class="col-num col-stuck">1</td>
+      <td class="col-pct bad">0%</td>
+      <td class="col-num">—</td>
+      <td class="col-pace"></td>
+      <td class="col-goal"></td>
+      <td class="col-num">—</td>
+      <td class="col-pct ">—</td>
+      <td class="col-num">—</td>
+      <td class="col-pct ">—</td>
+      <td class="col-num">—</td>
+      <td class="col-pct ">—</td>
+      <td class="col-rev">$0</td>
+      <td class="col-num">—</td>
+    </tr>
+
+    <tr class="utm-row" data-parent="instagram">
+      <td class="col-name col-utm">↳ vp_setter</td>
+      <td class="col-num">—</td>
+      <td class="col-num col-setter">1</td>
+      <td class="col-num col-stuck">1</td>
+      <td class="col-pct bad">0%</td>
+      <td class="col-num">—</td>
+      <td class="col-pace"></td>
+      <td class="col-goal"></td>
+      <td class="col-num">—</td>
+      <td class="col-pct ">—</td>
+      <td class="col-num">—</td>
+      <td class="col-pct ">—</td>
+      <td class="col-num">—</td>
+      <td class="col-pct ">—</td>
+      <td class="col-rev">$0</td>
+      <td class="col-num">—</td>
+    </tr>
+
+    <tr class="utm-row" data-parent="instagram">
+      <td class="col-name col-utm">↳ 2032684447</td>
+      <td class="col-num">—</td>
+      <td class="col-num col-setter">1</td>
+      <td class="col-num col-stuck">1</td>
+      <td class="col-pct bad">0%</td>
+      <td class="col-num">—</td>
+      <td class="col-pace"></td>
+      <td class="col-goal"></td>
+      <td class="col-num">—</td>
+      <td class="col-pct ">—</td>
+      <td class="col-num">—</td>
+      <td class="col-pct ">—</td>
+      <td class="col-num">—</td>
+      <td class="col-pct ">—</td>
+      <td class="col-rev">$0</td>
+      <td class="col-num">—</td>
+    </tr>
+
+    <tr class="utm-row" data-parent="instagram">
+      <td class="col-name col-utm">↳ 659184438</td>
+      <td class="col-num">—</td>
+      <td class="col-num col-setter">1</td>
+      <td class="col-num col-stuck">1</td>
+      <td class="col-pct bad">0%</td>
+      <td class="col-num">—</td>
+      <td class="col-pace"></td>
+      <td class="col-goal"></td>
+      <td class="col-num">—</td>
+      <td class="col-pct ">—</td>
+      <td class="col-num">—</td>
+      <td class="col-pct ">—</td>
+      <td class="col-num">—</td>
+      <td class="col-pct ">—</td>
+      <td class="col-rev">$0</td>
+      <td class="col-num">—</td>
+    </tr>
+
+    <tr class="funnel-row" onclick="toggleUTM('x')" data-fid="x">
+      <td class="col-name">
+        <span class="chevron" id="chev-x">›</span>X
+      </td>
+      <td class="col-num">—</td>
+      <td class="col-num col-setter">—</td>
+      <td class="col-num col-stuck">—</td>
+      <td class="col-pct ">—</td>
+      <td class="col-num">2</td>
+      <td class="col-pace pace-behind">3</td>
+      <td class="col-goal">20% (10)</td>
+      <td class="col-num">1</td>
+      <td class="col-pct mid">50.0%</td>
+      <td class="col-num">1</td>
+      <td class="col-pct mid">50.0%</td>
+      <td class="col-num">1</td>
+      <td class="col-pct good">50.0%</td>
+      <td class="col-rev pkg-trigger" onclick="event.stopPropagation();togglePkg('x')" title="Click to see package breakdown">$5,997 <span class="pkg-chevron" id="pkgchev-x">›</span></td>
+      <td class="col-num">$5,997</td>
+    </tr>
+
+    <tr class="pkg-row" data-parent="x" style="display:none">
+      <td class="col-name col-pkg">↳ Bronze - $5,997</td>
+      <td class="col-num">—</td>
+      <td class="col-num">—</td>
+      <td class="col-num">—</td>
+      <td class="col-pct"></td>
+      <td class="col-num">—</td>
+      <td class="col-pace"></td>
+      <td class="col-goal"></td>
+      <td class="col-num">—</td>
+      <td class="col-pct"></td>
+      <td class="col-num">—</td>
+      <td class="col-pct"></td>
+      <td class="col-num">1</td>
+      <td class="col-pct"></td>
+      <td class="col-rev">$5,997</td>
+      <td class="col-num">$5,997</td>
+    </tr>
+
+    <tr class="utm-row" data-parent="x">
+      <td class="col-name col-utm">↳ vp_setter</td>
+      <td class="col-num">—</td>
+      <td class="col-num col-setter">—</td>
+      <td class="col-num col-stuck">—</td>
+      <td class="col-pct ">—</td>
+      <td class="col-num">2</td>
+      <td class="col-pace"></td>
+      <td class="col-goal"></td>
+      <td class="col-num">1</td>
+      <td class="col-pct mid">50.0%</td>
+      <td class="col-num">1</td>
+      <td class="col-pct mid">50.0%</td>
+      <td class="col-num">1</td>
+      <td class="col-pct good">50.0%</td>
+      <td class="col-rev">$5,997</td>
+      <td class="col-num">$5,997</td>
+    </tr>
+
+    <tr class="funnel-row" onclick="toggleUTM('linkedin')" data-fid="linkedin">
+      <td class="col-name">
+        <span class="chevron" id="chev-linkedin">›</span>Linkedin
+      </td>
+      <td class="col-num">1</td>
+      <td class="col-num col-setter">—</td>
+      <td class="col-num col-stuck">—</td>
+      <td class="col-pct ">—</td>
+      <td class="col-num">2</td>
+      <td class="col-pace pace-behind">3</td>
+      <td class="col-goal">20% (10)</td>
+      <td class="col-num">2</td>
+      <td class="col-pct good">100.0%</td>
+      <td class="col-num">2</td>
+      <td class="col-pct good">100.0%</td>
+      <td class="col-num">—</td>
+      <td class="col-pct bad">0.0%</td>
+      <td class="col-rev pkg-trigger" onclick="event.stopPropagation();togglePkg('linkedin')" title="Click to see package breakdown">$0 <span class="pkg-chevron" id="pkgchev-linkedin">›</span></td>
+      <td class="col-num">—</td>
+    </tr>
+
+    <tr class="utm-row" data-parent="linkedin">
+      <td class="col-name col-utm">↳ vp_setter</td>
+      <td class="col-num">—</td>
+      <td class="col-num col-setter">—</td>
+      <td class="col-num col-stuck">—</td>
+      <td class="col-pct ">—</td>
+      <td class="col-num">2</td>
+      <td class="col-pace"></td>
+      <td class="col-goal"></td>
+      <td class="col-num">2</td>
+      <td class="col-pct good">100.0%</td>
+      <td class="col-num">2</td>
+      <td class="col-pct good">100.0%</td>
+      <td class="col-num">—</td>
+      <td class="col-pct bad">0.0%</td>
+      <td class="col-rev">$0</td>
+      <td class="col-num">—</td>
+    </tr>
+
+    <tr class="funnel-row" onclick="toggleUTM('anthony_x')" data-fid="anthony_x">
+      <td class="col-name">
+        <span class="chevron" id="chev-anthony_x">›</span>Anthony X
+      </td>
+      <td class="col-num">—</td>
+      <td class="col-num col-setter">—</td>
+      <td class="col-num col-stuck">—</td>
+      <td class="col-pct ">—</td>
+      <td class="col-num">—</td>
+      <td class="col-pace pace-muted">—</td>
+      <td class="col-goal">—</td>
+      <td class="col-num">—</td>
+      <td class="col-pct ">—</td>
+      <td class="col-num">—</td>
+      <td class="col-pct ">—</td>
+      <td class="col-num">—</td>
+      <td class="col-pct ">—</td>
+      <td class="col-rev pkg-trigger" onclick="event.stopPropagation();togglePkg('anthony_x')" title="Click to see package breakdown">$0 <span class="pkg-chevron" id="pkgchev-anthony_x">›</span></td>
+      <td class="col-num">—</td>
+    </tr>
+
+    <tr class="total-row">
+      <td class="col-name">TOTAL</td>
+      <td class="col-num">12</td>
+      <td class="col-num col-setter">8</td>
+      <td class="col-num col-stuck">6</td>
+      <td class="col-pct bad">25%</td>
+      <td class="col-num">22</td>
+      <td class="col-pace">—</td>
+      <td class="col-goal">—</td>
+      <td class="col-num">14</td>
+      <td class="col-pct mid">63.6%</td>
+      <td class="col-num">11</td>
+      <td class="col-pct mid">50.0%</td>
+      <td class="col-num">2</td>
+      <td class="col-pct mid">9.1%</td>
+      <td class="col-rev">$11,994</td>
+      <td class="col-num">$5,997</td>
+    </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- Lead Detail — tabbed -->
+<div class="section-label">
+  Lead Line Items
+  <span class="count-pill" id="lead-count">2 deals</span>
+</div>
+
+<div class="lead-tabs">
+  <button class="lead-tab" data-tab="setter" onclick="showLeadTab('setter')">Setter Calls <span class="tab-n">8</span></button>
+  <button class="lead-tab" data-tab="stuck"  onclick="showLeadTab('stuck')">Stuck <span class="tab-n">6</span></button>
+  <button class="lead-tab" data-tab="closer" onclick="showLeadTab('closer')">Closer Calls <span class="tab-n">22</span></button>
+  <button class="lead-tab active" data-tab="closed" onclick="showLeadTab('closed')">Closed-Won <span class="tab-n">2</span></button>
+</div>
+
+<!-- Setter + Stuck share one table; Stuck hides advanced rows -->
+<div class="table-wrap lead-pane" id="pane-setter" style="display:none">
+  <table>
+    <thead>
+      <tr>
+        <th class="col-date">Discovery Date</th>
+        <th class="col-client">Client</th>
+        <th class="col-email">Email</th>
+        <th class="col-funnel">Funnel</th>
+        <th class="col-status">Lead Status</th>
+        <th class="col-adv">Advanced to Closer</th>
+      </tr>
+    </thead>
+    <tbody>
+
+    <tr class="lead-row stuck-row">
+      <td class="col-date">7/13/2026</td>
+      <td class="col-client">Carson Himmelberger</td>
+      <td class="col-email">b****2469@outlook.com</td>
+      <td class="col-funnel"><span class="funnel-chip chip-instagram">Instagram</span></td>
+      <td class="col-status">📞 Follow Up</td>
+      <td class="col-adv"><span class="adv-no">Stuck</span></td>
+    </tr>
+
+    <tr class="lead-row stuck-row">
+      <td class="col-date">7/13/2026</td>
+      <td class="col-client">Kristian Vandiver</td>
+      <td class="col-email">k****n.32@hotmail.com</td>
+      <td class="col-funnel"><span class="funnel-chip chip-instagram">Instagram</span></td>
+      <td class="col-status">☎️ Call Booked</td>
+      <td class="col-adv"><span class="adv-no">Stuck</span></td>
+    </tr>
+
+    <tr class="lead-row stuck-row">
+      <td class="col-date">7/13/2026</td>
+      <td class="col-client">Maverick Carmichael</td>
+      <td class="col-email">c****here@gmail.com</td>
+      <td class="col-funnel"><span class="funnel-chip chip-instagram">Instagram</span></td>
+      <td class="col-status">📞 Follow Up</td>
+      <td class="col-adv"><span class="adv-no">Stuck</span></td>
+    </tr>
+
+    <tr class="lead-row advanced-row">
+      <td class="col-date">7/13/2026</td>
+      <td class="col-client">Tiffany Green</td>
+      <td class="col-email">r****yler@yahoo.com</td>
+      <td class="col-funnel"><span class="funnel-chip chip-instagram">Instagram</span></td>
+      <td class="col-status">💔 Lost</td>
+      <td class="col-adv"><span class="adv-yes">→ 7/14/2026</span></td>
+    </tr>
+
+    <tr class="lead-row advanced-row">
+      <td class="col-date">7/14/2026</td>
+      <td class="col-client">A’Niyah E</td>
+      <td class="col-email">a****is31@gmail.com</td>
+      <td class="col-funnel"><span class="funnel-chip chip-instagram">Instagram</span></td>
+      <td class="col-status">💔 Lost</td>
+      <td class="col-adv"><span class="adv-yes">→ 7/17/2026</span></td>
+    </tr>
+
+    <tr class="lead-row stuck-row">
+      <td class="col-date">7/14/2026</td>
+      <td class="col-client">Jessica Rodriguez</td>
+      <td class="col-email">j****eztx@yahoo.com</td>
+      <td class="col-funnel"><span class="funnel-chip chip-instagram">Instagram</span></td>
+      <td class="col-status">☎️ Call Booked</td>
+      <td class="col-adv"><span class="adv-no">Stuck</span></td>
+    </tr>
+
+    <tr class="lead-row stuck-row">
+      <td class="col-date">7/15/2026</td>
+      <td class="col-client">Ron Cabrers</td>
+      <td class="col-email">c****ronj@outlook.com</td>
+      <td class="col-funnel"><span class="funnel-chip chip-instagram">Instagram</span></td>
+      <td class="col-status">☎️ Call Booked</td>
+      <td class="col-adv"><span class="adv-no">Stuck</span></td>
+    </tr>
+
+    <tr class="lead-row stuck-row">
+      <td class="col-date">7/17/2026</td>
+      <td class="col-client">KELEON Rockett</td>
+      <td class="col-email">4****ladz@gmail.com</td>
+      <td class="col-funnel"><span class="funnel-chip chip-instagram">Instagram</span></td>
+      <td class="col-status">☎️ Call Booked</td>
+      <td class="col-adv"><span class="adv-no">Stuck</span></td>
+    </tr>
+    </tbody>
+  </table>
+  <p class="pane-note" id="note-setter">Every discovery call held this period. <strong>Advanced</strong> shows the date the lead reached a closer.</p>
+  <p class="pane-note" id="note-stuck" style="display:none">Discovery calls with no closer call booked. A call held in the last few days may simply not have converted yet.</p>
+</div>
+
+<div class="table-wrap lead-pane" id="pane-closer" style="display:none">
+  <table>
+    <thead>
+      <tr>
+        <th class="col-date">Sales Call Date</th>
+        <th class="col-client">Client</th>
+        <th class="col-email">Email</th>
+        <th class="col-funnel">Funnel</th>
+        <th class="col-status">Lead Status</th>
+        <th class="col-flag">Showed</th>
+        <th class="col-flag">Qualified</th>
+      </tr>
+    </thead>
+    <tbody>
+
+    <tr class="lead-row">
+      <td class="col-date">7/13/2026</td>
+      <td class="col-client">Chris Dunbar</td>
+      <td class="col-email">c****ph43@gmail.com</td>
+      <td class="col-funnel"><span class="funnel-chip chip-linkedin">Linkedin</span></td>
+      <td class="col-status">📞 Follow Up</td>
+      <td class="col-flag"><span class="yn yes">Yes</span></td>
+      <td class="col-flag"><span class="yn yes">Yes</span></td>
+    </tr>
+
+    <tr class="lead-row">
+      <td class="col-date">7/13/2026</td>
+      <td class="col-client">Elliot Woods</td>
+      <td class="col-email">e****ds22@gmail.com</td>
+      <td class="col-funnel"><span class="funnel-chip chip-instagram">Instagram</span></td>
+      <td class="col-status">☎️ Call Booked</td>
+      <td class="col-flag"><span class="yn no">No</span></td>
+      <td class="col-flag"><span class="yn no">No</span></td>
+    </tr>
+
+    <tr class="lead-row">
+      <td class="col-date">7/13/2026</td>
+      <td class="col-client">Felipe Paz-Rodriguez</td>
+      <td class="col-email">f****fe24@gmail.com</td>
+      <td class="col-funnel"><span class="funnel-chip chip-x">X</span></td>
+      <td class="col-status">🚫 Disqualified</td>
+      <td class="col-flag"><span class="yn no">No</span></td>
+      <td class="col-flag"><span class="yn no">No</span></td>
+    </tr>
+
+    <tr class="lead-row">
+      <td class="col-date">7/13/2026</td>
+      <td class="col-client">Geary Smith</td>
+      <td class="col-email">j****s164@aol.com</td>
+      <td class="col-funnel"><span class="funnel-chip chip-instagram">Instagram</span></td>
+      <td class="col-status">🕛 Reschedule</td>
+      <td class="col-flag"><span class="yn no">No</span></td>
+      <td class="col-flag"><span class="yn no">No</span></td>
+    </tr>
+
+    <tr class="lead-row">
+      <td class="col-date">7/13/2026</td>
+      <td class="col-client">George Leventis</td>
+      <td class="col-email">g****mata@gmail.com</td>
+      <td class="col-funnel"><span class="funnel-chip chip-instagram">Instagram</span></td>
+      <td class="col-status">🕛 Reschedule</td>
+      <td class="col-flag"><span class="yn no">No</span></td>
+      <td class="col-flag"><span class="yn no">No</span></td>
+    </tr>
+
+    <tr class="lead-row">
+      <td class="col-date">7/13/2026</td>
+      <td class="col-client">Nick Rojas</td>
+      <td class="col-email">t****ojas@gmail.com</td>
+      <td class="col-funnel"><span class="funnel-chip chip-instagram">Instagram</span></td>
+      <td class="col-status">🏆 Closed / Won</td>
+      <td class="col-flag"><span class="yn yes">Yes</span></td>
+      <td class="col-flag"><span class="yn yes">Yes</span></td>
+    </tr>
+
+    <tr class="lead-row">
+      <td class="col-date">7/13/2026</td>
+      <td class="col-client">Nicole Bentford</td>
+      <td class="col-email">n****ford@gmail.com</td>
+      <td class="col-funnel"><span class="funnel-chip chip-instagram">Instagram</span></td>
+      <td class="col-status">🕛 Reschedule</td>
+      <td class="col-flag"><span class="yn yes">Yes</span></td>
+      <td class="col-flag"><span class="yn yes">Yes</span></td>
+    </tr>
+
+    <tr class="lead-row">
+      <td class="col-date">7/13/2026</td>
+      <td class="col-client">RYAN</td>
+      <td class="col-email">r****pi88@yahoo.com</td>
+      <td class="col-funnel"><span class="funnel-chip chip-x">X</span></td>
+      <td class="col-status">🏆 Closed / Won</td>
+      <td class="col-flag"><span class="yn yes">Yes</span></td>
+      <td class="col-flag"><span class="yn yes">Yes</span></td>
+    </tr>
+
+    <tr class="lead-row">
+      <td class="col-date">7/13/2026</td>
+      <td class="col-client">Terell Williams</td>
+      <td class="col-email">t****ms82@gmail.com</td>
+      <td class="col-funnel"><span class="funnel-chip chip-instagram">Instagram</span></td>
+      <td class="col-status">☎️ Call Booked</td>
+      <td class="col-flag"><span class="yn yes">Yes</span></td>
+      <td class="col-flag"><span class="yn yes">Yes</span></td>
+    </tr>
+
+    <tr class="lead-row">
+      <td class="col-date">7/13/2026</td>
+      <td class="col-client">Victor Holness</td>
+      <td class="col-email">v****ctor@vitavendin.com</td>
+      <td class="col-funnel"><span class="funnel-chip chip-linkedin">Linkedin</span></td>
+      <td class="col-status">📞 Follow Up</td>
+      <td class="col-flag"><span class="yn yes">Yes</span></td>
+      <td class="col-flag"><span class="yn yes">Yes</span></td>
+    </tr>
+
+    <tr class="lead-row">
+      <td class="col-date">7/14/2026</td>
+      <td class="col-client">Maurice Webb</td>
+      <td class="col-email">m****b.mw@gmail.com</td>
+      <td class="col-funnel"><span class="funnel-chip chip-instagram">Instagram</span></td>
+      <td class="col-status">📞 Follow Up</td>
+      <td class="col-flag"><span class="yn yes">Yes</span></td>
+      <td class="col-flag"><span class="yn no">No</span></td>
+    </tr>
+
+    <tr class="lead-row">
+      <td class="col-date">7/14/2026</td>
+      <td class="col-client">Tiffany Green</td>
+      <td class="col-email">r****yler@yahoo.com</td>
+      <td class="col-funnel"><span class="funnel-chip chip-instagram">Instagram</span></td>
+      <td class="col-status">💔 Lost</td>
+      <td class="col-flag"><span class="yn yes">Yes</span></td>
+      <td class="col-flag"><span class="yn yes">Yes</span></td>
+    </tr>
+
+    <tr class="lead-row">
+      <td class="col-date">7/15/2026</td>
+      <td class="col-client">Luis Fernandez -</td>
+      <td class="col-email">b****uisf@aol.com</td>
+      <td class="col-funnel"><span class="funnel-chip chip-instagram">Instagram</span></td>
+      <td class="col-status">☎️ Call Booked</td>
+      <td class="col-flag"><span class="yn yes">Yes</span></td>
+      <td class="col-flag"><span class="yn no">No</span></td>
+    </tr>
+
+    <tr class="lead-row">
+      <td class="col-date">7/15/2026</td>
+      <td class="col-client">Mike Hardenbrook</td>
+      <td class="col-email">m****rook@gmail.com</td>
+      <td class="col-funnel"><span class="funnel-chip chip-instagram">Instagram</span></td>
+      <td class="col-status">👻 No Show</td>
+      <td class="col-flag"><span class="yn no">No</span></td>
+      <td class="col-flag"><span class="yn no">No</span></td>
+    </tr>
+
+    <tr class="lead-row">
+      <td class="col-date">7/16/2026</td>
+      <td class="col-client">Adriana Nevarez</td>
+      <td class="col-email">a****1987@gmail.com</td>
+      <td class="col-funnel"><span class="funnel-chip chip-instagram">Instagram</span></td>
+      <td class="col-status">💔 Lost</td>
+      <td class="col-flag"><span class="yn yes">Yes</span></td>
+      <td class="col-flag"><span class="yn no">No</span></td>
+    </tr>
+
+    <tr class="lead-row">
+      <td class="col-date">7/16/2026</td>
+      <td class="col-client">Africa Rodriguez</td>
+      <td class="col-email">a****otes@hotmail.com</td>
+      <td class="col-funnel"><span class="funnel-chip chip-instagram">Instagram</span></td>
+      <td class="col-status">💔 Lost</td>
+      <td class="col-flag"><span class="yn no">No</span></td>
+      <td class="col-flag"><span class="yn no">No</span></td>
+    </tr>
+
+    <tr class="lead-row">
+      <td class="col-date">7/16/2026</td>
+      <td class="col-client">Kara Ungaro</td>
+      <td class="col-email">d****garo@gmail.com</td>
+      <td class="col-funnel"><span class="funnel-chip chip-instagram">Instagram</span></td>
+      <td class="col-status">🕛 Reschedule</td>
+      <td class="col-flag"><span class="yn no">No</span></td>
+      <td class="col-flag"><span class="yn yes">Yes</span></td>
+    </tr>
+
+    <tr class="lead-row">
+      <td class="col-date">7/16/2026</td>
+      <td class="col-client">Patricio Rodriguez</td>
+      <td class="col-email">p****r215@yahoo.com</td>
+      <td class="col-funnel"><span class="funnel-chip chip-instagram">Instagram</span></td>
+      <td class="col-status">📞 Follow Up</td>
+      <td class="col-flag"><span class="yn yes">Yes</span></td>
+      <td class="col-flag"><span class="yn yes">Yes</span></td>
+    </tr>
+
+    <tr class="lead-row">
+      <td class="col-date">7/16/2026</td>
+      <td class="col-client">Thomas K</td>
+      <td class="col-email">j****trt4@gmail.com</td>
+      <td class="col-funnel"><span class="funnel-chip chip-instagram">Instagram</span></td>
+      <td class="col-status">☎️ Call Booked</td>
+      <td class="col-flag"><span class="yn no">No</span></td>
+      <td class="col-flag"><span class="yn no">No</span></td>
+    </tr>
+
+    <tr class="lead-row">
+      <td class="col-date">7/17/2026</td>
+      <td class="col-client">A’Niyah E</td>
+      <td class="col-email">a****is31@gmail.com</td>
+      <td class="col-funnel"><span class="funnel-chip chip-instagram">Instagram</span></td>
+      <td class="col-status">💔 Lost</td>
+      <td class="col-flag"><span class="yn yes">Yes</span></td>
+      <td class="col-flag"><span class="yn yes">Yes</span></td>
+    </tr>
+
+    <tr class="lead-row">
+      <td class="col-date">7/18/2026</td>
+      <td class="col-client">Pete Bolivar</td>
+      <td class="col-email">p****ivar@yahoo.com</td>
+      <td class="col-funnel"><span class="funnel-chip chip-instagram">Instagram</span></td>
+      <td class="col-status">💔 Lost</td>
+      <td class="col-flag"><span class="yn yes">Yes</span></td>
+      <td class="col-flag"><span class="yn no">No</span></td>
+    </tr>
+
+    <tr class="lead-row">
+      <td class="col-date">7/19/2026</td>
+      <td class="col-client">Jonathan Martinez</td>
+      <td class="col-email">j****ez35@yahoo.com</td>
+      <td class="col-funnel"><span class="funnel-chip chip-instagram">Instagram</span></td>
+      <td class="col-status">📞 Follow Up</td>
+      <td class="col-flag"><span class="yn yes">Yes</span></td>
+      <td class="col-flag"><span class="yn yes">Yes</span></td>
+    </tr>
+    </tbody>
+  </table>
+  <p class="pane-note">First sales calls with a closer. Some were preceded by a discovery call, some went direct.</p>
+</div>
+
+<div class="table-wrap lead-pane" id="pane-closed">
+  <table>
+    <thead>
+      <tr>
+        <th class="col-date">Date</th>
+        <th class="col-client">Client</th>
+        <th class="col-email">Email</th>
+        <th class="col-program">Program</th>
+        <th class="col-funnel">Funnel</th>
+        <th class="col-closer">Closer</th>
+        <th class="col-gross">Gross</th>
+        <th class="col-cash">Cash Collected</th>
+      </tr>
+    </thead>
+    <tbody>
+
+    <tr class="lead-row">
+      <td class="col-date">7/13/2026</td>
+      <td class="col-client">RYAN</td>
+      <td class="col-email">r****pi88@yahoo.com</td>
+      <td class="col-program">Bronze - $5,997</td>
+      <td class="col-funnel"><span class="funnel-chip chip-x">X</span></td>
+      <td class="col-closer">Eric Piccione</td>
+      <td class="col-gross">$5,997</td>
+      <td class="col-cash cash-missing">—</td>
+    </tr>
+
+    <tr class="lead-row">
+      <td class="col-date">7/13/2026</td>
+      <td class="col-client">Nick Rojas</td>
+      <td class="col-email">t****ojas@gmail.com</td>
+      <td class="col-program">Bronze - $5,997</td>
+      <td class="col-funnel"><span class="funnel-chip chip-instagram">Instagram</span></td>
+      <td class="col-closer">Robin Perkins</td>
+      <td class="col-gross">$5,997</td>
+      <td class="col-cash cash-missing">—</td>
+    </tr>
+
+    <tr class="total-row">
+      <td class="col-date">TOTAL</td>
+      <td class="col-client"></td>
+      <td class="col-email"></td>
+      <td class="col-program"></td>
+      <td class="col-funnel"></td>
+      <td class="col-closer"></td>
+      <td class="col-gross">$11,994</td>
+      <td class="col-cash">$0<div style="font-size:10px;font-weight:400;color:var(--muted);">0 of 2 deals</div></td>
+    </tr>
+    </tbody>
+  </table>
+</div>
+
+<script src="/agency-funnel-dashboard/archives/picker.js"></script>
+<script>
+  function togglePkg(fid) {
+    const pkgRows = document.querySelectorAll(`.pkg-row[data-parent="${fid}"]`);
+    const chevron = document.getElementById("pkgchev-" + fid);
+    const isOpen  = chevron && chevron.classList.contains("open");
+    pkgRows.forEach(r => {
+      r.style.display = isOpen ? "none" : "table-row";
+      r.classList.toggle("open", !isOpen);
+    });
+    if (chevron) chevron.classList.toggle("open", !isOpen);
+  }
+
+  const LEAD_COUNTS = {
+    setter: "8 calls",
+    stuck:  "6 stuck",
+    closer: "22 calls",
+    closed: "2 deals",
+  };
+
+  function showLeadTab(tab) {
+    // Stuck reuses the setter pane, filtered to non-advanced rows.
+    const paneId = (tab === "stuck") ? "setter" : tab;
+
+    document.querySelectorAll(".lead-pane").forEach(p => {
+      p.style.display = (p.id === "pane-" + paneId) ? "" : "none";
+    });
+    document.querySelectorAll(".lead-tab").forEach(b => {
+      b.classList.toggle("active", b.dataset.tab === tab);
+    });
+
+    const onlyStuck = (tab === "stuck");
+    document.querySelectorAll("#pane-setter .advanced-row").forEach(r => {
+      r.style.display = onlyStuck ? "none" : "";
+    });
+    const nSetter = document.getElementById("note-setter");
+    const nStuck  = document.getElementById("note-stuck");
+    if (nSetter) nSetter.style.display = onlyStuck ? "none" : "";
+    if (nStuck)  nStuck.style.display  = onlyStuck ? "" : "none";
+
+    const pill = document.getElementById("lead-count");
+    if (pill) pill.textContent = LEAD_COUNTS[tab] || "";
+
+    document.querySelector(".lead-tabs").scrollIntoView({behavior: "smooth", block: "nearest"});
+  }
+
+  function toggleUTM(fid) {
+    const utmRows = document.querySelectorAll(`.utm-row[data-parent="${fid}"]`);
+    const chevron = document.getElementById("chev-" + fid);
+    const isOpen  = chevron.classList.contains("open");
+    utmRows.forEach(r => r.classList.toggle("open", !isOpen));
+    chevron.classList.toggle("open", !isOpen);
+  }
+</script>
+
+<details class="methodology">
+  <summary>Definitions &amp; methodology</summary>
+  <div class="methodology-body">
+    <p><strong>Scope</strong> — Only the four agency-managed funnels (Instagram, X, Linkedin, Anthony X).
+    No other funnel data is fetched or published.</p>
+
+    <p><strong>Setter and Closer are two independent counts, not a split of one number.</strong>
+    Setter is discovery calls held this period — leads that scored below the bar get vetted by a setter
+    before a closer's calendar opens up. Closer is first sales calls. A lead with a discovery on the 19th
+    and a sales call on the 22nd is counted once in each. <em>The two columns do not add up.</em></p>
+
+    <p><strong>Stuck</strong> — discovery calls that have produced no closer call at all. A discovery held in the
+    last few days may simply not have converted yet, so a fresh week will always look worse than it is.
+    Check the Lead Status column: <em>Disqualified</em> means it ended, <em>Call Booked</em> means it's still moving.</p>
+
+    <p><strong>Show %, Qual %, CW %</strong> are measured against Closer, never Setter.
+    &nbsp;·&nbsp; <strong>Projected</strong> — end-of-month estimate at current daily booking pace:
+    <em>(Booked ÷ days elapsed) × days in month</em>. Green = exceeding, yellow = on pace, red = behind.
+    Funnels with no goal show —.</p>
+
+    <p><strong>Cash Collected</strong> — entered manually in Close. A dash means not yet recorded, not zero.
+    Cash may exceed gross when payments land from deals closed in a prior period.
+    &nbsp;·&nbsp; <strong>Email</strong> — partially masked.</p>
+  </div>
+</details>
+
+</body>
+</html>

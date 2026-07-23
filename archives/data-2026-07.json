@@ -7,7 +7,7 @@
     "setter": 20,
     "stuck": 15,
     "showed": 61,
-    "qualified": 61,
+    "qualified": 62,
     "closed": 6,
     "revenue": 41682.0
   },
@@ -24,8 +24,8 @@
       "book_pct": 92.0,
       "showed": 49,
       "show_pct": 61.3,
-      "qualified": 50,
-      "qual_pct": 62.5,
+      "qualified": 51,
+      "qual_pct": 63.7,
       "closed": 4,
       "cw_pct": 5.0,
       "revenue": 29988.0

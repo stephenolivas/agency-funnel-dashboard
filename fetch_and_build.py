@@ -879,8 +879,9 @@ def build_lead_rows(closed_leads):
     for r in closed_leads:
         fid = funnel_slug(r["funnel"])
         cash_cls = "col-cash" if r["cash"] is not None else "col-cash cash-missing"
+        _cash_attr = "" if r["cash"] is None else f'{r["cash"]:.2f}'
         rows.append(f"""
-    <tr class="lead-row">
+    <tr class="lead-row" data-funnel="{fid}" data-gross="{r["gross"]:.2f}" data-cash="{_cash_attr}">
       <td class="col-date">{esc(r["date_disp"])}</td>
       <td class="col-client">{esc(r["client"])}</td>
       <td class="col-email">{esc(r["email"])}</td>
@@ -910,7 +911,7 @@ def build_setter_rows(setter_leads):
         adv = ('<span class="adv-no">Stuck</span>' if r["stuck"]
                else f'<span class="adv-yes">→ {esc(r["advanced_disp"])}</span>')
         rows.append(f"""
-    <tr class="{cls}">
+    <tr class="{cls}" data-funnel="{fid}">
       <td class="col-date">{esc(r["date_disp"])}</td>
       <td class="col-client">{esc(r["client"])}</td>
       <td class="col-email">{esc(r["email"])}</td>
@@ -929,7 +930,7 @@ def build_closer_rows(closer_leads):
     for r in closer_leads:
         fid = funnel_slug(r["funnel"])
         rows.append(f"""
-    <tr class="lead-row">
+    <tr class="lead-row" data-funnel="{fid}">
       <td class="col-date">{esc(r["date_disp"])}</td>
       <td class="col-client">{esc(r["client"])}</td>
       <td class="col-email">{esc(r["email"])}</td>
@@ -964,6 +965,11 @@ def generate_html(data, month_picker_html="", week_picker_html=""):
     n_stuck  = sum(1 for r in setter_leads if r["stuck"])
     n_closer = len(closer_leads)
     n_closed = len(closed_leads)
+
+    funnel_pills_html = "".join(
+        f'<button class="ff-pill active" data-funnel="{funnel_slug(f)}" '
+        f'onclick="toggleFunnel(\'{funnel_slug(f)}\')">{esc(f)}</button>'
+        for f in ALLOWED_FUNNELS)
 
     g_lc  = grand.get("leads_created", 0)
     g_bo  = grand["booked"]
@@ -1288,6 +1294,42 @@ def generate_html(data, month_picker_html="", week_picker_html=""):
   .lead-tab.active .tab-n {{ background: rgba(255,255,255,0.22); color: #fff; }}
   .lead-tab[data-tab="stuck"].active {{ background: var(--amber); border-color: var(--amber); }}
 
+  /* ── Funnel filter pills ── */
+  .funnel-filter {{
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 0 36px 14px;
+    flex-wrap: wrap;
+  }}
+  .ff-label {{
+    font-size: 10.5px;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    color: var(--muted);
+    margin-right: 3px;
+  }}
+  .ff-pill {{
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 4px 12px;
+    font-size: 11.5px;
+    font-weight: 500;
+    color: var(--muted2);
+    cursor: pointer;
+    font-family: inherit;
+    transition: all 0.12s;
+    opacity: 0.5;
+  }}
+  .ff-pill:hover {{ border-color: var(--accent); color: var(--text); opacity: 1; }}
+  .ff-pill.active {{
+    background: var(--accent);
+    border-color: var(--accent);
+    color: #fff;
+    opacity: 1;
+  }}
+
   .pane-note {{
     font-size: 11px;
     color: var(--muted);
@@ -1536,6 +1578,11 @@ def generate_html(data, month_picker_html="", week_picker_html=""):
   <button class="lead-tab active" data-tab="closed" onclick="showLeadTab('closed')">Closed-Won <span class="tab-n">{n_closed}</span></button>
 </div>
 
+<div class="funnel-filter">
+  <span class="ff-label">Funnel</span>
+  {funnel_pills_html}
+</div>
+
 <!-- Setter + Stuck share one table; Stuck hides advanced rows -->
 <div class="table-wrap lead-pane" id="pane-setter" style="display:none">
   <table>
@@ -1621,38 +1668,115 @@ def generate_html(data, month_picker_html="", week_picker_html=""):
     if (chevron) chevron.classList.toggle("open", !isOpen);
   }}
 
-  const LEAD_COUNTS = {{
-    setter: "{n_setter} calls",
-    stuck:  "{n_stuck} stuck",
-    closer: "{n_closer} calls",
-    closed: "{n_closed} deals",
-  }};
+  // ── Lead table state ──────────────────────────────────────────────────────
+  let currentTab   = "closed";
+  let activeFunnels = new Set(
+    Array.from(document.querySelectorAll(".ff-pill")).map(p => p.dataset.funnel));
+
+  function fmtUSD(v) {{
+    if (!v) return "$0";
+    return "$" + Math.round(v).toLocaleString("en-US");
+  }}
+
+  function toggleFunnel(slug) {{
+    if (activeFunnels.has(slug)) activeFunnels.delete(slug);
+    else                         activeFunnels.add(slug);
+    document.querySelectorAll(".ff-pill").forEach(p =>
+      p.classList.toggle("active", activeFunnels.has(p.dataset.funnel)));
+    applyFilter();
+  }}
 
   function showLeadTab(tab) {{
-    // Stuck reuses the setter pane, filtered to non-advanced rows.
+    currentTab = tab;
     const paneId = (tab === "stuck") ? "setter" : tab;
-
     document.querySelectorAll(".lead-pane").forEach(p => {{
       p.style.display = (p.id === "pane-" + paneId) ? "" : "none";
     }});
     document.querySelectorAll(".lead-tab").forEach(b => {{
       b.classList.toggle("active", b.dataset.tab === tab);
     }});
+    applyFilter();
+    document.querySelector(".lead-tabs").scrollIntoView({{behavior: "smooth", block: "nearest"}});
+  }}
 
+  // Single source of visibility truth. A row shows iff its funnel is active AND
+  // (not in Stuck view OR it is a stuck row). Totals re-sum only visible rows.
+  function applyFilter() {{
+    const tab       = currentTab;
     const onlyStuck = (tab === "stuck");
-    document.querySelectorAll("#pane-setter .advanced-row").forEach(r => {{
-      r.style.display = onlyStuck ? "none" : "";
-    }});
+    const paneId    = onlyStuck ? "setter" : tab;
+    const pane      = document.getElementById("pane-" + paneId);
+    if (!pane) return;
+
     const nSetter = document.getElementById("note-setter");
     const nStuck  = document.getElementById("note-stuck");
     if (nSetter) nSetter.style.display = onlyStuck ? "none" : "";
     if (nStuck)  nStuck.style.display  = onlyStuck ? "" : "none";
 
-    const pill = document.getElementById("lead-count");
-    if (pill) pill.textContent = LEAD_COUNTS[tab] || "";
+    const rows = pane.querySelectorAll("tbody tr.lead-row");
+    let visible = 0, grossSum = 0, cashSum = 0, cashCount = 0, cashTotal = 0;
 
-    document.querySelector(".lead-tabs").scrollIntoView({{behavior: "smooth", block: "nearest"}});
+    rows.forEach(r => {{
+      const funnelOK = activeFunnels.has(r.dataset.funnel);
+      const stuckOK  = !onlyStuck || r.classList.contains("stuck-row");
+      const show = funnelOK && stuckOK;
+      r.style.display = show ? "" : "none";
+      if (show) {{
+        visible++;
+        if (tab === "closed") {{
+          grossSum += parseFloat(r.dataset.gross || "0");
+          cashTotal++;
+          if (r.dataset.cash !== "") {{ cashSum += parseFloat(r.dataset.cash); cashCount++; }}
+        }}
+      }}
+    }});
+
+    // Empty-state row — only manage it when the pane actually has data rows
+    // (a server-rendered "none this period" row already covers the zero case).
+    if (rows.length > 0) {{
+      const tbody = pane.querySelector("tbody");
+      let er = pane.querySelector("tr.filter-empty");
+      if (visible === 0) {{
+        if (!er) {{
+          er = document.createElement("tr");
+          er.className = "filter-empty";
+          const td = document.createElement("td");
+          td.colSpan = 8; td.className = "lead-empty";
+          er.appendChild(td);
+          tbody.insertBefore(er, tbody.firstChild);
+        }}
+        er.querySelector("td").textContent = (activeFunnels.size === 0)
+          ? "No funnels selected."
+          : "No rows for the selected funnels.";
+        er.style.display = "";
+      }} else if (er) {{
+        er.style.display = "none";
+      }}
+    }}
+
+    // Closed-Won TOTAL row re-sums visible rows
+    if (tab === "closed") {{
+      const totalRow = pane.querySelector("tr.total-row");
+      if (totalRow) {{
+        totalRow.style.display = (visible === 0) ? "none" : "";
+        const gCell = totalRow.querySelector(".col-gross");
+        const cCell = totalRow.querySelector(".col-cash");
+        if (gCell) gCell.textContent = fmtUSD(grossSum);
+        if (cCell) cCell.innerHTML = fmtUSD(cashSum) +
+          '<div style="font-size:10px;font-weight:400;color:var(--muted);">' +
+          cashCount + ' of ' + cashTotal + ' deals</div>';
+      }}
+    }}
+
+    const pill = document.getElementById("lead-count");
+    if (pill) {{
+      const noun = (tab === "closed") ? "deals" : (tab === "stuck") ? "stuck" : "calls";
+      pill.textContent = visible + " " + noun;
+    }}
   }}
+
+  // Sync counts, totals, and pill state to the default (closed) view on load.
+  applyFilter();
 
   function toggleUTM(fid) {{
     const utmRows = document.querySelectorAll(`.utm-row[data-parent="${{fid}}"]`);

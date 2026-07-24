@@ -303,6 +303,42 @@
   .lead-tab.active .tab-n { background: rgba(255,255,255,0.22); color: #fff; }
   .lead-tab[data-tab="stuck"].active { background: var(--amber); border-color: var(--amber); }
 
+  /* ── Funnel filter pills ── */
+  .funnel-filter {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 0 36px 14px;
+    flex-wrap: wrap;
+  }
+  .ff-label {
+    font-size: 10.5px;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    color: var(--muted);
+    margin-right: 3px;
+  }
+  .ff-pill {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 4px 12px;
+    font-size: 11.5px;
+    font-weight: 500;
+    color: var(--muted2);
+    cursor: pointer;
+    font-family: inherit;
+    transition: all 0.12s;
+    opacity: 0.5;
+  }
+  .ff-pill:hover { border-color: var(--accent); color: var(--text); opacity: 1; }
+  .ff-pill.active {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: #fff;
+    opacity: 1;
+  }
+
   .pane-note {
     font-size: 11px;
     color: var(--muted);
@@ -440,7 +476,7 @@
       <option value="/agency-funnel-dashboard/archives/week-current.html" >Jul 20–24 ▶</option></select></div>
     </div>
     <span class="snapshot-label">Snapshot</span>
-    July 24, 2026 at 01:47 PM PT<br>
+    July 24, 2026 at 01:58 PM PT<br>
     Source · Close CRM
   </div>
 </div>
@@ -449,7 +485,7 @@
 <div class="kpis">
   <div class="kpi" style="--kpi-accent:#6366f1; --kpi-color:#6366f1;">
     <div class="label">Leads Created</div>
-    <div class="value">114</div>
+    <div class="value">117</div>
     <div class="kpi-sub">new leads this period</div>
   </div>
   <div class="kpi kpi-clickable" data-tab="setter" onclick="showLeadTab('setter')"
@@ -524,7 +560,7 @@
       <td class="col-name">
         <span class="chevron" id="chev-instagram">›</span>Instagram
       </td>
-      <td class="col-num">100</td>
+      <td class="col-num">103</td>
       <td class="col-num col-setter">20</td>
       <td class="col-num col-stuck">15</td>
       <td class="col-pct bad">25%</td>
@@ -2240,7 +2276,7 @@
 
     <tr class="total-row">
       <td class="col-name">TOTAL</td>
-      <td class="col-num">114</td>
+      <td class="col-num">117</td>
       <td class="col-num col-setter">20</td>
       <td class="col-num col-stuck">15</td>
       <td class="col-pct bad">25%</td>
@@ -2273,6 +2309,11 @@
   <button class="lead-tab active" data-tab="closed" onclick="showLeadTab('closed')">Closed-Won <span class="tab-n">6</span></button>
 </div>
 
+<div class="funnel-filter">
+  <span class="ff-label">Funnel</span>
+  <button class="ff-pill active" data-funnel="instagram" onclick="toggleFunnel('instagram')">Instagram</button><button class="ff-pill active" data-funnel="x" onclick="toggleFunnel('x')">X</button><button class="ff-pill active" data-funnel="linkedin" onclick="toggleFunnel('linkedin')">Linkedin</button><button class="ff-pill active" data-funnel="anthony_x" onclick="toggleFunnel('anthony_x')">Anthony X</button>
+</div>
+
 <!-- Setter + Stuck share one table; Stuck hides advanced rows -->
 <div class="table-wrap lead-pane" id="pane-setter" style="display:none">
   <table>
@@ -2288,7 +2329,7 @@
     </thead>
     <tbody>
 
-    <tr class="lead-row stuck-row">
+    <tr class="lead-row stuck-row" data-funnel="instagram">
       <td class="col-date">7/2/2026</td>
       <td class="col-client">Kuuipo Perreira</td>
       <td class="col-email">k****mons@yahoo.com</td>
@@ -2297,7 +2338,7 @@
       <td class="col-adv"><span class="adv-no">Stuck</span></td>
     </tr>
 
-    <tr class="lead-row stuck-row">
+    <tr class="lead-row stuck-row" data-funnel="instagram">
       <td class="col-date">7/2/2026</td>
       <td class="col-client">Sajjad A</td>
       <td class="col-email">m****rals@gmail.com</td>
@@ -2306,7 +2347,7 @@
       <td class="col-adv"><span class="adv-no">Stuck</span></td>
     </tr>
 
-    <tr class="lead-row advanced-row">
+    <tr class="lead-row advanced-row" data-funnel="instagram">
       <td class="col-date">7/2/2026</td>
       <td class="col-client">Stasun Hebert</td>
       <td class="col-email">s****bert@yahoo.com</td>
@@ -2315,7 +2356,7 @@
       <td class="col-adv"><span class="adv-yes">→ 7/30/2026</span></td>
     </tr>
 
-    <tr class="lead-row stuck-row">
+    <tr class="lead-row stuck-row" data-funnel="instagram">
       <td class="col-date">7/6/2026</td>
       <td class="col-client">Ahmed Baseham</td>
       <td class="col-email">a****eham@amejys.com</td>
@@ -2324,7 +2365,7 @@
       <td class="col-adv"><span class="adv-no">Stuck</span></td>
     </tr>
 
-    <tr class="lead-row stuck-row">
+    <tr class="lead-row stuck-row" data-funnel="instagram">
       <td class="col-date">7/9/2026</td>
       <td class="col-client">Bishal Chettri</td>
       <td class="col-email">b****1000@gmail.com</td>
@@ -2333,7 +2374,7 @@
       <td class="col-adv"><span class="adv-no">Stuck</span></td>
     </tr>
 
-    <tr class="lead-row advanced-row">
+    <tr class="lead-row advanced-row" data-funnel="instagram">
       <td class="col-date">7/9/2026</td>
       <td class="col-client">Elliot Woods</td>
       <td class="col-email">e****ds22@gmail.com</td>
@@ -2342,7 +2383,7 @@
       <td class="col-adv"><span class="adv-yes">→ 7/13/2026</span></td>
     </tr>
 
-    <tr class="lead-row stuck-row">
+    <tr class="lead-row stuck-row" data-funnel="instagram">
       <td class="col-date">7/9/2026</td>
       <td class="col-client">James Yoon</td>
       <td class="col-email">j****s440@gmail.com</td>
@@ -2351,7 +2392,7 @@
       <td class="col-adv"><span class="adv-no">Stuck</span></td>
     </tr>
 
-    <tr class="lead-row stuck-row">
+    <tr class="lead-row stuck-row" data-funnel="instagram">
       <td class="col-date">7/9/2026</td>
       <td class="col-client">Karan Shah</td>
       <td class="col-email">k****8658@gmail.com</td>
@@ -2360,7 +2401,7 @@
       <td class="col-adv"><span class="adv-no">Stuck</span></td>
     </tr>
 
-    <tr class="lead-row stuck-row">
+    <tr class="lead-row stuck-row" data-funnel="instagram">
       <td class="col-date">7/9/2026</td>
       <td class="col-client">Mike Segal</td>
       <td class="col-email">s****lgon@yahoo.com</td>
@@ -2369,7 +2410,7 @@
       <td class="col-adv"><span class="adv-no">Stuck</span></td>
     </tr>
 
-    <tr class="lead-row stuck-row">
+    <tr class="lead-row stuck-row" data-funnel="instagram">
       <td class="col-date">7/11/2026</td>
       <td class="col-client">Camilio Menard</td>
       <td class="col-email">c****nard@gmail.com</td>
@@ -2378,7 +2419,7 @@
       <td class="col-adv"><span class="adv-no">Stuck</span></td>
     </tr>
 
-    <tr class="lead-row stuck-row">
+    <tr class="lead-row stuck-row" data-funnel="instagram">
       <td class="col-date">7/12/2026</td>
       <td class="col-client">Sergiu Carpiuc Mion</td>
       <td class="col-email">s****0310@gmail.com</td>
@@ -2387,7 +2428,7 @@
       <td class="col-adv"><span class="adv-no">Stuck</span></td>
     </tr>
 
-    <tr class="lead-row stuck-row">
+    <tr class="lead-row stuck-row" data-funnel="instagram">
       <td class="col-date">7/13/2026</td>
       <td class="col-client">Carson Himmelberger</td>
       <td class="col-email">b****2469@outlook.com</td>
@@ -2396,7 +2437,7 @@
       <td class="col-adv"><span class="adv-no">Stuck</span></td>
     </tr>
 
-    <tr class="lead-row stuck-row">
+    <tr class="lead-row stuck-row" data-funnel="instagram">
       <td class="col-date">7/13/2026</td>
       <td class="col-client">Kristian Vandiver</td>
       <td class="col-email">k****n.32@hotmail.com</td>
@@ -2405,7 +2446,7 @@
       <td class="col-adv"><span class="adv-no">Stuck</span></td>
     </tr>
 
-    <tr class="lead-row stuck-row">
+    <tr class="lead-row stuck-row" data-funnel="instagram">
       <td class="col-date">7/13/2026</td>
       <td class="col-client">Maverick Carmichael</td>
       <td class="col-email">c****here@gmail.com</td>
@@ -2414,7 +2455,7 @@
       <td class="col-adv"><span class="adv-no">Stuck</span></td>
     </tr>
 
-    <tr class="lead-row advanced-row">
+    <tr class="lead-row advanced-row" data-funnel="instagram">
       <td class="col-date">7/13/2026</td>
       <td class="col-client">Tiffany Green</td>
       <td class="col-email">r****yler@yahoo.com</td>
@@ -2423,7 +2464,7 @@
       <td class="col-adv"><span class="adv-yes">→ 7/14/2026</span></td>
     </tr>
 
-    <tr class="lead-row advanced-row">
+    <tr class="lead-row advanced-row" data-funnel="instagram">
       <td class="col-date">7/14/2026</td>
       <td class="col-client">A’Niyah E</td>
       <td class="col-email">a****is31@gmail.com</td>
@@ -2432,7 +2473,7 @@
       <td class="col-adv"><span class="adv-yes">→ 7/17/2026</span></td>
     </tr>
 
-    <tr class="lead-row stuck-row">
+    <tr class="lead-row stuck-row" data-funnel="instagram">
       <td class="col-date">7/14/2026</td>
       <td class="col-client">Jessica Rodriguez</td>
       <td class="col-email">j****eztx@yahoo.com</td>
@@ -2441,7 +2482,7 @@
       <td class="col-adv"><span class="adv-no">Stuck</span></td>
     </tr>
 
-    <tr class="lead-row stuck-row">
+    <tr class="lead-row stuck-row" data-funnel="instagram">
       <td class="col-date">7/15/2026</td>
       <td class="col-client">Ron Cabrers</td>
       <td class="col-email">c****ronj@outlook.com</td>
@@ -2450,7 +2491,7 @@
       <td class="col-adv"><span class="adv-no">Stuck</span></td>
     </tr>
 
-    <tr class="lead-row stuck-row">
+    <tr class="lead-row stuck-row" data-funnel="instagram">
       <td class="col-date">7/17/2026</td>
       <td class="col-client">KELEON Rockett</td>
       <td class="col-email">4****ladz@gmail.com</td>
@@ -2459,7 +2500,7 @@
       <td class="col-adv"><span class="adv-no">Stuck</span></td>
     </tr>
 
-    <tr class="lead-row advanced-row">
+    <tr class="lead-row advanced-row" data-funnel="instagram">
       <td class="col-date">7/18/2026</td>
       <td class="col-client">Firas Ghrimil</td>
       <td class="col-email">g****iras@gmail.com</td>
@@ -2488,7 +2529,7 @@
     </thead>
     <tbody>
 
-    <tr class="lead-row">
+    <tr class="lead-row" data-funnel="instagram">
       <td class="col-date">7/1/2026</td>
       <td class="col-client">Ady</td>
       <td class="col-email">a****escu@gmail.com</td>
@@ -2498,7 +2539,7 @@
       <td class="col-flag"><span class="yn yes">Yes</span></td>
     </tr>
 
-    <tr class="lead-row">
+    <tr class="lead-row" data-funnel="instagram">
       <td class="col-date">7/1/2026</td>
       <td class="col-client">Alexandra Chuquillangui</td>
       <td class="col-email">a****q413@gmail.com</td>
@@ -2508,7 +2549,7 @@
       <td class="col-flag"><span class="yn yes">Yes</span></td>
     </tr>
 
-    <tr class="lead-row">
+    <tr class="lead-row" data-funnel="instagram">
       <td class="col-date">7/1/2026</td>
       <td class="col-client">Armando Stöhr</td>
       <td class="col-email">a****7523@hotmail.com</td>
@@ -2518,7 +2559,7 @@
       <td class="col-flag"><span class="yn no">No</span></td>
     </tr>
 
-    <tr class="lead-row">
+    <tr class="lead-row" data-funnel="linkedin">
       <td class="col-date">7/1/2026</td>
       <td class="col-client">T. Hauser</td>
       <td class="col-email">t****8888@gmail.com</td>
@@ -2528,7 +2569,7 @@
       <td class="col-flag"><span class="yn yes">Yes</span></td>
     </tr>
 
-    <tr class="lead-row">
+    <tr class="lead-row" data-funnel="x">
       <td class="col-date">7/2/2026</td>
       <td class="col-client">Clinton Thomas</td>
       <td class="col-email">c****2022@gmail.com</td>
@@ -2538,7 +2579,7 @@
       <td class="col-flag"><span class="yn yes">Yes</span></td>
     </tr>
 
-    <tr class="lead-row">
+    <tr class="lead-row" data-funnel="linkedin">
       <td class="col-date">7/2/2026</td>
       <td class="col-client">Daniel Saligumba</td>
       <td class="col-email">d****umba@icloud.com</td>
@@ -2548,7 +2589,7 @@
       <td class="col-flag"><span class="yn yes">Yes</span></td>
     </tr>
 
-    <tr class="lead-row">
+    <tr class="lead-row" data-funnel="instagram">
       <td class="col-date">7/2/2026</td>
       <td class="col-client">Darrick Kingston</td>
       <td class="col-email">d****on27@gmail.com</td>
@@ -2558,7 +2599,7 @@
       <td class="col-flag"><span class="yn yes">Yes</span></td>
     </tr>
 
-    <tr class="lead-row">
+    <tr class="lead-row" data-funnel="linkedin">
       <td class="col-date">7/2/2026</td>
       <td class="col-client">Ellen Schier</td>
       <td class="col-email">e****hier@gmail.com</td>
@@ -2568,7 +2609,7 @@
       <td class="col-flag"><span class="yn yes">Yes</span></td>
     </tr>
 
-    <tr class="lead-row">
+    <tr class="lead-row" data-funnel="x">
       <td class="col-date">7/2/2026</td>
       <td class="col-client">Richard Toal</td>
       <td class="col-email">r****al44@gmail.com</td>
@@ -2578,7 +2619,7 @@
       <td class="col-flag"><span class="yn yes">Yes</span></td>
     </tr>
 
-    <tr class="lead-row">
+    <tr class="lead-row" data-funnel="instagram">
       <td class="col-date">7/2/2026</td>
       <td class="col-client">Tom Viola</td>
       <td class="col-email">a****er23@gmail.com</td>
@@ -2588,7 +2629,7 @@
       <td class="col-flag"><span class="yn yes">Yes</span></td>
     </tr>
 
-    <tr class="lead-row">
+    <tr class="lead-row" data-funnel="instagram">
       <td class="col-date">7/3/2026</td>
       <td class="col-client">Blake Nelson</td>
       <td class="col-email">b****ks84@gmail.com</td>
@@ -2598,7 +2639,7 @@
       <td class="col-flag"><span class="yn yes">Yes</span></td>
     </tr>
 
-    <tr class="lead-row">
+    <tr class="lead-row" data-funnel="instagram">
       <td class="col-date">7/3/2026</td>
       <td class="col-client">Chelsey Mark</td>
       <td class="col-email">c****plus@gmail.com</td>
@@ -2608,7 +2649,7 @@
       <td class="col-flag"><span class="yn yes">Yes</span></td>
     </tr>
 
-    <tr class="lead-row">
+    <tr class="lead-row" data-funnel="instagram">
       <td class="col-date">7/3/2026</td>
       <td class="col-client">John Rose</td>
       <td class="col-email">j****@marqueecouriers.com</td>
@@ -2618,7 +2659,7 @@
       <td class="col-flag"><span class="yn no">No</span></td>
     </tr>
 
-    <tr class="lead-row">
+    <tr class="lead-row" data-funnel="instagram">
       <td class="col-date">7/3/2026</td>
       <td class="col-client">Nathalie Albarran</td>
       <td class="col-email">n****n721@gmail.com</td>
@@ -2628,7 +2669,7 @@
       <td class="col-flag"><span class="yn yes">Yes</span></td>
     </tr>
 
-    <tr class="lead-row">
+    <tr class="lead-row" data-funnel="instagram">
       <td class="col-date">7/3/2026</td>
       <td class="col-client">Sheldon Hudson</td>
       <td class="col-email">s****son9@gmail.com</td>
@@ -2638,7 +2679,7 @@
       <td class="col-flag"><span class="yn no">No</span></td>
     </tr>
 
-    <tr class="lead-row">
+    <tr class="lead-row" data-funnel="anthony_x">
       <td class="col-date">7/5/2026</td>
       <td class="col-client">D Newton</td>
       <td class="col-email">d****2987@gmail.com</td>
@@ -2648,7 +2689,7 @@
       <td class="col-flag"><span class="yn yes">Yes</span></td>
     </tr>
 
-    <tr class="lead-row">
+    <tr class="lead-row" data-funnel="instagram">
       <td class="col-date">7/5/2026</td>
       <td class="col-client">Joey Fakhry</td>
       <td class="col-email">j****yy21@gmail.com</td>
@@ -2658,7 +2699,7 @@
       <td class="col-flag"><span class="yn yes">Yes</span></td>
     </tr>
 
-    <tr class="lead-row">
+    <tr class="lead-row" data-funnel="instagram">
       <td class="col-date">7/5/2026</td>
       <td class="col-client">Joy Mwihia</td>
       <td class="col-email">j****ihia@yahoo.com</td>
@@ -2668,7 +2709,7 @@
       <td class="col-flag"><span class="yn yes">Yes</span></td>
     </tr>
 
-    <tr class="lead-row">
+    <tr class="lead-row" data-funnel="instagram">
       <td class="col-date">7/6/2026</td>
       <td class="col-client">Juan Arcos</td>
       <td class="col-email">q****7gad@hotmail.com</td>
@@ -2678,7 +2719,7 @@
       <td class="col-flag"><span class="yn yes">Yes</span></td>
     </tr>
 
-    <tr class="lead-row">
+    <tr class="lead-row" data-funnel="instagram">
       <td class="col-date">7/6/2026</td>
       <td class="col-client">Michael Chisom</td>
       <td class="col-email">l****l950@gmail.com</td>
@@ -2688,7 +2729,7 @@
       <td class="col-flag"><span class="yn no">No</span></td>
     </tr>
 
-    <tr class="lead-row">
+    <tr class="lead-row" data-funnel="instagram">
       <td class="col-date">7/6/2026</td>
       <td class="col-client">Philip Galin</td>
       <td class="col-email">p****ilip@galinvending.com</td>
@@ -2698,7 +2739,7 @@
       <td class="col-flag"><span class="yn yes">Yes</span></td>
     </tr>
 
-    <tr class="lead-row">
+    <tr class="lead-row" data-funnel="instagram">
       <td class="col-date">7/6/2026</td>
       <td class="col-client">Ryan Gracey</td>
       <td class="col-email">r****acey@gmail.com</td>
@@ -2708,7 +2749,7 @@
       <td class="col-flag"><span class="yn no">No</span></td>
     </tr>
 
-    <tr class="lead-row">
+    <tr class="lead-row" data-funnel="instagram">
       <td class="col-date">7/6/2026</td>
       <td class="col-client">Ryan Gracey</td>
       <td class="col-email">r****acey@gmail.com</td>
@@ -2718,7 +2759,7 @@
       <td class="col-flag"><span class="yn yes">Yes</span></td>
     </tr>
 
-    <tr class="lead-row">
+    <tr class="lead-row" data-funnel="instagram">
       <td class="col-date">7/6/2026</td>
       <td class="col-client">Tyria F</td>
       <td class="col-email">t****rise@gmail.com</td>
@@ -2728,7 +2769,7 @@
       <td class="col-flag"><span class="yn no">No</span></td>
     </tr>
 
-    <tr class="lead-row">
+    <tr class="lead-row" data-funnel="instagram">
       <td class="col-date">7/7/2026</td>
       <td class="col-client">Amanda Repoza</td>
       <td class="col-email">a****oz01@gmail.com</td>
@@ -2738,7 +2779,7 @@
       <td class="col-flag"><span class="yn no">No</span></td>
     </tr>
 
-    <tr class="lead-row">
+    <tr class="lead-row" data-funnel="instagram">
       <td class="col-date">7/7/2026</td>
       <td class="col-client">Dominic Divito</td>
       <td class="col-email">d****o711@gmail.com</td>
@@ -2748,7 +2789,7 @@
       <td class="col-flag"><span class="yn yes">Yes</span></td>
     </tr>
 
-    <tr class="lead-row">
+    <tr class="lead-row" data-funnel="instagram">
       <td class="col-date">7/7/2026</td>
       <td class="col-client">Erik Reyes</td>
       <td class="col-email">r****ik82@gmail.com</td>
@@ -2758,7 +2799,7 @@
       <td class="col-flag"><span class="yn yes">Yes</span></td>
     </tr>
 
-    <tr class="lead-row">
+    <tr class="lead-row" data-funnel="instagram">
       <td class="col-date">7/7/2026</td>
       <td class="col-client">Fiona Williamson</td>
       <td class="col-email">f****ood7@gmail.com</td>
@@ -2768,7 +2809,7 @@
       <td class="col-flag"><span class="yn no">No</span></td>
     </tr>
 
-    <tr class="lead-row">
+    <tr class="lead-row" data-funnel="instagram">
       <td class="col-date">7/8/2026</td>
       <td class="col-client">David Mojuetan</td>
       <td class="col-email">d****etan@gmail.com</td>
@@ -2778,7 +2819,7 @@
       <td class="col-flag"><span class="yn yes">Yes</span></td>
     </tr>
 
-    <tr class="lead-row">
+    <tr class="lead-row" data-funnel="instagram">
       <td class="col-date">7/8/2026</td>
       <td class="col-client">Jana Valdez</td>
       <td class="col-email">j****z926@gmail.com</td>
@@ -2788,7 +2829,7 @@
       <td class="col-flag"><span class="yn no">No</span></td>
     </tr>
 
-    <tr class="lead-row">
+    <tr class="lead-row" data-funnel="instagram">
       <td class="col-date">7/8/2026</td>
       <td class="col-client">Mikey Flores</td>
       <td class="col-email">m****cent@yahoo.com</td>
@@ -2798,7 +2839,7 @@
       <td class="col-flag"><span class="yn no">No</span></td>
     </tr>
 
-    <tr class="lead-row">
+    <tr class="lead-row" data-funnel="instagram">
       <td class="col-date">7/8/2026</td>
       <td class="col-client">Sam Seekamp</td>
       <td class="col-email">s****kamp@gmail.com</td>
@@ -2808,7 +2849,7 @@
       <td class="col-flag"><span class="yn yes">Yes</span></td>
     </tr>
 
-    <tr class="lead-row">
+    <tr class="lead-row" data-funnel="instagram">
       <td class="col-date">7/8/2026</td>
       <td class="col-client">Sarah Lyday</td>
       <td class="col-email">s****enix@gmail.com</td>
@@ -2818,7 +2859,7 @@
       <td class="col-flag"><span class="yn yes">Yes</span></td>
     </tr>
 
-    <tr class="lead-row">
+    <tr class="lead-row" data-funnel="instagram">
       <td class="col-date">7/8/2026</td>
       <td class="col-client">Sierra Husmann</td>
       <td class="col-email">s****bble@gmail.com</td>
@@ -2828,7 +2869,7 @@
       <td class="col-flag"><span class="yn no">No</span></td>
     </tr>
 
-    <tr class="lead-row">
+    <tr class="lead-row" data-funnel="instagram">
       <td class="col-date">7/8/2026</td>
       <td class="col-client">Toby Tolman</td>
       <td class="col-email">t****an20@yahoo.com</td>
@@ -2838,7 +2879,7 @@
       <td class="col-flag"><span class="yn yes">Yes</span></td>
     </tr>
 
-    <tr class="lead-row">
+    <tr class="lead-row" data-funnel="instagram">
       <td class="col-date">7/8/2026</td>
       <td class="col-client">Zachary Chadwick</td>
       <td class="col-email">z****@waldmfg.com</td>
@@ -2848,7 +2889,7 @@
       <td class="col-flag"><span class="yn yes">Yes</span></td>
     </tr>
 
-    <tr class="lead-row">
+    <tr class="lead-row" data-funnel="instagram">
       <td class="col-date">7/9/2026</td>
       <td class="col-client">CaseyBybee</td>
       <td class="col-email">c****ybee@gmail.com</td>
@@ -2858,7 +2899,7 @@
       <td class="col-flag"><span class="yn yes">Yes</span></td>
     </tr>
 
-    <tr class="lead-row">
+    <tr class="lead-row" data-funnel="instagram">
       <td class="col-date">7/9/2026</td>
       <td class="col-client">John Tatum</td>
       <td class="col-email">e****roup@gmail.com</td>
@@ -2868,7 +2909,7 @@
       <td class="col-flag"><span class="yn yes">Yes</span></td>
     </tr>
 
-    <tr class="lead-row">
+    <tr class="lead-row" data-funnel="instagram">
       <td class="col-date">7/9/2026</td>
       <td class="col-client">Nazario Maisonet</td>
       <td class="col-email">n****onet@me.com</td>
@@ -2878,7 +2919,7 @@
       <td class="col-flag"><span class="yn yes">Yes</span></td>
     </tr>
 
-    <tr class="lead-row">
+    <tr class="lead-row" data-funnel="instagram">
       <td class="col-date">7/9/2026</td>
       <td class="col-client">Shay Seltzer</td>
       <td class="col-email">s****s119@gmail.com</td>
@@ -2888,7 +2929,7 @@
       <td class="col-flag"><span class="yn yes">Yes</span></td>
     </tr>
 
-    <tr class="lead-row">
+    <tr class="lead-row" data-funnel="instagram">
       <td class="col-date">7/9/2026</td>
       <td class="col-client">Tessa Domenici</td>
       <td class="col-email">t****ci07@yahoo.com</td>
@@ -2898,7 +2939,7 @@
       <td class="col-flag"><span class="yn yes">Yes</span></td>
     </tr>
 
-    <tr class="lead-row">
+    <tr class="lead-row" data-funnel="instagram">
       <td class="col-date">7/9/2026</td>
       <td class="col-client">Tj Rice</td>
       <td class="col-email">t****ce20@gmail.com</td>
@@ -2908,7 +2949,7 @@
       <td class="col-flag"><span class="yn yes">Yes</span></td>
     </tr>
 
-    <tr class="lead-row">
+    <tr class="lead-row" data-funnel="instagram">
       <td class="col-date">7/10/2026</td>
       <td class="col-client">Alex Farmakis</td>
       <td class="col-email">a****s443@gmail.com</td>
@@ -2918,7 +2959,7 @@
       <td class="col-flag"><span class="yn yes">Yes</span></td>
     </tr>
 
-    <tr class="lead-row">
+    <tr class="lead-row" data-funnel="instagram">
       <td class="col-date">7/10/2026</td>
       <td class="col-client">Chris Farmer</td>
       <td class="col-email">c****2011@gmail.com</td>
@@ -2928,7 +2969,7 @@
       <td class="col-flag"><span class="yn yes">Yes</span></td>
     </tr>
 
-    <tr class="lead-row">
+    <tr class="lead-row" data-funnel="instagram">
       <td class="col-date">7/10/2026</td>
       <td class="col-client">Christian Maldonado</td>
       <td class="col-email">c****do20@yahoo.com</td>
@@ -2938,7 +2979,7 @@
       <td class="col-flag"><span class="yn no">No</span></td>
     </tr>
 
-    <tr class="lead-row">
+    <tr class="lead-row" data-funnel="anthony_x">
       <td class="col-date">7/10/2026</td>
       <td class="col-client">Dan Dellaria</td>
       <td class="col-email">d****aria@comcast.net</td>
@@ -2948,7 +2989,7 @@
       <td class="col-flag"><span class="yn yes">Yes</span></td>
     </tr>
 
-    <tr class="lead-row">
+    <tr class="lead-row" data-funnel="instagram">
       <td class="col-date">7/10/2026</td>
       <td class="col-client">Efosa Okonkwo</td>
       <td class="col-email">e****nkwo@gmail.com</td>
@@ -2958,7 +2999,7 @@
       <td class="col-flag"><span class="yn yes">Yes</span></td>
     </tr>
 
-    <tr class="lead-row">
+    <tr class="lead-row" data-funnel="instagram">
       <td class="col-date">7/10/2026</td>
       <td class="col-client">Madison Wright</td>
       <td class="col-email">m****is04@gmail.com</td>
@@ -2968,7 +3009,7 @@
       <td class="col-flag"><span class="yn yes">Yes</span></td>
     </tr>
 
-    <tr class="lead-row">
+    <tr class="lead-row" data-funnel="instagram">
       <td class="col-date">7/11/2026</td>
       <td class="col-client">Dev Saini</td>
       <td class="col-email">d****aini@hotmail.com</td>
@@ -2978,7 +3019,7 @@
       <td class="col-flag"><span class="yn yes">Yes</span></td>
     </tr>
 
-    <tr class="lead-row">
+    <tr class="lead-row" data-funnel="instagram">
       <td class="col-date">7/12/2026</td>
       <td class="col-client">Andy Spence</td>
       <td class="col-email">a****e442@gmail.com</td>
@@ -2988,7 +3029,7 @@
       <td class="col-flag"><span class="yn yes">Yes</span></td>
     </tr>
 
-    <tr class="lead-row">
+    <tr class="lead-row" data-funnel="instagram">
       <td class="col-date">7/12/2026</td>
       <td class="col-client">George Hylis</td>
       <td class="col-email">h****jiri@gmail.com</td>
@@ -2998,7 +3039,7 @@
       <td class="col-flag"><span class="yn yes">Yes</span></td>
     </tr>
 
-    <tr class="lead-row">
+    <tr class="lead-row" data-funnel="linkedin">
       <td class="col-date">7/13/2026</td>
       <td class="col-client">Chris Dunbar</td>
       <td class="col-email">c****ph43@gmail.com</td>
@@ -3008,7 +3049,7 @@
       <td class="col-flag"><span class="yn yes">Yes</span></td>
     </tr>
 
-    <tr class="lead-row">
+    <tr class="lead-row" data-funnel="instagram">
       <td class="col-date">7/13/2026</td>
       <td class="col-client">Elliot Woods</td>
       <td class="col-email">e****ds22@gmail.com</td>
@@ -3018,7 +3059,7 @@
       <td class="col-flag"><span class="yn no">No</span></td>
     </tr>
 
-    <tr class="lead-row">
+    <tr class="lead-row" data-funnel="x">
       <td class="col-date">7/13/2026</td>
       <td class="col-client">Felipe Paz-Rodriguez</td>
       <td class="col-email">f****fe24@gmail.com</td>
@@ -3028,7 +3069,7 @@
       <td class="col-flag"><span class="yn no">No</span></td>
     </tr>
 
-    <tr class="lead-row">
+    <tr class="lead-row" data-funnel="instagram">
       <td class="col-date">7/13/2026</td>
       <td class="col-client">George Leventis</td>
       <td class="col-email">g****mata@gmail.com</td>
@@ -3038,7 +3079,7 @@
       <td class="col-flag"><span class="yn no">No</span></td>
     </tr>
 
-    <tr class="lead-row">
+    <tr class="lead-row" data-funnel="instagram">
       <td class="col-date">7/13/2026</td>
       <td class="col-client">Nick Rojas</td>
       <td class="col-email">t****ojas@gmail.com</td>
@@ -3048,7 +3089,7 @@
       <td class="col-flag"><span class="yn yes">Yes</span></td>
     </tr>
 
-    <tr class="lead-row">
+    <tr class="lead-row" data-funnel="instagram">
       <td class="col-date">7/13/2026</td>
       <td class="col-client">Nicole Bentford</td>
       <td class="col-email">n****ford@gmail.com</td>
@@ -3058,7 +3099,7 @@
       <td class="col-flag"><span class="yn yes">Yes</span></td>
     </tr>
 
-    <tr class="lead-row">
+    <tr class="lead-row" data-funnel="x">
       <td class="col-date">7/13/2026</td>
       <td class="col-client">RYAN</td>
       <td class="col-email">r****pi88@yahoo.com</td>
@@ -3068,7 +3109,7 @@
       <td class="col-flag"><span class="yn yes">Yes</span></td>
     </tr>
 
-    <tr class="lead-row">
+    <tr class="lead-row" data-funnel="instagram">
       <td class="col-date">7/13/2026</td>
       <td class="col-client">Terell Williams</td>
       <td class="col-email">t****ms82@gmail.com</td>
@@ -3078,7 +3119,7 @@
       <td class="col-flag"><span class="yn yes">Yes</span></td>
     </tr>
 
-    <tr class="lead-row">
+    <tr class="lead-row" data-funnel="linkedin">
       <td class="col-date">7/13/2026</td>
       <td class="col-client">Victor Holness</td>
       <td class="col-email">v****ctor@vitavendin.com</td>
@@ -3088,7 +3129,7 @@
       <td class="col-flag"><span class="yn yes">Yes</span></td>
     </tr>
 
-    <tr class="lead-row">
+    <tr class="lead-row" data-funnel="instagram">
       <td class="col-date">7/14/2026</td>
       <td class="col-client">Maurice Webb</td>
       <td class="col-email">m****b.mw@gmail.com</td>
@@ -3098,7 +3139,7 @@
       <td class="col-flag"><span class="yn no">No</span></td>
     </tr>
 
-    <tr class="lead-row">
+    <tr class="lead-row" data-funnel="instagram">
       <td class="col-date">7/14/2026</td>
       <td class="col-client">Tiffany Green</td>
       <td class="col-email">r****yler@yahoo.com</td>
@@ -3108,7 +3149,7 @@
       <td class="col-flag"><span class="yn yes">Yes</span></td>
     </tr>
 
-    <tr class="lead-row">
+    <tr class="lead-row" data-funnel="instagram">
       <td class="col-date">7/15/2026</td>
       <td class="col-client">Luis Fernandez -</td>
       <td class="col-email">b****uisf@aol.com</td>
@@ -3118,7 +3159,7 @@
       <td class="col-flag"><span class="yn yes">Yes</span></td>
     </tr>
 
-    <tr class="lead-row">
+    <tr class="lead-row" data-funnel="instagram">
       <td class="col-date">7/15/2026</td>
       <td class="col-client">Mike Hardenbrook</td>
       <td class="col-email">m****rook@gmail.com</td>
@@ -3128,7 +3169,7 @@
       <td class="col-flag"><span class="yn no">No</span></td>
     </tr>
 
-    <tr class="lead-row">
+    <tr class="lead-row" data-funnel="instagram">
       <td class="col-date">7/16/2026</td>
       <td class="col-client">Adriana Nevarez</td>
       <td class="col-email">a****1987@gmail.com</td>
@@ -3138,7 +3179,7 @@
       <td class="col-flag"><span class="yn no">No</span></td>
     </tr>
 
-    <tr class="lead-row">
+    <tr class="lead-row" data-funnel="instagram">
       <td class="col-date">7/16/2026</td>
       <td class="col-client">Africa Rodriguez</td>
       <td class="col-email">a****otes@hotmail.com</td>
@@ -3148,7 +3189,7 @@
       <td class="col-flag"><span class="yn no">No</span></td>
     </tr>
 
-    <tr class="lead-row">
+    <tr class="lead-row" data-funnel="instagram">
       <td class="col-date">7/16/2026</td>
       <td class="col-client">Kara Ungaro</td>
       <td class="col-email">d****garo@gmail.com</td>
@@ -3158,7 +3199,7 @@
       <td class="col-flag"><span class="yn yes">Yes</span></td>
     </tr>
 
-    <tr class="lead-row">
+    <tr class="lead-row" data-funnel="instagram">
       <td class="col-date">7/16/2026</td>
       <td class="col-client">Patricio Rodriguez</td>
       <td class="col-email">p****r215@yahoo.com</td>
@@ -3168,7 +3209,7 @@
       <td class="col-flag"><span class="yn yes">Yes</span></td>
     </tr>
 
-    <tr class="lead-row">
+    <tr class="lead-row" data-funnel="instagram">
       <td class="col-date">7/16/2026</td>
       <td class="col-client">Thomas K</td>
       <td class="col-email">j****trt4@gmail.com</td>
@@ -3178,7 +3219,7 @@
       <td class="col-flag"><span class="yn no">No</span></td>
     </tr>
 
-    <tr class="lead-row">
+    <tr class="lead-row" data-funnel="instagram">
       <td class="col-date">7/17/2026</td>
       <td class="col-client">Asif Malik</td>
       <td class="col-email">b****oltd@gmail.com</td>
@@ -3188,7 +3229,7 @@
       <td class="col-flag"><span class="yn no">No</span></td>
     </tr>
 
-    <tr class="lead-row">
+    <tr class="lead-row" data-funnel="instagram">
       <td class="col-date">7/17/2026</td>
       <td class="col-client">A’Niyah E</td>
       <td class="col-email">a****is31@gmail.com</td>
@@ -3198,7 +3239,7 @@
       <td class="col-flag"><span class="yn yes">Yes</span></td>
     </tr>
 
-    <tr class="lead-row">
+    <tr class="lead-row" data-funnel="instagram">
       <td class="col-date">7/17/2026</td>
       <td class="col-client">Sean Jusko</td>
       <td class="col-email">d****onhs@gmail.com</td>
@@ -3208,7 +3249,7 @@
       <td class="col-flag"><span class="yn yes">Yes</span></td>
     </tr>
 
-    <tr class="lead-row">
+    <tr class="lead-row" data-funnel="instagram">
       <td class="col-date">7/18/2026</td>
       <td class="col-client">Pete Bolivar</td>
       <td class="col-email">p****ivar@yahoo.com</td>
@@ -3218,7 +3259,7 @@
       <td class="col-flag"><span class="yn no">No</span></td>
     </tr>
 
-    <tr class="lead-row">
+    <tr class="lead-row" data-funnel="instagram">
       <td class="col-date">7/19/2026</td>
       <td class="col-client">Jonathan Martinez</td>
       <td class="col-email">j****ez35@yahoo.com</td>
@@ -3228,7 +3269,7 @@
       <td class="col-flag"><span class="yn yes">Yes</span></td>
     </tr>
 
-    <tr class="lead-row">
+    <tr class="lead-row" data-funnel="instagram">
       <td class="col-date">7/20/2026</td>
       <td class="col-client">Dhvani Patel</td>
       <td class="col-email">d****l268@gmail.com</td>
@@ -3238,7 +3279,7 @@
       <td class="col-flag"><span class="yn no">No</span></td>
     </tr>
 
-    <tr class="lead-row">
+    <tr class="lead-row" data-funnel="linkedin">
       <td class="col-date">7/20/2026</td>
       <td class="col-client">Eli Christensen</td>
       <td class="col-email">a****rise@yahoo.com</td>
@@ -3248,7 +3289,7 @@
       <td class="col-flag"><span class="yn yes">Yes</span></td>
     </tr>
 
-    <tr class="lead-row">
+    <tr class="lead-row" data-funnel="instagram">
       <td class="col-date">7/20/2026</td>
       <td class="col-client">Justin Maiser</td>
       <td class="col-email">j****iser@iheartmedia.com</td>
@@ -3258,7 +3299,7 @@
       <td class="col-flag"><span class="yn yes">Yes</span></td>
     </tr>
 
-    <tr class="lead-row">
+    <tr class="lead-row" data-funnel="instagram">
       <td class="col-date">7/20/2026</td>
       <td class="col-client">Justin Shepherd</td>
       <td class="col-email">j****d223@gmail.com</td>
@@ -3268,7 +3309,7 @@
       <td class="col-flag"><span class="yn yes">Yes</span></td>
     </tr>
 
-    <tr class="lead-row">
+    <tr class="lead-row" data-funnel="instagram">
       <td class="col-date">7/21/2026</td>
       <td class="col-client">Amy Bang</td>
       <td class="col-email">a****sung@gmail.com</td>
@@ -3278,7 +3319,7 @@
       <td class="col-flag"><span class="yn yes">Yes</span></td>
     </tr>
 
-    <tr class="lead-row">
+    <tr class="lead-row" data-funnel="instagram">
       <td class="col-date">7/21/2026</td>
       <td class="col-client">Denise Baum</td>
       <td class="col-email">d****um11@gmail.com</td>
@@ -3288,7 +3329,7 @@
       <td class="col-flag"><span class="yn yes">Yes</span></td>
     </tr>
 
-    <tr class="lead-row">
+    <tr class="lead-row" data-funnel="instagram">
       <td class="col-date">7/21/2026</td>
       <td class="col-client">Diana Ecker</td>
       <td class="col-email">d****ker7@gmail.com</td>
@@ -3298,7 +3339,7 @@
       <td class="col-flag"><span class="yn yes">Yes</span></td>
     </tr>
 
-    <tr class="lead-row">
+    <tr class="lead-row" data-funnel="linkedin">
       <td class="col-date">7/21/2026</td>
       <td class="col-client">Hope Brown</td>
       <td class="col-email">l****0205@gmail.com</td>
@@ -3308,7 +3349,7 @@
       <td class="col-flag"><span class="yn no">No</span></td>
     </tr>
 
-    <tr class="lead-row">
+    <tr class="lead-row" data-funnel="instagram">
       <td class="col-date">7/21/2026</td>
       <td class="col-client">Joey Carter</td>
       <td class="col-email">t****ures@gmail.com</td>
@@ -3318,7 +3359,7 @@
       <td class="col-flag"><span class="yn yes">Yes</span></td>
     </tr>
 
-    <tr class="lead-row">
+    <tr class="lead-row" data-funnel="instagram">
       <td class="col-date">7/21/2026</td>
       <td class="col-client">Mohammed Alkindi</td>
       <td class="col-email">m****ds98@hotmail.com</td>
@@ -3328,7 +3369,7 @@
       <td class="col-flag"><span class="yn no">No</span></td>
     </tr>
 
-    <tr class="lead-row">
+    <tr class="lead-row" data-funnel="instagram">
       <td class="col-date">7/21/2026</td>
       <td class="col-client">Robert Langston</td>
       <td class="col-email">r****0567@gmail.com</td>
@@ -3338,7 +3379,7 @@
       <td class="col-flag"><span class="yn yes">Yes</span></td>
     </tr>
 
-    <tr class="lead-row">
+    <tr class="lead-row" data-funnel="instagram">
       <td class="col-date">7/22/2026</td>
       <td class="col-client">Brianna Golson</td>
       <td class="col-email">b****ding@gmail.com</td>
@@ -3348,7 +3389,7 @@
       <td class="col-flag"><span class="yn yes">Yes</span></td>
     </tr>
 
-    <tr class="lead-row">
+    <tr class="lead-row" data-funnel="x">
       <td class="col-date">7/22/2026</td>
       <td class="col-client">Eric Coulter Jr</td>
       <td class="col-email">e****jr93@gmail.com</td>
@@ -3358,7 +3399,7 @@
       <td class="col-flag"><span class="yn no">No</span></td>
     </tr>
 
-    <tr class="lead-row">
+    <tr class="lead-row" data-funnel="instagram">
       <td class="col-date">7/22/2026</td>
       <td class="col-client">Robert Scott</td>
       <td class="col-email">c****2408@gmail.com</td>
@@ -3368,7 +3409,7 @@
       <td class="col-flag"><span class="yn no">No</span></td>
     </tr>
 
-    <tr class="lead-row">
+    <tr class="lead-row" data-funnel="anthony_x">
       <td class="col-date">7/23/2026</td>
       <td class="col-client">Damian Schuler</td>
       <td class="col-email">d****er92@gmail.com</td>
@@ -3378,7 +3419,7 @@
       <td class="col-flag"><span class="yn yes">Yes</span></td>
     </tr>
 
-    <tr class="lead-row">
+    <tr class="lead-row" data-funnel="instagram">
       <td class="col-date">7/23/2026</td>
       <td class="col-client">Eduardo Enciso</td>
       <td class="col-email">e****soed@gmail.com</td>
@@ -3388,7 +3429,7 @@
       <td class="col-flag"><span class="yn yes">Yes</span></td>
     </tr>
 
-    <tr class="lead-row">
+    <tr class="lead-row" data-funnel="instagram">
       <td class="col-date">7/23/2026</td>
       <td class="col-client">Firas Ghrimil</td>
       <td class="col-email">g****iras@gmail.com</td>
@@ -3398,7 +3439,7 @@
       <td class="col-flag"><span class="yn yes">Yes</span></td>
     </tr>
 
-    <tr class="lead-row">
+    <tr class="lead-row" data-funnel="instagram">
       <td class="col-date">7/23/2026</td>
       <td class="col-client">Isaiah Planas</td>
       <td class="col-email">p****aiah@gmail.com</td>
@@ -3408,7 +3449,7 @@
       <td class="col-flag"><span class="yn no">No</span></td>
     </tr>
 
-    <tr class="lead-row">
+    <tr class="lead-row" data-funnel="instagram">
       <td class="col-date">7/23/2026</td>
       <td class="col-client">Melissa Soares</td>
       <td class="col-email">m****usoa@gmail.com</td>
@@ -3418,7 +3459,7 @@
       <td class="col-flag"><span class="yn yes">Yes</span></td>
     </tr>
 
-    <tr class="lead-row">
+    <tr class="lead-row" data-funnel="instagram">
       <td class="col-date">7/23/2026</td>
       <td class="col-client">Peyton Faulkner</td>
       <td class="col-email">f****yton@yahoo.com</td>
@@ -3428,7 +3469,7 @@
       <td class="col-flag"><span class="yn yes">Yes</span></td>
     </tr>
 
-    <tr class="lead-row">
+    <tr class="lead-row" data-funnel="instagram">
       <td class="col-date">7/24/2026</td>
       <td class="col-client">James Padilla</td>
       <td class="col-email">j****la07@gmail.com</td>
@@ -3438,7 +3479,7 @@
       <td class="col-flag"><span class="yn no">No</span></td>
     </tr>
 
-    <tr class="lead-row">
+    <tr class="lead-row" data-funnel="instagram">
       <td class="col-date">7/24/2026</td>
       <td class="col-client">Jared Houseman</td>
       <td class="col-email">j****eman@outlook.com</td>
@@ -3448,7 +3489,7 @@
       <td class="col-flag"><span class="yn yes">Yes</span></td>
     </tr>
 
-    <tr class="lead-row">
+    <tr class="lead-row" data-funnel="instagram">
       <td class="col-date">7/24/2026</td>
       <td class="col-client">Mae Reynon</td>
       <td class="col-email">j****mv67@gmail.com</td>
@@ -3458,7 +3499,7 @@
       <td class="col-flag"><span class="yn yes">Yes</span></td>
     </tr>
 
-    <tr class="lead-row">
+    <tr class="lead-row" data-funnel="instagram">
       <td class="col-date">7/24/2026</td>
       <td class="col-client">Michael Muehlendorf</td>
       <td class="col-email">m****dorf@gmail.com</td>
@@ -3468,7 +3509,7 @@
       <td class="col-flag"><span class="yn no">No</span></td>
     </tr>
 
-    <tr class="lead-row">
+    <tr class="lead-row" data-funnel="instagram">
       <td class="col-date">7/24/2026</td>
       <td class="col-client">Pawanpreet Nahal</td>
       <td class="col-email">p****toor@live.com</td>
@@ -3498,7 +3539,7 @@
     </thead>
     <tbody>
 
-    <tr class="lead-row">
+    <tr class="lead-row" data-funnel="instagram" data-gross="8997.00" data-cash="8780.70">
       <td class="col-date">7/2/2026</td>
       <td class="col-client">Alexandra Chuquillangui</td>
       <td class="col-email">a****q413@gmail.com</td>
@@ -3509,7 +3550,7 @@
       <td class="col-cash">$8,781</td>
     </tr>
 
-    <tr class="lead-row">
+    <tr class="lead-row" data-funnel="instagram" data-gross="8997.00" data-cash="5517.53">
       <td class="col-date">7/2/2026</td>
       <td class="col-client">John Anthony</td>
       <td class="col-email">v****ngco@gmail.com</td>
@@ -3520,7 +3561,7 @@
       <td class="col-cash">$5,518</td>
     </tr>
 
-    <tr class="lead-row">
+    <tr class="lead-row" data-funnel="instagram" data-gross="5997.00" data-cash="5852.33">
       <td class="col-date">7/4/2026</td>
       <td class="col-client">Erick Lopez</td>
       <td class="col-email">l****ck37@yahoo.com</td>
@@ -3531,7 +3572,7 @@
       <td class="col-cash">$5,852</td>
     </tr>
 
-    <tr class="lead-row">
+    <tr class="lead-row" data-funnel="linkedin" data-gross="5697.00" data-cash="5691.93">
       <td class="col-date">7/8/2026</td>
       <td class="col-client">Todd Berk</td>
       <td class="col-email">t****@snack-tastic.com</td>
@@ -3542,7 +3583,7 @@
       <td class="col-cash">$5,692</td>
     </tr>
 
-    <tr class="lead-row">
+    <tr class="lead-row" data-funnel="x" data-gross="5997.00" data-cash="5862.15">
       <td class="col-date">7/13/2026</td>
       <td class="col-client">RYAN</td>
       <td class="col-email">r****pi88@yahoo.com</td>
@@ -3553,7 +3594,7 @@
       <td class="col-cash">$5,862</td>
     </tr>
 
-    <tr class="lead-row">
+    <tr class="lead-row" data-funnel="instagram" data-gross="5997.00" data-cash="">
       <td class="col-date">7/13/2026</td>
       <td class="col-client">Nick Rojas</td>
       <td class="col-email">t****ojas@gmail.com</td>
@@ -3591,38 +3632,115 @@
     if (chevron) chevron.classList.toggle("open", !isOpen);
   }
 
-  const LEAD_COUNTS = {
-    setter: "20 calls",
-    stuck:  "15 stuck",
-    closer: "99 calls",
-    closed: "6 deals",
-  };
+  // ── Lead table state ──────────────────────────────────────────────────────
+  let currentTab   = "closed";
+  let activeFunnels = new Set(
+    Array.from(document.querySelectorAll(".ff-pill")).map(p => p.dataset.funnel));
+
+  function fmtUSD(v) {
+    if (!v) return "$0";
+    return "$" + Math.round(v).toLocaleString("en-US");
+  }
+
+  function toggleFunnel(slug) {
+    if (activeFunnels.has(slug)) activeFunnels.delete(slug);
+    else                         activeFunnels.add(slug);
+    document.querySelectorAll(".ff-pill").forEach(p =>
+      p.classList.toggle("active", activeFunnels.has(p.dataset.funnel)));
+    applyFilter();
+  }
 
   function showLeadTab(tab) {
-    // Stuck reuses the setter pane, filtered to non-advanced rows.
+    currentTab = tab;
     const paneId = (tab === "stuck") ? "setter" : tab;
-
     document.querySelectorAll(".lead-pane").forEach(p => {
       p.style.display = (p.id === "pane-" + paneId) ? "" : "none";
     });
     document.querySelectorAll(".lead-tab").forEach(b => {
       b.classList.toggle("active", b.dataset.tab === tab);
     });
+    applyFilter();
+    document.querySelector(".lead-tabs").scrollIntoView({behavior: "smooth", block: "nearest"});
+  }
 
+  // Single source of visibility truth. A row shows iff its funnel is active AND
+  // (not in Stuck view OR it is a stuck row). Totals re-sum only visible rows.
+  function applyFilter() {
+    const tab       = currentTab;
     const onlyStuck = (tab === "stuck");
-    document.querySelectorAll("#pane-setter .advanced-row").forEach(r => {
-      r.style.display = onlyStuck ? "none" : "";
-    });
+    const paneId    = onlyStuck ? "setter" : tab;
+    const pane      = document.getElementById("pane-" + paneId);
+    if (!pane) return;
+
     const nSetter = document.getElementById("note-setter");
     const nStuck  = document.getElementById("note-stuck");
     if (nSetter) nSetter.style.display = onlyStuck ? "none" : "";
     if (nStuck)  nStuck.style.display  = onlyStuck ? "" : "none";
 
-    const pill = document.getElementById("lead-count");
-    if (pill) pill.textContent = LEAD_COUNTS[tab] || "";
+    const rows = pane.querySelectorAll("tbody tr.lead-row");
+    let visible = 0, grossSum = 0, cashSum = 0, cashCount = 0, cashTotal = 0;
 
-    document.querySelector(".lead-tabs").scrollIntoView({behavior: "smooth", block: "nearest"});
+    rows.forEach(r => {
+      const funnelOK = activeFunnels.has(r.dataset.funnel);
+      const stuckOK  = !onlyStuck || r.classList.contains("stuck-row");
+      const show = funnelOK && stuckOK;
+      r.style.display = show ? "" : "none";
+      if (show) {
+        visible++;
+        if (tab === "closed") {
+          grossSum += parseFloat(r.dataset.gross || "0");
+          cashTotal++;
+          if (r.dataset.cash !== "") { cashSum += parseFloat(r.dataset.cash); cashCount++; }
+        }
+      }
+    });
+
+    // Empty-state row — only manage it when the pane actually has data rows
+    // (a server-rendered "none this period" row already covers the zero case).
+    if (rows.length > 0) {
+      const tbody = pane.querySelector("tbody");
+      let er = pane.querySelector("tr.filter-empty");
+      if (visible === 0) {
+        if (!er) {
+          er = document.createElement("tr");
+          er.className = "filter-empty";
+          const td = document.createElement("td");
+          td.colSpan = 8; td.className = "lead-empty";
+          er.appendChild(td);
+          tbody.insertBefore(er, tbody.firstChild);
+        }
+        er.querySelector("td").textContent = (activeFunnels.size === 0)
+          ? "No funnels selected."
+          : "No rows for the selected funnels.";
+        er.style.display = "";
+      } else if (er) {
+        er.style.display = "none";
+      }
+    }
+
+    // Closed-Won TOTAL row re-sums visible rows
+    if (tab === "closed") {
+      const totalRow = pane.querySelector("tr.total-row");
+      if (totalRow) {
+        totalRow.style.display = (visible === 0) ? "none" : "";
+        const gCell = totalRow.querySelector(".col-gross");
+        const cCell = totalRow.querySelector(".col-cash");
+        if (gCell) gCell.textContent = fmtUSD(grossSum);
+        if (cCell) cCell.innerHTML = fmtUSD(cashSum) +
+          '<div style="font-size:10px;font-weight:400;color:var(--muted);">' +
+          cashCount + ' of ' + cashTotal + ' deals</div>';
+      }
+    }
+
+    const pill = document.getElementById("lead-count");
+    if (pill) {
+      const noun = (tab === "closed") ? "deals" : (tab === "stuck") ? "stuck" : "calls";
+      pill.textContent = visible + " " + noun;
+    }
   }
+
+  // Sync counts, totals, and pill state to the default (closed) view on load.
+  applyFilter();
 
   function toggleUTM(fid) {
     const utmRows = document.querySelectorAll(`.utm-row[data-parent="${fid}"]`);

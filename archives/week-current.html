@@ -303,6 +303,42 @@
   .lead-tab.active .tab-n { background: rgba(255,255,255,0.22); color: #fff; }
   .lead-tab[data-tab="stuck"].active { background: var(--amber); border-color: var(--amber); }
 
+  /* ── Funnel filter pills ── */
+  .funnel-filter {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 0 36px 14px;
+    flex-wrap: wrap;
+  }
+  .ff-label {
+    font-size: 10.5px;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    color: var(--muted);
+    margin-right: 3px;
+  }
+  .ff-pill {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 4px 12px;
+    font-size: 11.5px;
+    font-weight: 500;
+    color: var(--muted2);
+    cursor: pointer;
+    font-family: inherit;
+    transition: all 0.12s;
+    opacity: 0.5;
+  }
+  .ff-pill:hover { border-color: var(--accent); color: var(--text); opacity: 1; }
+  .ff-pill.active {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: #fff;
+    opacity: 1;
+  }
+
   .pane-note {
     font-size: 11px;
     color: var(--muted);
@@ -440,7 +476,7 @@
       <option value="/agency-funnel-dashboard/archives/week-current.html" selected>Jul 20–24 ▶</option></select></div>
     </div>
     <span class="snapshot-label"><span class="archive-badge">Week View</span></span>
-    July 24, 2026 at 01:47 PM PT<br>
+    July 24, 2026 at 01:59 PM PT<br>
     Source · Close CRM
   </div>
 </div>
@@ -449,7 +485,7 @@
 <div class="kpis">
   <div class="kpi" style="--kpi-accent:#6366f1; --kpi-color:#6366f1;">
     <div class="label">Leads Created</div>
-    <div class="value">29</div>
+    <div class="value">30</div>
     <div class="kpi-sub">new leads this period</div>
   </div>
   <div class="kpi kpi-clickable" data-tab="setter" onclick="showLeadTab('setter')"
@@ -524,7 +560,7 @@
       <td class="col-name">
         <span class="chevron" id="chev-instagram">›</span>Instagram
       </td>
-      <td class="col-num">25</td>
+      <td class="col-num">26</td>
       <td class="col-num col-setter">—</td>
       <td class="col-num col-stuck">—</td>
       <td class="col-pct ">—</td>
@@ -834,7 +870,7 @@
 
     <tr class="total-row">
       <td class="col-name">TOTAL</td>
-      <td class="col-num">29</td>
+      <td class="col-num">30</td>
       <td class="col-num col-setter">0</td>
       <td class="col-num col-stuck">0</td>
       <td class="col-pct ">—</td>
@@ -865,6 +901,11 @@
   <button class="lead-tab" data-tab="stuck"  onclick="showLeadTab('stuck')">Stuck <span class="tab-n">0</span></button>
   <button class="lead-tab" data-tab="closer" onclick="showLeadTab('closer')">Closer Calls <span class="tab-n">25</span></button>
   <button class="lead-tab active" data-tab="closed" onclick="showLeadTab('closed')">Closed-Won <span class="tab-n">0</span></button>
+</div>
+
+<div class="funnel-filter">
+  <span class="ff-label">Funnel</span>
+  <button class="ff-pill active" data-funnel="instagram" onclick="toggleFunnel('instagram')">Instagram</button><button class="ff-pill active" data-funnel="x" onclick="toggleFunnel('x')">X</button><button class="ff-pill active" data-funnel="linkedin" onclick="toggleFunnel('linkedin')">Linkedin</button><button class="ff-pill active" data-funnel="anthony_x" onclick="toggleFunnel('anthony_x')">Anthony X</button>
 </div>
 
 <!-- Setter + Stuck share one table; Stuck hides advanced rows -->
@@ -904,7 +945,7 @@
     </thead>
     <tbody>
 
-    <tr class="lead-row">
+    <tr class="lead-row" data-funnel="instagram">
       <td class="col-date">7/20/2026</td>
       <td class="col-client">Dhvani Patel</td>
       <td class="col-email">d****l268@gmail.com</td>
@@ -914,7 +955,7 @@
       <td class="col-flag"><span class="yn no">No</span></td>
     </tr>
 
-    <tr class="lead-row">
+    <tr class="lead-row" data-funnel="linkedin">
       <td class="col-date">7/20/2026</td>
       <td class="col-client">Eli Christensen</td>
       <td class="col-email">a****rise@yahoo.com</td>
@@ -924,7 +965,7 @@
       <td class="col-flag"><span class="yn yes">Yes</span></td>
     </tr>
 
-    <tr class="lead-row">
+    <tr class="lead-row" data-funnel="instagram">
       <td class="col-date">7/20/2026</td>
       <td class="col-client">Justin Maiser</td>
       <td class="col-email">j****iser@iheartmedia.com</td>
@@ -934,7 +975,7 @@
       <td class="col-flag"><span class="yn yes">Yes</span></td>
     </tr>
 
-    <tr class="lead-row">
+    <tr class="lead-row" data-funnel="instagram">
       <td class="col-date">7/20/2026</td>
       <td class="col-client">Justin Shepherd</td>
       <td class="col-email">j****d223@gmail.com</td>
@@ -944,7 +985,7 @@
       <td class="col-flag"><span class="yn yes">Yes</span></td>
     </tr>
 
-    <tr class="lead-row">
+    <tr class="lead-row" data-funnel="instagram">
       <td class="col-date">7/21/2026</td>
       <td class="col-client">Amy Bang</td>
       <td class="col-email">a****sung@gmail.com</td>
@@ -954,7 +995,7 @@
       <td class="col-flag"><span class="yn yes">Yes</span></td>
     </tr>
 
-    <tr class="lead-row">
+    <tr class="lead-row" data-funnel="instagram">
       <td class="col-date">7/21/2026</td>
       <td class="col-client">Denise Baum</td>
       <td class="col-email">d****um11@gmail.com</td>
@@ -964,7 +1005,7 @@
       <td class="col-flag"><span class="yn yes">Yes</span></td>
     </tr>
 
-    <tr class="lead-row">
+    <tr class="lead-row" data-funnel="instagram">
       <td class="col-date">7/21/2026</td>
       <td class="col-client">Diana Ecker</td>
       <td class="col-email">d****ker7@gmail.com</td>
@@ -974,7 +1015,7 @@
       <td class="col-flag"><span class="yn yes">Yes</span></td>
     </tr>
 
-    <tr class="lead-row">
+    <tr class="lead-row" data-funnel="linkedin">
       <td class="col-date">7/21/2026</td>
       <td class="col-client">Hope Brown</td>
       <td class="col-email">l****0205@gmail.com</td>
@@ -984,7 +1025,7 @@
       <td class="col-flag"><span class="yn no">No</span></td>
     </tr>
 
-    <tr class="lead-row">
+    <tr class="lead-row" data-funnel="instagram">
       <td class="col-date">7/21/2026</td>
       <td class="col-client">Joey Carter</td>
       <td class="col-email">t****ures@gmail.com</td>
@@ -994,7 +1035,7 @@
       <td class="col-flag"><span class="yn yes">Yes</span></td>
     </tr>
 
-    <tr class="lead-row">
+    <tr class="lead-row" data-funnel="instagram">
       <td class="col-date">7/21/2026</td>
       <td class="col-client">Mohammed Alkindi</td>
       <td class="col-email">m****ds98@hotmail.com</td>
@@ -1004,7 +1045,7 @@
       <td class="col-flag"><span class="yn no">No</span></td>
     </tr>
 
-    <tr class="lead-row">
+    <tr class="lead-row" data-funnel="instagram">
       <td class="col-date">7/21/2026</td>
       <td class="col-client">Robert Langston</td>
       <td class="col-email">r****0567@gmail.com</td>
@@ -1014,7 +1055,7 @@
       <td class="col-flag"><span class="yn yes">Yes</span></td>
     </tr>
 
-    <tr class="lead-row">
+    <tr class="lead-row" data-funnel="instagram">
       <td class="col-date">7/22/2026</td>
       <td class="col-client">Brianna Golson</td>
       <td class="col-email">b****ding@gmail.com</td>
@@ -1024,7 +1065,7 @@
       <td class="col-flag"><span class="yn yes">Yes</span></td>
     </tr>
 
-    <tr class="lead-row">
+    <tr class="lead-row" data-funnel="x">
       <td class="col-date">7/22/2026</td>
       <td class="col-client">Eric Coulter Jr</td>
       <td class="col-email">e****jr93@gmail.com</td>
@@ -1034,7 +1075,7 @@
       <td class="col-flag"><span class="yn no">No</span></td>
     </tr>
 
-    <tr class="lead-row">
+    <tr class="lead-row" data-funnel="instagram">
       <td class="col-date">7/22/2026</td>
       <td class="col-client">Robert Scott</td>
       <td class="col-email">c****2408@gmail.com</td>
@@ -1044,7 +1085,7 @@
       <td class="col-flag"><span class="yn no">No</span></td>
     </tr>
 
-    <tr class="lead-row">
+    <tr class="lead-row" data-funnel="anthony_x">
       <td class="col-date">7/23/2026</td>
       <td class="col-client">Damian Schuler</td>
       <td class="col-email">d****er92@gmail.com</td>
@@ -1054,7 +1095,7 @@
       <td class="col-flag"><span class="yn yes">Yes</span></td>
     </tr>
 
-    <tr class="lead-row">
+    <tr class="lead-row" data-funnel="instagram">
       <td class="col-date">7/23/2026</td>
       <td class="col-client">Eduardo Enciso</td>
       <td class="col-email">e****soed@gmail.com</td>
@@ -1064,7 +1105,7 @@
       <td class="col-flag"><span class="yn yes">Yes</span></td>
     </tr>
 
-    <tr class="lead-row">
+    <tr class="lead-row" data-funnel="instagram">
       <td class="col-date">7/23/2026</td>
       <td class="col-client">Firas Ghrimil</td>
       <td class="col-email">g****iras@gmail.com</td>
@@ -1074,7 +1115,7 @@
       <td class="col-flag"><span class="yn yes">Yes</span></td>
     </tr>
 
-    <tr class="lead-row">
+    <tr class="lead-row" data-funnel="instagram">
       <td class="col-date">7/23/2026</td>
       <td class="col-client">Isaiah Planas</td>
       <td class="col-email">p****aiah@gmail.com</td>
@@ -1084,7 +1125,7 @@
       <td class="col-flag"><span class="yn no">No</span></td>
     </tr>
 
-    <tr class="lead-row">
+    <tr class="lead-row" data-funnel="instagram">
       <td class="col-date">7/23/2026</td>
       <td class="col-client">Melissa Soares</td>
       <td class="col-email">m****usoa@gmail.com</td>
@@ -1094,7 +1135,7 @@
       <td class="col-flag"><span class="yn yes">Yes</span></td>
     </tr>
 
-    <tr class="lead-row">
+    <tr class="lead-row" data-funnel="instagram">
       <td class="col-date">7/23/2026</td>
       <td class="col-client">Peyton Faulkner</td>
       <td class="col-email">f****yton@yahoo.com</td>
@@ -1104,7 +1145,7 @@
       <td class="col-flag"><span class="yn yes">Yes</span></td>
     </tr>
 
-    <tr class="lead-row">
+    <tr class="lead-row" data-funnel="instagram">
       <td class="col-date">7/24/2026</td>
       <td class="col-client">James Padilla</td>
       <td class="col-email">j****la07@gmail.com</td>
@@ -1114,7 +1155,7 @@
       <td class="col-flag"><span class="yn no">No</span></td>
     </tr>
 
-    <tr class="lead-row">
+    <tr class="lead-row" data-funnel="instagram">
       <td class="col-date">7/24/2026</td>
       <td class="col-client">Jared Houseman</td>
       <td class="col-email">j****eman@outlook.com</td>
@@ -1124,7 +1165,7 @@
       <td class="col-flag"><span class="yn yes">Yes</span></td>
     </tr>
 
-    <tr class="lead-row">
+    <tr class="lead-row" data-funnel="instagram">
       <td class="col-date">7/24/2026</td>
       <td class="col-client">Mae Reynon</td>
       <td class="col-email">j****mv67@gmail.com</td>
@@ -1134,7 +1175,7 @@
       <td class="col-flag"><span class="yn yes">Yes</span></td>
     </tr>
 
-    <tr class="lead-row">
+    <tr class="lead-row" data-funnel="instagram">
       <td class="col-date">7/24/2026</td>
       <td class="col-client">Michael Muehlendorf</td>
       <td class="col-email">m****dorf@gmail.com</td>
@@ -1144,7 +1185,7 @@
       <td class="col-flag"><span class="yn no">No</span></td>
     </tr>
 
-    <tr class="lead-row">
+    <tr class="lead-row" data-funnel="instagram">
       <td class="col-date">7/24/2026</td>
       <td class="col-client">Pawanpreet Nahal</td>
       <td class="col-email">p****toor@live.com</td>
@@ -1203,38 +1244,115 @@
     if (chevron) chevron.classList.toggle("open", !isOpen);
   }
 
-  const LEAD_COUNTS = {
-    setter: "0 calls",
-    stuck:  "0 stuck",
-    closer: "25 calls",
-    closed: "0 deals",
-  };
+  // ── Lead table state ──────────────────────────────────────────────────────
+  let currentTab   = "closed";
+  let activeFunnels = new Set(
+    Array.from(document.querySelectorAll(".ff-pill")).map(p => p.dataset.funnel));
+
+  function fmtUSD(v) {
+    if (!v) return "$0";
+    return "$" + Math.round(v).toLocaleString("en-US");
+  }
+
+  function toggleFunnel(slug) {
+    if (activeFunnels.has(slug)) activeFunnels.delete(slug);
+    else                         activeFunnels.add(slug);
+    document.querySelectorAll(".ff-pill").forEach(p =>
+      p.classList.toggle("active", activeFunnels.has(p.dataset.funnel)));
+    applyFilter();
+  }
 
   function showLeadTab(tab) {
-    // Stuck reuses the setter pane, filtered to non-advanced rows.
+    currentTab = tab;
     const paneId = (tab === "stuck") ? "setter" : tab;
-
     document.querySelectorAll(".lead-pane").forEach(p => {
       p.style.display = (p.id === "pane-" + paneId) ? "" : "none";
     });
     document.querySelectorAll(".lead-tab").forEach(b => {
       b.classList.toggle("active", b.dataset.tab === tab);
     });
+    applyFilter();
+    document.querySelector(".lead-tabs").scrollIntoView({behavior: "smooth", block: "nearest"});
+  }
 
+  // Single source of visibility truth. A row shows iff its funnel is active AND
+  // (not in Stuck view OR it is a stuck row). Totals re-sum only visible rows.
+  function applyFilter() {
+    const tab       = currentTab;
     const onlyStuck = (tab === "stuck");
-    document.querySelectorAll("#pane-setter .advanced-row").forEach(r => {
-      r.style.display = onlyStuck ? "none" : "";
-    });
+    const paneId    = onlyStuck ? "setter" : tab;
+    const pane      = document.getElementById("pane-" + paneId);
+    if (!pane) return;
+
     const nSetter = document.getElementById("note-setter");
     const nStuck  = document.getElementById("note-stuck");
     if (nSetter) nSetter.style.display = onlyStuck ? "none" : "";
     if (nStuck)  nStuck.style.display  = onlyStuck ? "" : "none";
 
-    const pill = document.getElementById("lead-count");
-    if (pill) pill.textContent = LEAD_COUNTS[tab] || "";
+    const rows = pane.querySelectorAll("tbody tr.lead-row");
+    let visible = 0, grossSum = 0, cashSum = 0, cashCount = 0, cashTotal = 0;
 
-    document.querySelector(".lead-tabs").scrollIntoView({behavior: "smooth", block: "nearest"});
+    rows.forEach(r => {
+      const funnelOK = activeFunnels.has(r.dataset.funnel);
+      const stuckOK  = !onlyStuck || r.classList.contains("stuck-row");
+      const show = funnelOK && stuckOK;
+      r.style.display = show ? "" : "none";
+      if (show) {
+        visible++;
+        if (tab === "closed") {
+          grossSum += parseFloat(r.dataset.gross || "0");
+          cashTotal++;
+          if (r.dataset.cash !== "") { cashSum += parseFloat(r.dataset.cash); cashCount++; }
+        }
+      }
+    });
+
+    // Empty-state row — only manage it when the pane actually has data rows
+    // (a server-rendered "none this period" row already covers the zero case).
+    if (rows.length > 0) {
+      const tbody = pane.querySelector("tbody");
+      let er = pane.querySelector("tr.filter-empty");
+      if (visible === 0) {
+        if (!er) {
+          er = document.createElement("tr");
+          er.className = "filter-empty";
+          const td = document.createElement("td");
+          td.colSpan = 8; td.className = "lead-empty";
+          er.appendChild(td);
+          tbody.insertBefore(er, tbody.firstChild);
+        }
+        er.querySelector("td").textContent = (activeFunnels.size === 0)
+          ? "No funnels selected."
+          : "No rows for the selected funnels.";
+        er.style.display = "";
+      } else if (er) {
+        er.style.display = "none";
+      }
+    }
+
+    // Closed-Won TOTAL row re-sums visible rows
+    if (tab === "closed") {
+      const totalRow = pane.querySelector("tr.total-row");
+      if (totalRow) {
+        totalRow.style.display = (visible === 0) ? "none" : "";
+        const gCell = totalRow.querySelector(".col-gross");
+        const cCell = totalRow.querySelector(".col-cash");
+        if (gCell) gCell.textContent = fmtUSD(grossSum);
+        if (cCell) cCell.innerHTML = fmtUSD(cashSum) +
+          '<div style="font-size:10px;font-weight:400;color:var(--muted);">' +
+          cashCount + ' of ' + cashTotal + ' deals</div>';
+      }
+    }
+
+    const pill = document.getElementById("lead-count");
+    if (pill) {
+      const noun = (tab === "closed") ? "deals" : (tab === "stuck") ? "stuck" : "calls";
+      pill.textContent = visible + " " + noun;
+    }
   }
+
+  // Sync counts, totals, and pill state to the default (closed) view on load.
+  applyFilter();
 
   function toggleUTM(fid) {
     const utmRows = document.querySelectorAll(`.utm-row[data-parent="${fid}"]`);

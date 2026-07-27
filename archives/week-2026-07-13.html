@@ -303,6 +303,42 @@
   .lead-tab.active .tab-n { background: rgba(255,255,255,0.22); color: #fff; }
   .lead-tab[data-tab="stuck"].active { background: var(--amber); border-color: var(--amber); }
 
+  /* ── Funnel filter pills ── */
+  .funnel-filter {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 0 36px 14px;
+    flex-wrap: wrap;
+  }
+  .ff-label {
+    font-size: 10.5px;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    color: var(--muted);
+    margin-right: 3px;
+  }
+  .ff-pill {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 4px 12px;
+    font-size: 11.5px;
+    font-weight: 500;
+    color: var(--muted2);
+    cursor: pointer;
+    font-family: inherit;
+    transition: all 0.12s;
+    opacity: 0.5;
+  }
+  .ff-pill:hover { border-color: var(--accent); color: var(--text); opacity: 1; }
+  .ff-pill.active {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: #fff;
+    opacity: 1;
+  }
+
   .pane-note {
     font-size: 11px;
     color: var(--muted);
@@ -435,11 +471,12 @@
       <div class="month-picker"><select onchange="window.location.href=this.value"><option value="/agency-funnel-dashboard/index.html" selected>July 2026</option>
       <option value="/agency-funnel-dashboard/archives/2026-06.html" >June 2026</option>
       </select></div><span class="picker-divider">|</span><div class="week-picker"><select onchange="window.location.href=this.value"><option value="/agency-funnel-dashboard/index.html" >Full Month</option>
+      <option value="/agency-funnel-dashboard/archives/week-2026-07-13.html" selected>Jul 13–19</option>
       <option value="/agency-funnel-dashboard/archives/week-2026-07-06.html" >Jul 6–12</option>
-      <option value="/agency-funnel-dashboard/archives/week-current.html" >Jul 20–20 ▶</option></select></div>
+      <option value="/agency-funnel-dashboard/archives/week-current.html" >Jul 27–27 ▶</option></select></div>
     </div>
     <span class="snapshot-label"><span class="archive-badge">Week View</span></span>
-    July 20, 2026 at 09:38 AM PT<br>
+    July 27, 2026 at 03:37 AM PT<br>
     Source · Close CRM
   </div>
 </div>
@@ -448,15 +485,15 @@
 <div class="kpis">
   <div class="kpi" style="--kpi-accent:#6366f1; --kpi-color:#6366f1;">
     <div class="label">Leads Created</div>
-    <div class="value">12</div>
+    <div class="value">21</div>
     <div class="kpi-sub">new leads this period</div>
   </div>
   <div class="kpi kpi-clickable" data-tab="setter" onclick="showLeadTab('setter')"
        style="--kpi-accent:#9333ea; --kpi-color:#9333ea;" title="Click to list these leads below">
     <div class="kpi-jump">view leads ↓</div>
     <div class="label">Setter Calls</div>
-    <div class="value">8</div>
-    <div class="kpi-sub">25% advanced to a closer</div>
+    <div class="value">9</div>
+    <div class="kpi-sub">33% advanced to a closer</div>
     <div class="kpi-cash partial" onclick="event.stopPropagation();showLeadTab('stuck')"
          style="cursor:pointer;">6 stuck · no closer call</div>
   </div>
@@ -464,23 +501,23 @@
        style="--kpi-accent:#4f46e5; --kpi-color:var(--text);" title="Click to list these leads below">
     <div class="kpi-jump">view leads ↓</div>
     <div class="label">Closer Calls</div>
-    <div class="value">22</div>
+    <div class="value">23</div>
     <div class="kpi-sub">first sales calls</div>
   </div>
   <div class="kpi" style="--kpi-accent:#2563eb; --kpi-color:#2563eb;">
     <div class="label">Showed</div>
-    <div class="value">14</div>
-    <div class="kpi-sub">63.6% show rate</div>
+    <div class="value">15</div>
+    <div class="kpi-sub">65.2% show rate</div>
   </div>
   <div class="kpi" style="--kpi-accent:#7c3aed; --kpi-color:#7c3aed;">
     <div class="label">Qualified</div>
-    <div class="value">11</div>
-    <div class="kpi-sub">50.0% qual rate</div>
+    <div class="value">13</div>
+    <div class="kpi-sub">56.5% qual rate</div>
   </div>
   <div class="kpi" style="--kpi-accent:#d97706; --kpi-color:#d97706;">
     <div class="label">Closed Won</div>
     <div class="value">2</div>
-    <div class="kpi-sub">9.1% booked→close · 18.2% qual→close</div>
+    <div class="kpi-sub">8.7% booked→close · 15.4% qual→close</div>
   </div>
   <div class="kpi kpi-clickable" data-tab="closed" onclick="showLeadTab('closed')"
        style="--kpi-accent:#0e9f6e; --kpi-color:#0e9f6e;" title="Click to list these leads below">
@@ -488,7 +525,7 @@
     <div class="label">Closed Revenue</div>
     <div class="value">$11,994</div>
     <div class="kpi-sub">$5,997 avg deal</div>
-    <div class="kpi-cash partial">$0 cash · 0 of 2 deals</div>
+    <div class="kpi-cash partial">$5,862 cash · 1 of 2 deals</div>
   </div>
 </div>
 
@@ -523,19 +560,19 @@
       <td class="col-name">
         <span class="chevron" id="chev-instagram">›</span>Instagram
       </td>
-      <td class="col-num">11</td>
-      <td class="col-num col-setter">8</td>
+      <td class="col-num">19</td>
+      <td class="col-num col-setter">9</td>
       <td class="col-num col-stuck">6</td>
-      <td class="col-pct bad">25%</td>
-      <td class="col-num">18</td>
-      <td class="col-pace pace-behind">29</td>
+      <td class="col-pct bad">33%</td>
+      <td class="col-num">19</td>
+      <td class="col-pace pace-behind">31</td>
       <td class="col-goal">6% (300)</td>
-      <td class="col-num">11</td>
-      <td class="col-pct mid">61.1%</td>
-      <td class="col-num">8</td>
-      <td class="col-pct bad">44.4%</td>
+      <td class="col-num">12</td>
+      <td class="col-pct mid">63.2%</td>
+      <td class="col-num">10</td>
+      <td class="col-pct mid">52.6%</td>
       <td class="col-num">1</td>
-      <td class="col-pct bad">5.6%</td>
+      <td class="col-pct bad">5.3%</td>
       <td class="col-rev pkg-trigger" onclick="event.stopPropagation();togglePkg('instagram')" title="Click to see package breakdown">$5,997 <span class="pkg-chevron" id="pkgchev-instagram">›</span></td>
       <td class="col-num">$5,997</td>
     </tr>
@@ -557,6 +594,25 @@
       <td class="col-pct"></td>
       <td class="col-rev">$5,997</td>
       <td class="col-num">$5,997</td>
+    </tr>
+
+    <tr class="utm-row" data-parent="instagram">
+      <td class="col-name col-utm">↳ Unattributed</td>
+      <td class="col-num">—</td>
+      <td class="col-num col-setter">1</td>
+      <td class="col-num col-stuck">—</td>
+      <td class="col-pct good">100%</td>
+      <td class="col-num">2</td>
+      <td class="col-pace"></td>
+      <td class="col-goal"></td>
+      <td class="col-num">1</td>
+      <td class="col-pct mid">50.0%</td>
+      <td class="col-num">1</td>
+      <td class="col-pct mid">50.0%</td>
+      <td class="col-num">—</td>
+      <td class="col-pct bad">0.0%</td>
+      <td class="col-rev">$0</td>
+      <td class="col-num">—</td>
     </tr>
 
     <tr class="utm-row" data-parent="instagram">
@@ -608,46 +664,8 @@
       <td class="col-goal"></td>
       <td class="col-num">1</td>
       <td class="col-pct good">100.0%</td>
-      <td class="col-num">—</td>
-      <td class="col-pct bad">0.0%</td>
-      <td class="col-num">—</td>
-      <td class="col-pct bad">0.0%</td>
-      <td class="col-rev">$0</td>
-      <td class="col-num">—</td>
-    </tr>
-
-    <tr class="utm-row" data-parent="instagram">
-      <td class="col-name col-utm">↳ 987305080</td>
-      <td class="col-num">—</td>
-      <td class="col-num col-setter">—</td>
-      <td class="col-num col-stuck">—</td>
-      <td class="col-pct ">—</td>
-      <td class="col-num">1</td>
-      <td class="col-pace"></td>
-      <td class="col-goal"></td>
-      <td class="col-num">—</td>
-      <td class="col-pct bad">0.0%</td>
-      <td class="col-num">—</td>
-      <td class="col-pct bad">0.0%</td>
-      <td class="col-num">—</td>
-      <td class="col-pct bad">0.0%</td>
-      <td class="col-rev">$0</td>
-      <td class="col-num">—</td>
-    </tr>
-
-    <tr class="utm-row" data-parent="instagram">
-      <td class="col-name col-utm">↳ 300258569</td>
-      <td class="col-num">—</td>
-      <td class="col-num col-setter">—</td>
-      <td class="col-num col-stuck">—</td>
-      <td class="col-pct ">—</td>
-      <td class="col-num">1</td>
-      <td class="col-pace"></td>
-      <td class="col-goal"></td>
       <td class="col-num">1</td>
       <td class="col-pct good">100.0%</td>
-      <td class="col-num">—</td>
-      <td class="col-pct bad">0.0%</td>
       <td class="col-num">—</td>
       <td class="col-pct bad">0.0%</td>
       <td class="col-rev">$0</td>
@@ -674,44 +692,6 @@
     </tr>
 
     <tr class="utm-row" data-parent="instagram">
-      <td class="col-name col-utm">↳ 1700520300</td>
-      <td class="col-num">—</td>
-      <td class="col-num col-setter">—</td>
-      <td class="col-num col-stuck">—</td>
-      <td class="col-pct ">—</td>
-      <td class="col-num">1</td>
-      <td class="col-pace"></td>
-      <td class="col-goal"></td>
-      <td class="col-num">1</td>
-      <td class="col-pct good">100.0%</td>
-      <td class="col-num">1</td>
-      <td class="col-pct good">100.0%</td>
-      <td class="col-num">—</td>
-      <td class="col-pct bad">0.0%</td>
-      <td class="col-rev">$0</td>
-      <td class="col-num">—</td>
-    </tr>
-
-    <tr class="utm-row" data-parent="instagram">
-      <td class="col-name col-utm">↳ 21601763</td>
-      <td class="col-num">—</td>
-      <td class="col-num col-setter">—</td>
-      <td class="col-num col-stuck">—</td>
-      <td class="col-pct ">—</td>
-      <td class="col-num">1</td>
-      <td class="col-pace"></td>
-      <td class="col-goal"></td>
-      <td class="col-num">—</td>
-      <td class="col-pct bad">0.0%</td>
-      <td class="col-num">—</td>
-      <td class="col-pct bad">0.0%</td>
-      <td class="col-num">—</td>
-      <td class="col-pct bad">0.0%</td>
-      <td class="col-rev">$0</td>
-      <td class="col-num">—</td>
-    </tr>
-
-    <tr class="utm-row" data-parent="instagram">
       <td class="col-name col-utm">↳ link-in-bio</td>
       <td class="col-num">—</td>
       <td class="col-num col-setter">—</td>
@@ -731,7 +711,7 @@
     </tr>
 
     <tr class="utm-row" data-parent="instagram">
-      <td class="col-name col-utm">↳ 67868771</td>
+      <td class="col-name col-utm">↳ 959113594</td>
       <td class="col-num">—</td>
       <td class="col-num col-setter">—</td>
       <td class="col-num col-stuck">—</td>
@@ -743,6 +723,25 @@
       <td class="col-pct good">100.0%</td>
       <td class="col-num">1</td>
       <td class="col-pct good">100.0%</td>
+      <td class="col-num">1</td>
+      <td class="col-pct good">100.0%</td>
+      <td class="col-rev">$5,997</td>
+      <td class="col-num">$5,997</td>
+    </tr>
+
+    <tr class="utm-row" data-parent="instagram">
+      <td class="col-name col-utm">↳ 1369605260</td>
+      <td class="col-num">—</td>
+      <td class="col-num col-setter">—</td>
+      <td class="col-num col-stuck">—</td>
+      <td class="col-pct ">—</td>
+      <td class="col-num">1</td>
+      <td class="col-pace"></td>
+      <td class="col-goal"></td>
+      <td class="col-num">—</td>
+      <td class="col-pct bad">0.0%</td>
+      <td class="col-num">—</td>
+      <td class="col-pct bad">0.0%</td>
       <td class="col-num">—</td>
       <td class="col-pct bad">0.0%</td>
       <td class="col-rev">$0</td>
@@ -788,7 +787,7 @@
     </tr>
 
     <tr class="utm-row" data-parent="instagram">
-      <td class="col-name col-utm">↳ 1360244868</td>
+      <td class="col-name col-utm">↳ 67868771</td>
       <td class="col-num">—</td>
       <td class="col-num col-setter">—</td>
       <td class="col-num col-stuck">—</td>
@@ -796,8 +795,8 @@
       <td class="col-num">1</td>
       <td class="col-pace"></td>
       <td class="col-goal"></td>
-      <td class="col-num">—</td>
-      <td class="col-pct bad">0.0%</td>
+      <td class="col-num">1</td>
+      <td class="col-pct good">100.0%</td>
       <td class="col-num">1</td>
       <td class="col-pct good">100.0%</td>
       <td class="col-num">—</td>
@@ -808,25 +807,6 @@
 
     <tr class="utm-row" data-parent="instagram">
       <td class="col-name col-utm">↳ 1327568259</td>
-      <td class="col-num">—</td>
-      <td class="col-num col-setter">—</td>
-      <td class="col-num col-stuck">—</td>
-      <td class="col-pct ">—</td>
-      <td class="col-num">1</td>
-      <td class="col-pace"></td>
-      <td class="col-goal"></td>
-      <td class="col-num">—</td>
-      <td class="col-pct bad">0.0%</td>
-      <td class="col-num">—</td>
-      <td class="col-pct bad">0.0%</td>
-      <td class="col-num">—</td>
-      <td class="col-pct bad">0.0%</td>
-      <td class="col-rev">$0</td>
-      <td class="col-num">—</td>
-    </tr>
-
-    <tr class="utm-row" data-parent="instagram">
-      <td class="col-name col-utm">↳ 1369605260</td>
       <td class="col-num">—</td>
       <td class="col-num col-setter">—</td>
       <td class="col-num col-stuck">—</td>
@@ -864,6 +844,25 @@
     </tr>
 
     <tr class="utm-row" data-parent="instagram">
+      <td class="col-name col-utm">↳ 21601763</td>
+      <td class="col-num">—</td>
+      <td class="col-num col-setter">—</td>
+      <td class="col-num col-stuck">—</td>
+      <td class="col-pct ">—</td>
+      <td class="col-num">1</td>
+      <td class="col-pace"></td>
+      <td class="col-goal"></td>
+      <td class="col-num">—</td>
+      <td class="col-pct bad">0.0%</td>
+      <td class="col-num">—</td>
+      <td class="col-pct bad">0.0%</td>
+      <td class="col-num">—</td>
+      <td class="col-pct bad">0.0%</td>
+      <td class="col-rev">$0</td>
+      <td class="col-num">—</td>
+    </tr>
+
+    <tr class="utm-row" data-parent="instagram">
       <td class="col-name col-utm">↳ 1031005252</td>
       <td class="col-num">—</td>
       <td class="col-num col-setter">—</td>
@@ -883,7 +882,26 @@
     </tr>
 
     <tr class="utm-row" data-parent="instagram">
-      <td class="col-name col-utm">↳ 959113594</td>
+      <td class="col-name col-utm">↳ 300258569</td>
+      <td class="col-num">—</td>
+      <td class="col-num col-setter">—</td>
+      <td class="col-num col-stuck">—</td>
+      <td class="col-pct ">—</td>
+      <td class="col-num">1</td>
+      <td class="col-pace"></td>
+      <td class="col-goal"></td>
+      <td class="col-num">1</td>
+      <td class="col-pct good">100.0%</td>
+      <td class="col-num">—</td>
+      <td class="col-pct bad">0.0%</td>
+      <td class="col-num">—</td>
+      <td class="col-pct bad">0.0%</td>
+      <td class="col-rev">$0</td>
+      <td class="col-num">—</td>
+    </tr>
+
+    <tr class="utm-row" data-parent="instagram">
+      <td class="col-name col-utm">↳ 1700520300</td>
       <td class="col-num">—</td>
       <td class="col-num col-setter">—</td>
       <td class="col-num col-stuck">—</td>
@@ -895,10 +913,86 @@
       <td class="col-pct good">100.0%</td>
       <td class="col-num">1</td>
       <td class="col-pct good">100.0%</td>
+      <td class="col-num">—</td>
+      <td class="col-pct bad">0.0%</td>
+      <td class="col-rev">$0</td>
+      <td class="col-num">—</td>
+    </tr>
+
+    <tr class="utm-row" data-parent="instagram">
+      <td class="col-name col-utm">↳ 1360244868</td>
+      <td class="col-num">—</td>
+      <td class="col-num col-setter">—</td>
+      <td class="col-num col-stuck">—</td>
+      <td class="col-pct ">—</td>
+      <td class="col-num">1</td>
+      <td class="col-pace"></td>
+      <td class="col-goal"></td>
+      <td class="col-num">—</td>
+      <td class="col-pct bad">0.0%</td>
       <td class="col-num">1</td>
       <td class="col-pct good">100.0%</td>
-      <td class="col-rev">$5,997</td>
-      <td class="col-num">$5,997</td>
+      <td class="col-num">—</td>
+      <td class="col-pct bad">0.0%</td>
+      <td class="col-rev">$0</td>
+      <td class="col-num">—</td>
+    </tr>
+
+    <tr class="utm-row" data-parent="instagram">
+      <td class="col-name col-utm">↳ 1914248257</td>
+      <td class="col-num">—</td>
+      <td class="col-num col-setter">1</td>
+      <td class="col-num col-stuck">1</td>
+      <td class="col-pct bad">0%</td>
+      <td class="col-num">—</td>
+      <td class="col-pace"></td>
+      <td class="col-goal"></td>
+      <td class="col-num">—</td>
+      <td class="col-pct ">—</td>
+      <td class="col-num">—</td>
+      <td class="col-pct ">—</td>
+      <td class="col-num">—</td>
+      <td class="col-pct ">—</td>
+      <td class="col-rev">$0</td>
+      <td class="col-num">—</td>
+    </tr>
+
+    <tr class="utm-row" data-parent="instagram">
+      <td class="col-name col-utm">↳ 659184438</td>
+      <td class="col-num">—</td>
+      <td class="col-num col-setter">1</td>
+      <td class="col-num col-stuck">1</td>
+      <td class="col-pct bad">0%</td>
+      <td class="col-num">—</td>
+      <td class="col-pace"></td>
+      <td class="col-goal"></td>
+      <td class="col-num">—</td>
+      <td class="col-pct ">—</td>
+      <td class="col-num">—</td>
+      <td class="col-pct ">—</td>
+      <td class="col-num">—</td>
+      <td class="col-pct ">—</td>
+      <td class="col-rev">$0</td>
+      <td class="col-num">—</td>
+    </tr>
+
+    <tr class="utm-row" data-parent="instagram">
+      <td class="col-name col-utm">↳ vp_setter</td>
+      <td class="col-num">—</td>
+      <td class="col-num col-setter">1</td>
+      <td class="col-num col-stuck">1</td>
+      <td class="col-pct bad">0%</td>
+      <td class="col-num">—</td>
+      <td class="col-pace"></td>
+      <td class="col-goal"></td>
+      <td class="col-num">—</td>
+      <td class="col-pct ">—</td>
+      <td class="col-num">—</td>
+      <td class="col-pct ">—</td>
+      <td class="col-num">—</td>
+      <td class="col-pct ">—</td>
+      <td class="col-rev">$0</td>
+      <td class="col-num">—</td>
     </tr>
 
     <tr class="utm-row" data-parent="instagram">
@@ -940,64 +1034,7 @@
     </tr>
 
     <tr class="utm-row" data-parent="instagram">
-      <td class="col-name col-utm">↳ 1914248257</td>
-      <td class="col-num">—</td>
-      <td class="col-num col-setter">1</td>
-      <td class="col-num col-stuck">1</td>
-      <td class="col-pct bad">0%</td>
-      <td class="col-num">—</td>
-      <td class="col-pace"></td>
-      <td class="col-goal"></td>
-      <td class="col-num">—</td>
-      <td class="col-pct ">—</td>
-      <td class="col-num">—</td>
-      <td class="col-pct ">—</td>
-      <td class="col-num">—</td>
-      <td class="col-pct ">—</td>
-      <td class="col-rev">$0</td>
-      <td class="col-num">—</td>
-    </tr>
-
-    <tr class="utm-row" data-parent="instagram">
-      <td class="col-name col-utm">↳ vp_setter</td>
-      <td class="col-num">—</td>
-      <td class="col-num col-setter">1</td>
-      <td class="col-num col-stuck">1</td>
-      <td class="col-pct bad">0%</td>
-      <td class="col-num">—</td>
-      <td class="col-pace"></td>
-      <td class="col-goal"></td>
-      <td class="col-num">—</td>
-      <td class="col-pct ">—</td>
-      <td class="col-num">—</td>
-      <td class="col-pct ">—</td>
-      <td class="col-num">—</td>
-      <td class="col-pct ">—</td>
-      <td class="col-rev">$0</td>
-      <td class="col-num">—</td>
-    </tr>
-
-    <tr class="utm-row" data-parent="instagram">
       <td class="col-name col-utm">↳ 2032684447</td>
-      <td class="col-num">—</td>
-      <td class="col-num col-setter">1</td>
-      <td class="col-num col-stuck">1</td>
-      <td class="col-pct bad">0%</td>
-      <td class="col-num">—</td>
-      <td class="col-pace"></td>
-      <td class="col-goal"></td>
-      <td class="col-num">—</td>
-      <td class="col-pct ">—</td>
-      <td class="col-num">—</td>
-      <td class="col-pct ">—</td>
-      <td class="col-num">—</td>
-      <td class="col-pct ">—</td>
-      <td class="col-rev">$0</td>
-      <td class="col-num">—</td>
-    </tr>
-
-    <tr class="utm-row" data-parent="instagram">
-      <td class="col-name col-utm">↳ 659184438</td>
       <td class="col-num">—</td>
       <td class="col-num col-setter">1</td>
       <td class="col-num col-stuck">1</td>
@@ -1078,7 +1115,7 @@
       <td class="col-name">
         <span class="chevron" id="chev-linkedin">›</span>Linkedin
       </td>
-      <td class="col-num">1</td>
+      <td class="col-num">2</td>
       <td class="col-num col-setter">—</td>
       <td class="col-num col-stuck">—</td>
       <td class="col-pct ">—</td>
@@ -1137,19 +1174,19 @@
 
     <tr class="total-row">
       <td class="col-name">TOTAL</td>
-      <td class="col-num">12</td>
-      <td class="col-num col-setter">8</td>
+      <td class="col-num">21</td>
+      <td class="col-num col-setter">9</td>
       <td class="col-num col-stuck">6</td>
-      <td class="col-pct bad">25%</td>
-      <td class="col-num">22</td>
+      <td class="col-pct bad">33%</td>
+      <td class="col-num">23</td>
       <td class="col-pace">—</td>
       <td class="col-goal">—</td>
-      <td class="col-num">14</td>
-      <td class="col-pct mid">63.6%</td>
-      <td class="col-num">11</td>
-      <td class="col-pct mid">50.0%</td>
+      <td class="col-num">15</td>
+      <td class="col-pct mid">65.2%</td>
+      <td class="col-num">13</td>
+      <td class="col-pct mid">56.5%</td>
       <td class="col-num">2</td>
-      <td class="col-pct mid">9.1%</td>
+      <td class="col-pct mid">8.7%</td>
       <td class="col-rev">$11,994</td>
       <td class="col-num">$5,997</td>
     </tr>
@@ -1164,10 +1201,15 @@
 </div>
 
 <div class="lead-tabs">
-  <button class="lead-tab" data-tab="setter" onclick="showLeadTab('setter')">Setter Calls <span class="tab-n">8</span></button>
+  <button class="lead-tab" data-tab="setter" onclick="showLeadTab('setter')">Setter Calls <span class="tab-n">9</span></button>
   <button class="lead-tab" data-tab="stuck"  onclick="showLeadTab('stuck')">Stuck <span class="tab-n">6</span></button>
-  <button class="lead-tab" data-tab="closer" onclick="showLeadTab('closer')">Closer Calls <span class="tab-n">22</span></button>
+  <button class="lead-tab" data-tab="closer" onclick="showLeadTab('closer')">Closer Calls <span class="tab-n">23</span></button>
   <button class="lead-tab active" data-tab="closed" onclick="showLeadTab('closed')">Closed-Won <span class="tab-n">2</span></button>
+</div>
+
+<div class="funnel-filter">
+  <span class="ff-label">Funnel</span>
+  <button class="ff-pill active" data-funnel="instagram" onclick="toggleFunnel('instagram')">Instagram</button><button class="ff-pill active" data-funnel="x" onclick="toggleFunnel('x')">X</button><button class="ff-pill active" data-funnel="linkedin" onclick="toggleFunnel('linkedin')">Linkedin</button><button class="ff-pill active" data-funnel="anthony_x" onclick="toggleFunnel('anthony_x')">Anthony X</button>
 </div>
 
 <!-- Setter + Stuck share one table; Stuck hides advanced rows -->
@@ -1185,7 +1227,7 @@
     </thead>
     <tbody>
 
-    <tr class="lead-row stuck-row">
+    <tr class="lead-row stuck-row" data-funnel="instagram">
       <td class="col-date">7/13/2026</td>
       <td class="col-client">Carson Himmelberger</td>
       <td class="col-email">b****2469@outlook.com</td>
@@ -1194,7 +1236,7 @@
       <td class="col-adv"><span class="adv-no">Stuck</span></td>
     </tr>
 
-    <tr class="lead-row stuck-row">
+    <tr class="lead-row stuck-row" data-funnel="instagram">
       <td class="col-date">7/13/2026</td>
       <td class="col-client">Kristian Vandiver</td>
       <td class="col-email">k****n.32@hotmail.com</td>
@@ -1203,7 +1245,7 @@
       <td class="col-adv"><span class="adv-no">Stuck</span></td>
     </tr>
 
-    <tr class="lead-row stuck-row">
+    <tr class="lead-row stuck-row" data-funnel="instagram">
       <td class="col-date">7/13/2026</td>
       <td class="col-client">Maverick Carmichael</td>
       <td class="col-email">c****here@gmail.com</td>
@@ -1212,7 +1254,7 @@
       <td class="col-adv"><span class="adv-no">Stuck</span></td>
     </tr>
 
-    <tr class="lead-row advanced-row">
+    <tr class="lead-row advanced-row" data-funnel="instagram">
       <td class="col-date">7/13/2026</td>
       <td class="col-client">Tiffany Green</td>
       <td class="col-email">r****yler@yahoo.com</td>
@@ -1221,7 +1263,7 @@
       <td class="col-adv"><span class="adv-yes">→ 7/14/2026</span></td>
     </tr>
 
-    <tr class="lead-row advanced-row">
+    <tr class="lead-row advanced-row" data-funnel="instagram">
       <td class="col-date">7/14/2026</td>
       <td class="col-client">A’Niyah E</td>
       <td class="col-email">a****is31@gmail.com</td>
@@ -1230,7 +1272,7 @@
       <td class="col-adv"><span class="adv-yes">→ 7/17/2026</span></td>
     </tr>
 
-    <tr class="lead-row stuck-row">
+    <tr class="lead-row stuck-row" data-funnel="instagram">
       <td class="col-date">7/14/2026</td>
       <td class="col-client">Jessica Rodriguez</td>
       <td class="col-email">j****eztx@yahoo.com</td>
@@ -1239,7 +1281,7 @@
       <td class="col-adv"><span class="adv-no">Stuck</span></td>
     </tr>
 
-    <tr class="lead-row stuck-row">
+    <tr class="lead-row stuck-row" data-funnel="instagram">
       <td class="col-date">7/15/2026</td>
       <td class="col-client">Ron Cabrers</td>
       <td class="col-email">c****ronj@outlook.com</td>
@@ -1248,13 +1290,22 @@
       <td class="col-adv"><span class="adv-no">Stuck</span></td>
     </tr>
 
-    <tr class="lead-row stuck-row">
+    <tr class="lead-row stuck-row" data-funnel="instagram">
       <td class="col-date">7/17/2026</td>
       <td class="col-client">KELEON Rockett</td>
       <td class="col-email">4****ladz@gmail.com</td>
       <td class="col-funnel"><span class="funnel-chip chip-instagram">Instagram</span></td>
       <td class="col-status">☎️ Call Booked</td>
       <td class="col-adv"><span class="adv-no">Stuck</span></td>
+    </tr>
+
+    <tr class="lead-row advanced-row" data-funnel="instagram">
+      <td class="col-date">7/18/2026</td>
+      <td class="col-client">Firas Ghrimil</td>
+      <td class="col-email">g****iras@gmail.com</td>
+      <td class="col-funnel"><span class="funnel-chip chip-instagram">Instagram</span></td>
+      <td class="col-status">📞 Follow Up</td>
+      <td class="col-adv"><span class="adv-yes">→ 7/23/2026</span></td>
     </tr>
     </tbody>
   </table>
@@ -1277,7 +1328,7 @@
     </thead>
     <tbody>
 
-    <tr class="lead-row">
+    <tr class="lead-row" data-funnel="linkedin">
       <td class="col-date">7/13/2026</td>
       <td class="col-client">Chris Dunbar</td>
       <td class="col-email">c****ph43@gmail.com</td>
@@ -1287,17 +1338,17 @@
       <td class="col-flag"><span class="yn yes">Yes</span></td>
     </tr>
 
-    <tr class="lead-row">
+    <tr class="lead-row" data-funnel="instagram">
       <td class="col-date">7/13/2026</td>
       <td class="col-client">Elliot Woods</td>
       <td class="col-email">e****ds22@gmail.com</td>
       <td class="col-funnel"><span class="funnel-chip chip-instagram">Instagram</span></td>
-      <td class="col-status">☎️ Call Booked</td>
+      <td class="col-status">📞 Follow Up</td>
       <td class="col-flag"><span class="yn no">No</span></td>
       <td class="col-flag"><span class="yn no">No</span></td>
     </tr>
 
-    <tr class="lead-row">
+    <tr class="lead-row" data-funnel="x">
       <td class="col-date">7/13/2026</td>
       <td class="col-client">Felipe Paz-Rodriguez</td>
       <td class="col-email">f****fe24@gmail.com</td>
@@ -1307,17 +1358,7 @@
       <td class="col-flag"><span class="yn no">No</span></td>
     </tr>
 
-    <tr class="lead-row">
-      <td class="col-date">7/13/2026</td>
-      <td class="col-client">Geary Smith</td>
-      <td class="col-email">j****s164@aol.com</td>
-      <td class="col-funnel"><span class="funnel-chip chip-instagram">Instagram</span></td>
-      <td class="col-status">🕛 Reschedule</td>
-      <td class="col-flag"><span class="yn no">No</span></td>
-      <td class="col-flag"><span class="yn no">No</span></td>
-    </tr>
-
-    <tr class="lead-row">
+    <tr class="lead-row" data-funnel="instagram">
       <td class="col-date">7/13/2026</td>
       <td class="col-client">George Leventis</td>
       <td class="col-email">g****mata@gmail.com</td>
@@ -1327,7 +1368,7 @@
       <td class="col-flag"><span class="yn no">No</span></td>
     </tr>
 
-    <tr class="lead-row">
+    <tr class="lead-row" data-funnel="instagram">
       <td class="col-date">7/13/2026</td>
       <td class="col-client">Nick Rojas</td>
       <td class="col-email">t****ojas@gmail.com</td>
@@ -1337,17 +1378,17 @@
       <td class="col-flag"><span class="yn yes">Yes</span></td>
     </tr>
 
-    <tr class="lead-row">
+    <tr class="lead-row" data-funnel="instagram">
       <td class="col-date">7/13/2026</td>
       <td class="col-client">Nicole Bentford</td>
       <td class="col-email">n****ford@gmail.com</td>
       <td class="col-funnel"><span class="funnel-chip chip-instagram">Instagram</span></td>
-      <td class="col-status">🕛 Reschedule</td>
+      <td class="col-status">💔 Lost</td>
       <td class="col-flag"><span class="yn yes">Yes</span></td>
       <td class="col-flag"><span class="yn yes">Yes</span></td>
     </tr>
 
-    <tr class="lead-row">
+    <tr class="lead-row" data-funnel="x">
       <td class="col-date">7/13/2026</td>
       <td class="col-client">RYAN</td>
       <td class="col-email">r****pi88@yahoo.com</td>
@@ -1357,17 +1398,17 @@
       <td class="col-flag"><span class="yn yes">Yes</span></td>
     </tr>
 
-    <tr class="lead-row">
+    <tr class="lead-row" data-funnel="instagram">
       <td class="col-date">7/13/2026</td>
       <td class="col-client">Terell Williams</td>
       <td class="col-email">t****ms82@gmail.com</td>
       <td class="col-funnel"><span class="funnel-chip chip-instagram">Instagram</span></td>
-      <td class="col-status">☎️ Call Booked</td>
+      <td class="col-status">📞 Follow Up</td>
       <td class="col-flag"><span class="yn yes">Yes</span></td>
       <td class="col-flag"><span class="yn yes">Yes</span></td>
     </tr>
 
-    <tr class="lead-row">
+    <tr class="lead-row" data-funnel="linkedin">
       <td class="col-date">7/13/2026</td>
       <td class="col-client">Victor Holness</td>
       <td class="col-email">v****ctor@vitavendin.com</td>
@@ -1377,7 +1418,7 @@
       <td class="col-flag"><span class="yn yes">Yes</span></td>
     </tr>
 
-    <tr class="lead-row">
+    <tr class="lead-row" data-funnel="instagram">
       <td class="col-date">7/14/2026</td>
       <td class="col-client">Maurice Webb</td>
       <td class="col-email">m****b.mw@gmail.com</td>
@@ -1387,7 +1428,7 @@
       <td class="col-flag"><span class="yn no">No</span></td>
     </tr>
 
-    <tr class="lead-row">
+    <tr class="lead-row" data-funnel="instagram">
       <td class="col-date">7/14/2026</td>
       <td class="col-client">Tiffany Green</td>
       <td class="col-email">r****yler@yahoo.com</td>
@@ -1397,17 +1438,17 @@
       <td class="col-flag"><span class="yn yes">Yes</span></td>
     </tr>
 
-    <tr class="lead-row">
+    <tr class="lead-row" data-funnel="instagram">
       <td class="col-date">7/15/2026</td>
       <td class="col-client">Luis Fernandez -</td>
       <td class="col-email">b****uisf@aol.com</td>
       <td class="col-funnel"><span class="funnel-chip chip-instagram">Instagram</span></td>
-      <td class="col-status">☎️ Call Booked</td>
+      <td class="col-status">💤 Non-responsive</td>
       <td class="col-flag"><span class="yn yes">Yes</span></td>
-      <td class="col-flag"><span class="yn no">No</span></td>
+      <td class="col-flag"><span class="yn yes">Yes</span></td>
     </tr>
 
-    <tr class="lead-row">
+    <tr class="lead-row" data-funnel="instagram">
       <td class="col-date">7/15/2026</td>
       <td class="col-client">Mike Hardenbrook</td>
       <td class="col-email">m****rook@gmail.com</td>
@@ -1417,7 +1458,7 @@
       <td class="col-flag"><span class="yn no">No</span></td>
     </tr>
 
-    <tr class="lead-row">
+    <tr class="lead-row" data-funnel="instagram">
       <td class="col-date">7/16/2026</td>
       <td class="col-client">Adriana Nevarez</td>
       <td class="col-email">a****1987@gmail.com</td>
@@ -1427,7 +1468,7 @@
       <td class="col-flag"><span class="yn no">No</span></td>
     </tr>
 
-    <tr class="lead-row">
+    <tr class="lead-row" data-funnel="instagram">
       <td class="col-date">7/16/2026</td>
       <td class="col-client">Africa Rodriguez</td>
       <td class="col-email">a****otes@hotmail.com</td>
@@ -1437,7 +1478,7 @@
       <td class="col-flag"><span class="yn no">No</span></td>
     </tr>
 
-    <tr class="lead-row">
+    <tr class="lead-row" data-funnel="instagram">
       <td class="col-date">7/16/2026</td>
       <td class="col-client">Kara Ungaro</td>
       <td class="col-email">d****garo@gmail.com</td>
@@ -1447,7 +1488,7 @@
       <td class="col-flag"><span class="yn yes">Yes</span></td>
     </tr>
 
-    <tr class="lead-row">
+    <tr class="lead-row" data-funnel="instagram">
       <td class="col-date">7/16/2026</td>
       <td class="col-client">Patricio Rodriguez</td>
       <td class="col-email">p****r215@yahoo.com</td>
@@ -1457,17 +1498,27 @@
       <td class="col-flag"><span class="yn yes">Yes</span></td>
     </tr>
 
-    <tr class="lead-row">
+    <tr class="lead-row" data-funnel="instagram">
       <td class="col-date">7/16/2026</td>
       <td class="col-client">Thomas K</td>
       <td class="col-email">j****trt4@gmail.com</td>
       <td class="col-funnel"><span class="funnel-chip chip-instagram">Instagram</span></td>
-      <td class="col-status">☎️ Call Booked</td>
+      <td class="col-status">💔 Lost</td>
       <td class="col-flag"><span class="yn no">No</span></td>
       <td class="col-flag"><span class="yn no">No</span></td>
     </tr>
 
-    <tr class="lead-row">
+    <tr class="lead-row" data-funnel="instagram">
+      <td class="col-date">7/17/2026</td>
+      <td class="col-client">Asif Malik</td>
+      <td class="col-email">b****oltd@gmail.com</td>
+      <td class="col-funnel"><span class="funnel-chip chip-instagram">Instagram</span></td>
+      <td class="col-status">👻 No Show</td>
+      <td class="col-flag"><span class="yn no">No</span></td>
+      <td class="col-flag"><span class="yn no">No</span></td>
+    </tr>
+
+    <tr class="lead-row" data-funnel="instagram">
       <td class="col-date">7/17/2026</td>
       <td class="col-client">A’Niyah E</td>
       <td class="col-email">a****is31@gmail.com</td>
@@ -1477,7 +1528,17 @@
       <td class="col-flag"><span class="yn yes">Yes</span></td>
     </tr>
 
-    <tr class="lead-row">
+    <tr class="lead-row" data-funnel="instagram">
+      <td class="col-date">7/17/2026</td>
+      <td class="col-client">Sean Jusko</td>
+      <td class="col-email">d****onhs@gmail.com</td>
+      <td class="col-funnel"><span class="funnel-chip chip-instagram">Instagram</span></td>
+      <td class="col-status">📞 Follow Up</td>
+      <td class="col-flag"><span class="yn yes">Yes</span></td>
+      <td class="col-flag"><span class="yn yes">Yes</span></td>
+    </tr>
+
+    <tr class="lead-row" data-funnel="instagram">
       <td class="col-date">7/18/2026</td>
       <td class="col-client">Pete Bolivar</td>
       <td class="col-email">p****ivar@yahoo.com</td>
@@ -1487,7 +1548,7 @@
       <td class="col-flag"><span class="yn no">No</span></td>
     </tr>
 
-    <tr class="lead-row">
+    <tr class="lead-row" data-funnel="instagram">
       <td class="col-date">7/19/2026</td>
       <td class="col-client">Jonathan Martinez</td>
       <td class="col-email">j****ez35@yahoo.com</td>
@@ -1517,7 +1578,7 @@
     </thead>
     <tbody>
 
-    <tr class="lead-row">
+    <tr class="lead-row" data-funnel="x" data-gross="5997.00" data-cash="5862.15">
       <td class="col-date">7/13/2026</td>
       <td class="col-client">RYAN</td>
       <td class="col-email">r****pi88@yahoo.com</td>
@@ -1525,10 +1586,10 @@
       <td class="col-funnel"><span class="funnel-chip chip-x">X</span></td>
       <td class="col-closer">Eric Piccione</td>
       <td class="col-gross">$5,997</td>
-      <td class="col-cash cash-missing">—</td>
+      <td class="col-cash">$5,862</td>
     </tr>
 
-    <tr class="lead-row">
+    <tr class="lead-row" data-funnel="instagram" data-gross="5997.00" data-cash="">
       <td class="col-date">7/13/2026</td>
       <td class="col-client">Nick Rojas</td>
       <td class="col-email">t****ojas@gmail.com</td>
@@ -1547,7 +1608,7 @@
       <td class="col-funnel"></td>
       <td class="col-closer"></td>
       <td class="col-gross">$11,994</td>
-      <td class="col-cash">$0<div style="font-size:10px;font-weight:400;color:var(--muted);">0 of 2 deals</div></td>
+      <td class="col-cash">$5,862<div style="font-size:10px;font-weight:400;color:var(--muted);">1 of 2 deals</div></td>
     </tr>
     </tbody>
   </table>
@@ -1566,38 +1627,115 @@
     if (chevron) chevron.classList.toggle("open", !isOpen);
   }
 
-  const LEAD_COUNTS = {
-    setter: "8 calls",
-    stuck:  "6 stuck",
-    closer: "22 calls",
-    closed: "2 deals",
-  };
+  // ── Lead table state ──────────────────────────────────────────────────────
+  let currentTab   = "closed";
+  let activeFunnels = new Set(
+    Array.from(document.querySelectorAll(".ff-pill")).map(p => p.dataset.funnel));
+
+  function fmtUSD(v) {
+    if (!v) return "$0";
+    return "$" + Math.round(v).toLocaleString("en-US");
+  }
+
+  function toggleFunnel(slug) {
+    if (activeFunnels.has(slug)) activeFunnels.delete(slug);
+    else                         activeFunnels.add(slug);
+    document.querySelectorAll(".ff-pill").forEach(p =>
+      p.classList.toggle("active", activeFunnels.has(p.dataset.funnel)));
+    applyFilter();
+  }
 
   function showLeadTab(tab) {
-    // Stuck reuses the setter pane, filtered to non-advanced rows.
+    currentTab = tab;
     const paneId = (tab === "stuck") ? "setter" : tab;
-
     document.querySelectorAll(".lead-pane").forEach(p => {
       p.style.display = (p.id === "pane-" + paneId) ? "" : "none";
     });
     document.querySelectorAll(".lead-tab").forEach(b => {
       b.classList.toggle("active", b.dataset.tab === tab);
     });
+    applyFilter();
+    document.querySelector(".lead-tabs").scrollIntoView({behavior: "smooth", block: "nearest"});
+  }
 
+  // Single source of visibility truth. A row shows iff its funnel is active AND
+  // (not in Stuck view OR it is a stuck row). Totals re-sum only visible rows.
+  function applyFilter() {
+    const tab       = currentTab;
     const onlyStuck = (tab === "stuck");
-    document.querySelectorAll("#pane-setter .advanced-row").forEach(r => {
-      r.style.display = onlyStuck ? "none" : "";
-    });
+    const paneId    = onlyStuck ? "setter" : tab;
+    const pane      = document.getElementById("pane-" + paneId);
+    if (!pane) return;
+
     const nSetter = document.getElementById("note-setter");
     const nStuck  = document.getElementById("note-stuck");
     if (nSetter) nSetter.style.display = onlyStuck ? "none" : "";
     if (nStuck)  nStuck.style.display  = onlyStuck ? "" : "none";
 
-    const pill = document.getElementById("lead-count");
-    if (pill) pill.textContent = LEAD_COUNTS[tab] || "";
+    const rows = pane.querySelectorAll("tbody tr.lead-row");
+    let visible = 0, grossSum = 0, cashSum = 0, cashCount = 0, cashTotal = 0;
 
-    document.querySelector(".lead-tabs").scrollIntoView({behavior: "smooth", block: "nearest"});
+    rows.forEach(r => {
+      const funnelOK = activeFunnels.has(r.dataset.funnel);
+      const stuckOK  = !onlyStuck || r.classList.contains("stuck-row");
+      const show = funnelOK && stuckOK;
+      r.style.display = show ? "" : "none";
+      if (show) {
+        visible++;
+        if (tab === "closed") {
+          grossSum += parseFloat(r.dataset.gross || "0");
+          cashTotal++;
+          if (r.dataset.cash !== "") { cashSum += parseFloat(r.dataset.cash); cashCount++; }
+        }
+      }
+    });
+
+    // Empty-state row — only manage it when the pane actually has data rows
+    // (a server-rendered "none this period" row already covers the zero case).
+    if (rows.length > 0) {
+      const tbody = pane.querySelector("tbody");
+      let er = pane.querySelector("tr.filter-empty");
+      if (visible === 0) {
+        if (!er) {
+          er = document.createElement("tr");
+          er.className = "filter-empty";
+          const td = document.createElement("td");
+          td.colSpan = 8; td.className = "lead-empty";
+          er.appendChild(td);
+          tbody.insertBefore(er, tbody.firstChild);
+        }
+        er.querySelector("td").textContent = (activeFunnels.size === 0)
+          ? "No funnels selected."
+          : "No rows for the selected funnels.";
+        er.style.display = "";
+      } else if (er) {
+        er.style.display = "none";
+      }
+    }
+
+    // Closed-Won TOTAL row re-sums visible rows
+    if (tab === "closed") {
+      const totalRow = pane.querySelector("tr.total-row");
+      if (totalRow) {
+        totalRow.style.display = (visible === 0) ? "none" : "";
+        const gCell = totalRow.querySelector(".col-gross");
+        const cCell = totalRow.querySelector(".col-cash");
+        if (gCell) gCell.textContent = fmtUSD(grossSum);
+        if (cCell) cCell.innerHTML = fmtUSD(cashSum) +
+          '<div style="font-size:10px;font-weight:400;color:var(--muted);">' +
+          cashCount + ' of ' + cashTotal + ' deals</div>';
+      }
+    }
+
+    const pill = document.getElementById("lead-count");
+    if (pill) {
+      const noun = (tab === "closed") ? "deals" : (tab === "stuck") ? "stuck" : "calls";
+      pill.textContent = visible + " " + noun;
+    }
   }
+
+  // Sync counts, totals, and pill state to the default (closed) view on load.
+  applyFilter();
 
   function toggleUTM(fid) {
     const utmRows = document.querySelectorAll(`.utm-row[data-parent="${fid}"]`);

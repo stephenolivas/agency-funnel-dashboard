@@ -8,6 +8,11 @@
       "is_live": true
     },
     {
+      "key": "2026-07",
+      "label": "July 2026",
+      "is_live": false
+    },
+    {
       "key": "2026-06",
       "label": "June 2026",
       "is_live": false
@@ -61,5 +66,5 @@
       }
     ]
   },
-  "updated_at": "2026-08-01T07:16:08"
+  "updated_at": "2026-08-01T07:24:31"
 }

@@ -8,12 +8,12 @@
     "stuck": 0,
     "showed": 9,
     "qualified": 10,
-    "closed": 1,
-    "revenue": 6997.0
+    "closed": 2,
+    "revenue": 9997.0
   },
   "cash_collected": 0,
   "cash_filled": 0,
-  "cash_total_n": 1,
+  "cash_total_n": 2,
   "funnels": {
     "Instagram": {
       "leads_created": 9,
@@ -26,9 +26,9 @@
       "show_pct": 45.0,
       "qualified": 10,
       "qual_pct": 50.0,
-      "closed": 1,
-      "cw_pct": 5.0,
-      "revenue": 6997.0
+      "closed": 2,
+      "cw_pct": 10.0,
+      "revenue": 9997.0
     },
     "X": {
       "leads_created": 1,

@@ -2,7 +2,7 @@
   "month_key": "2026-08",
   "month_label": "August 2026",
   "grand": {
-    "leads_created": 20,
+    "leads_created": 21,
     "booked": 29,
     "setter": 2,
     "stuck": 1,
@@ -46,12 +46,12 @@
       "revenue": 0.0
     },
     "Linkedin": {
-      "leads_created": 2,
+      "leads_created": 3,
       "setter": 1,
       "stuck": 1,
       "advance_pct": 0.0,
       "booked": 1,
-      "book_pct": 50.0,
+      "book_pct": 33.3,
       "showed": 0,
       "show_pct": 0.0,
       "qualified": 0,

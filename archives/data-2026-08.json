@@ -6,14 +6,14 @@
     "booked": 31,
     "setter": 2,
     "stuck": 1,
-    "showed": 15,
+    "showed": 16,
     "qualified": 14,
-    "closed": 2,
-    "revenue": 9997.0
+    "closed": 3,
+    "revenue": 18994.0
   },
-  "cash_collected": 0,
-  "cash_filled": 0,
-  "cash_total_n": 2,
+  "cash_collected": 10347.0,
+  "cash_filled": 1,
+  "cash_total_n": 3,
   "funnels": {
     "Instagram": {
       "leads_created": 21,
@@ -22,13 +22,13 @@
       "advance_pct": 100.0,
       "booked": 28,
       "book_pct": 133.3,
-      "showed": 13,
-      "show_pct": 46.4,
+      "showed": 14,
+      "show_pct": 50.0,
       "qualified": 13,
       "qual_pct": 46.4,
-      "closed": 2,
-      "cw_pct": 7.1,
-      "revenue": 9997.0
+      "closed": 3,
+      "cw_pct": 10.7,
+      "revenue": 18994.0
     },
     "X": {
       "leads_created": 1,

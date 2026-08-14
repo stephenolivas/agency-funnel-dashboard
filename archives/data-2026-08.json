@@ -3,7 +3,7 @@
   "month_label": "August 2026",
   "grand": {
     "leads_created": 25,
-    "booked": 30,
+    "booked": 31,
     "setter": 2,
     "stuck": 1,
     "showed": 15,
@@ -20,14 +20,14 @@
       "setter": 1,
       "stuck": 0,
       "advance_pct": 100.0,
-      "booked": 27,
-      "book_pct": 128.6,
+      "booked": 28,
+      "book_pct": 133.3,
       "showed": 13,
-      "show_pct": 48.1,
+      "show_pct": 46.4,
       "qualified": 13,
-      "qual_pct": 48.1,
+      "qual_pct": 46.4,
       "closed": 2,
-      "cw_pct": 7.4,
+      "cw_pct": 7.1,
       "revenue": 9997.0
     },
     "X": {

@@ -476,7 +476,7 @@
       <option value="/agency-funnel-dashboard/archives/week-current.html" selected>Aug 17–17 ▶</option></select></div>
     </div>
     <span class="snapshot-label"><span class="archive-badge">Week View</span></span>
-    August 17, 2026 at 01:01 PM PT<br>
+    August 17, 2026 at 01:16 PM PT<br>
     Source · Close CRM
   </div>
 </div>
@@ -492,10 +492,10 @@
        style="--kpi-accent:#9333ea; --kpi-color:#9333ea;" title="Click to list these leads below">
     <div class="kpi-jump">view leads ↓</div>
     <div class="label">Setter Calls</div>
-    <div class="value">0</div>
-    <div class="kpi-sub">— advanced to a closer</div>
-    <div class="kpi-cash " onclick="event.stopPropagation();showLeadTab('stuck')"
-         style="cursor:pointer;">0 stuck · no closer call</div>
+    <div class="value">1</div>
+    <div class="kpi-sub">0% advanced to a closer</div>
+    <div class="kpi-cash partial" onclick="event.stopPropagation();showLeadTab('stuck')"
+         style="cursor:pointer;">1 stuck · no closer call</div>
   </div>
   <div class="kpi kpi-clickable" data-tab="closer" onclick="showLeadTab('closer')"
        style="--kpi-accent:#4f46e5; --kpi-color:var(--text);" title="Click to list these leads below">
@@ -561,9 +561,9 @@
         <span class="chevron" id="chev-instagram">›</span>Instagram
       </td>
       <td class="col-num">1</td>
-      <td class="col-num col-setter">—</td>
-      <td class="col-num col-stuck">—</td>
-      <td class="col-pct ">—</td>
+      <td class="col-num col-setter">1</td>
+      <td class="col-num col-stuck">1</td>
+      <td class="col-pct bad">0%</td>
       <td class="col-num">—</td>
       <td class="col-pace pace-muted">—</td>
       <td class="col-goal">0% (300)</td>
@@ -574,6 +574,25 @@
       <td class="col-num">—</td>
       <td class="col-pct ">—</td>
       <td class="col-rev pkg-trigger" onclick="event.stopPropagation();togglePkg('instagram')" title="Click to see package breakdown">$0 <span class="pkg-chevron" id="pkgchev-instagram">›</span></td>
+      <td class="col-num">—</td>
+    </tr>
+
+    <tr class="utm-row" data-parent="instagram">
+      <td class="col-name col-utm">↳ dont-buy-before</td>
+      <td class="col-num">—</td>
+      <td class="col-num col-setter">1</td>
+      <td class="col-num col-stuck">1</td>
+      <td class="col-pct bad">0%</td>
+      <td class="col-num">—</td>
+      <td class="col-pace"></td>
+      <td class="col-goal"></td>
+      <td class="col-num">—</td>
+      <td class="col-pct ">—</td>
+      <td class="col-num">—</td>
+      <td class="col-pct ">—</td>
+      <td class="col-num">—</td>
+      <td class="col-pct ">—</td>
+      <td class="col-rev">$0</td>
       <td class="col-num">—</td>
     </tr>
 
@@ -643,9 +662,9 @@
     <tr class="total-row">
       <td class="col-name">TOTAL</td>
       <td class="col-num">1</td>
-      <td class="col-num col-setter">0</td>
-      <td class="col-num col-stuck">0</td>
-      <td class="col-pct ">—</td>
+      <td class="col-num col-setter">1</td>
+      <td class="col-num col-stuck">1</td>
+      <td class="col-pct bad">0%</td>
       <td class="col-num">0</td>
       <td class="col-pace">—</td>
       <td class="col-goal">—</td>
@@ -669,8 +688,8 @@
 </div>
 
 <div class="lead-tabs">
-  <button class="lead-tab" data-tab="setter" onclick="showLeadTab('setter')">Setter Calls <span class="tab-n">0</span></button>
-  <button class="lead-tab" data-tab="stuck"  onclick="showLeadTab('stuck')">Stuck <span class="tab-n">0</span></button>
+  <button class="lead-tab" data-tab="setter" onclick="showLeadTab('setter')">Setter Calls <span class="tab-n">1</span></button>
+  <button class="lead-tab" data-tab="stuck"  onclick="showLeadTab('stuck')">Stuck <span class="tab-n">1</span></button>
   <button class="lead-tab" data-tab="closer" onclick="showLeadTab('closer')">Closer Calls <span class="tab-n">0</span></button>
   <button class="lead-tab active" data-tab="closed" onclick="showLeadTab('closed')">Closed-Won <span class="tab-n">0</span></button>
 </div>
@@ -695,7 +714,14 @@
     </thead>
     <tbody>
 
-    <tr><td colspan="6" class="lead-empty">No discovery calls in this period.</td></tr>
+    <tr class="lead-row stuck-row" data-funnel="instagram">
+      <td class="col-date">8/17/2026</td>
+      <td class="col-client">Ivens Pierre-Louis</td>
+      <td class="col-email">m****hann@machann.com</td>
+      <td class="col-funnel"><span class="funnel-chip chip-instagram">Instagram</span></td>
+      <td class="col-status">📞 Follow Up</td>
+      <td class="col-adv"><span class="adv-no">Stuck</span></td>
+    </tr>
     </tbody>
   </table>
   <p class="pane-note" id="note-setter">Every discovery call held this period. <strong>Advanced</strong> shows the date the lead reached a closer.</p>

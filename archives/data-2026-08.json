@@ -2,7 +2,7 @@
   "month_key": "2026-08",
   "month_label": "August 2026",
   "grand": {
-    "leads_created": 32,
+    "leads_created": 33,
     "booked": 34,
     "setter": 3,
     "stuck": 2,
@@ -16,12 +16,12 @@
   "cash_total_n": 3,
   "funnels": {
     "Instagram": {
-      "leads_created": 28,
+      "leads_created": 29,
       "setter": 2,
       "stuck": 1,
       "advance_pct": 50.0,
       "booked": 31,
-      "book_pct": 110.7,
+      "book_pct": 106.9,
       "showed": 16,
       "show_pct": 51.6,
       "qualified": 15,

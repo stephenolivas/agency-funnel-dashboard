@@ -3,9 +3,9 @@
   "month_label": "August 2026",
   "grand": {
     "leads_created": 34,
-    "booked": 34,
-    "setter": 3,
-    "stuck": 2,
+    "booked": 36,
+    "setter": 4,
+    "stuck": 3,
     "showed": 18,
     "qualified": 16,
     "closed": 4,
@@ -17,17 +17,17 @@
   "funnels": {
     "Instagram": {
       "leads_created": 30,
-      "setter": 2,
-      "stuck": 1,
-      "advance_pct": 50.0,
-      "booked": 31,
-      "book_pct": 103.3,
+      "setter": 3,
+      "stuck": 2,
+      "advance_pct": 33.3,
+      "booked": 33,
+      "book_pct": 110.0,
       "showed": 16,
-      "show_pct": 51.6,
+      "show_pct": 48.5,
       "qualified": 15,
-      "qual_pct": 48.4,
+      "qual_pct": 45.5,
       "closed": 4,
-      "cw_pct": 12.9,
+      "cw_pct": 12.1,
       "revenue": 24991.0
     },
     "X": {

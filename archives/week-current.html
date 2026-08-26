@@ -477,7 +477,7 @@
       <option value="/agency-funnel-dashboard/archives/week-current.html" selected>Aug 24–26 ▶</option></select></div>
     </div>
     <span class="snapshot-label"><span class="archive-badge">Week View</span></span>
-    August 26, 2026 at 10:16 AM PT<br>
+    August 26, 2026 at 10:32 AM PT<br>
     Source · Close CRM
   </div>
 </div>
@@ -517,16 +517,16 @@
   </div>
   <div class="kpi" style="--kpi-accent:#d97706; --kpi-color:#d97706;">
     <div class="label">Closed Won</div>
-    <div class="value">0</div>
-    <div class="kpi-sub">0.0% booked→close · 0.0% qual→close</div>
+    <div class="value">1</div>
+    <div class="kpi-sub">10.0% booked→close · 16.7% qual→close</div>
   </div>
   <div class="kpi kpi-clickable" data-tab="closed" onclick="showLeadTab('closed')"
        style="--kpi-accent:#0e9f6e; --kpi-color:#0e9f6e;" title="Click to list these leads below">
     <div class="kpi-jump">view leads ↓</div>
     <div class="label">Closed Revenue</div>
-    <div class="value">$0</div>
-    <div class="kpi-sub">— avg deal</div>
-    <div class="kpi-cash ">no cash data</div>
+    <div class="value">$5,997</div>
+    <div class="kpi-sub">$5,997 avg deal</div>
+    <div class="kpi-cash partial">$0 cash · 0 of 1 deals</div>
   </div>
 </div>
 
@@ -650,10 +650,48 @@
       <td class="col-pct ">—</td>
       <td class="col-num">—</td>
       <td class="col-pct ">—</td>
+      <td class="col-num">1</td>
+      <td class="col-pct ">—</td>
+      <td class="col-rev pkg-trigger" onclick="event.stopPropagation();togglePkg('x')" title="Click to see package breakdown">$5,997 <span class="pkg-chevron" id="pkgchev-x">›</span></td>
+      <td class="col-num">$5,997</td>
+    </tr>
+
+    <tr class="pkg-row" data-parent="x" style="display:none">
+      <td class="col-name col-pkg">↳ Bronze - $5,997</td>
+      <td class="col-num">—</td>
+      <td class="col-num">—</td>
+      <td class="col-num">—</td>
+      <td class="col-pct"></td>
+      <td class="col-num">—</td>
+      <td class="col-pace"></td>
+      <td class="col-goal"></td>
+      <td class="col-num">—</td>
+      <td class="col-pct"></td>
+      <td class="col-num">—</td>
+      <td class="col-pct"></td>
+      <td class="col-num">1</td>
+      <td class="col-pct"></td>
+      <td class="col-rev">$5,997</td>
+      <td class="col-num">$5,997</td>
+    </tr>
+
+    <tr class="utm-row" data-parent="x">
+      <td class="col-name col-utm">↳ book-call</td>
+      <td class="col-num">—</td>
+      <td class="col-num col-setter">—</td>
+      <td class="col-num col-stuck">—</td>
+      <td class="col-pct ">—</td>
+      <td class="col-num">—</td>
+      <td class="col-pace"></td>
+      <td class="col-goal"></td>
       <td class="col-num">—</td>
       <td class="col-pct ">—</td>
-      <td class="col-rev pkg-trigger" onclick="event.stopPropagation();togglePkg('x')" title="Click to see package breakdown">$0 <span class="pkg-chevron" id="pkgchev-x">›</span></td>
       <td class="col-num">—</td>
+      <td class="col-pct ">—</td>
+      <td class="col-num">1</td>
+      <td class="col-pct ">—</td>
+      <td class="col-rev">$5,997</td>
+      <td class="col-num">$5,997</td>
     </tr>
 
     <tr class="funnel-row" onclick="toggleUTM('linkedin')" data-fid="linkedin">
@@ -711,10 +749,10 @@
       <td class="col-pct mid">50.0%</td>
       <td class="col-num">6</td>
       <td class="col-pct mid">60.0%</td>
-      <td class="col-num">0</td>
-      <td class="col-pct bad">0.0%</td>
-      <td class="col-rev">$0</td>
-      <td class="col-num">—</td>
+      <td class="col-num">1</td>
+      <td class="col-pct mid">10.0%</td>
+      <td class="col-rev">$5,997</td>
+      <td class="col-num">$5,997</td>
     </tr>
     </tbody>
   </table>
@@ -723,14 +761,14 @@
 <!-- Lead Detail — tabbed -->
 <div class="section-label">
   Lead Line Items
-  <span class="count-pill" id="lead-count">0 deals</span>
+  <span class="count-pill" id="lead-count">1 deals</span>
 </div>
 
 <div class="lead-tabs">
   <button class="lead-tab" data-tab="setter" onclick="showLeadTab('setter')">Setter Calls <span class="tab-n">1</span></button>
   <button class="lead-tab" data-tab="stuck"  onclick="showLeadTab('stuck')">Stuck <span class="tab-n">0</span></button>
   <button class="lead-tab" data-tab="closer" onclick="showLeadTab('closer')">Closer Calls <span class="tab-n">10</span></button>
-  <button class="lead-tab active" data-tab="closed" onclick="showLeadTab('closed')">Closed-Won <span class="tab-n">0</span></button>
+  <button class="lead-tab active" data-tab="closed" onclick="showLeadTab('closed')">Closed-Won <span class="tab-n">1</span></button>
 </div>
 
 <div class="funnel-filter">
@@ -902,7 +940,16 @@
     </thead>
     <tbody>
 
-    <tr><td colspan="8" class="lead-empty">No closed-won deals in this period.</td></tr>
+    <tr class="lead-row" data-funnel="x" data-gross="5997.00" data-cash="">
+      <td class="col-date">8/26/2026</td>
+      <td class="col-client">Jonas Mikals</td>
+      <td class="col-email">j****kals@yahoo.com</td>
+      <td class="col-program">Bronze - $5,997</td>
+      <td class="col-funnel"><span class="funnel-chip chip-x">X</span></td>
+      <td class="col-closer">Robin Perkins</td>
+      <td class="col-gross">$5,997</td>
+      <td class="col-cash cash-missing">—</td>
+    </tr>
 
     <tr class="total-row">
       <td class="col-date">TOTAL</td>
@@ -911,8 +958,8 @@
       <td class="col-program"></td>
       <td class="col-funnel"></td>
       <td class="col-closer"></td>
-      <td class="col-gross">$0</td>
-      <td class="col-cash">$0<div style="font-size:10px;font-weight:400;color:var(--muted);">0 of 0 deals</div></td>
+      <td class="col-gross">$5,997</td>
+      <td class="col-cash">$0<div style="font-size:10px;font-weight:400;color:var(--muted);">0 of 1 deals</div></td>
     </tr>
     </tbody>
   </table>

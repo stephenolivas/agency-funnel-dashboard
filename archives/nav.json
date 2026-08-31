@@ -21,6 +21,11 @@
   "weeks": {
     "2026-08": [
       {
+        "key": "week-2026-08-17",
+        "label": "Aug 17\u201323",
+        "is_current": false
+      },
+      {
         "key": "week-2026-08-10",
         "label": "Aug 10\u201316",
         "is_current": false
@@ -32,7 +37,7 @@
       },
       {
         "key": "week-current",
-        "label": "Aug 24\u201328 \u25b6",
+        "label": "Aug 31\u201331 \u25b6",
         "is_current": true
       }
     ],
@@ -86,5 +91,5 @@
       }
     ]
   },
-  "updated_at": "2026-08-28T10:17:00"
+  "updated_at": "2026-08-31T07:45:55"
 }

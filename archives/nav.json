@@ -1,11 +1,16 @@
 {
-  "live_month": "2026-08",
-  "live_month_label": "August 2026",
+  "live_month": "2026-09",
+  "live_month_label": "September 2026",
   "months": [
+    {
+      "key": "2026-09",
+      "label": "September 2026",
+      "is_live": true
+    },
     {
       "key": "2026-08",
       "label": "August 2026",
-      "is_live": true
+      "is_live": false
     },
     {
       "key": "2026-07",
@@ -34,11 +39,6 @@
         "key": "week-2026-08-03",
         "label": "Aug 3\u20139",
         "is_current": false
-      },
-      {
-        "key": "week-current",
-        "label": "Aug 31\u201331 \u25b6",
-        "is_current": true
       }
     ],
     "2026-07": [
@@ -89,7 +89,14 @@
         "label": "Jun 1\u20137",
         "is_current": false
       }
+    ],
+    "2026-09": [
+      {
+        "key": "week-current",
+        "label": "Aug 31\u2013Sep 1 \u25b6",
+        "is_current": true
+      }
     ]
   },
-  "updated_at": "2026-08-31T07:45:55"
+  "updated_at": "2026-09-01T10:05:07"
 }

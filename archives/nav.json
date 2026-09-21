@@ -24,6 +24,18 @@
     }
   ],
   "weeks": {
+    "2026-09": [
+      {
+        "key": "week-2026-09-07",
+        "label": "Sep 7\u201313",
+        "is_current": false
+      },
+      {
+        "key": "week-current",
+        "label": "Sep 21\u201321 \u25b6",
+        "is_current": true
+      }
+    ],
     "2026-08": [
       {
         "key": "week-2026-08-31",
@@ -99,14 +111,7 @@
         "label": "Jun 1\u20137",
         "is_current": false
       }
-    ],
-    "2026-09": [
-      {
-        "key": "week-current",
-        "label": "Sep 14\u201314 \u25b6",
-        "is_current": true
-      }
     ]
   },
-  "updated_at": "2026-09-14T06:34:22"
+  "updated_at": "2026-09-21T06:34:42"
 }

@@ -26,13 +26,18 @@
   "weeks": {
     "2026-09": [
       {
+        "key": "week-2026-09-14",
+        "label": "Sep 14\u201320",
+        "is_current": false
+      },
+      {
         "key": "week-2026-09-07",
         "label": "Sep 7\u201313",
         "is_current": false
       },
       {
         "key": "week-current",
-        "label": "Sep 21\u201321 \u25b6",
+        "label": "Sep 28\u201328 \u25b6",
         "is_current": true
       }
     ],
@@ -113,5 +118,5 @@
       }
     ]
   },
-  "updated_at": "2026-09-21T06:34:42"
+  "updated_at": "2026-09-28T07:53:03"
 }

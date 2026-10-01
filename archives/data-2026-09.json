@@ -1,0 +1,79 @@
+{
+  "month_key": "2026-09",
+  "month_label": "September 2026",
+  "grand": {
+    "leads_created": 134,
+    "booked": 49,
+    "setter": 10,
+    "stuck": 6,
+    "showed": 30,
+    "qualified": 24,
+    "closed": 4,
+    "revenue": 20079.0
+  },
+  "cash_collected": 0,
+  "cash_filled": 0,
+  "cash_total_n": 4,
+  "funnels": {
+    "Instagram": {
+      "leads_created": 129,
+      "setter": 7,
+      "stuck": 3,
+      "advance_pct": 57.1,
+      "booked": 44,
+      "book_pct": 34.1,
+      "showed": 26,
+      "show_pct": 59.1,
+      "qualified": 22,
+      "qual_pct": 50.0,
+      "closed": 4,
+      "cw_pct": 9.1,
+      "revenue": 20079.0
+    },
+    "X": {
+      "leads_created": 1,
+      "setter": 1,
+      "stuck": 1,
+      "advance_pct": 0.0,
+      "booked": 0,
+      "book_pct": 0.0,
+      "showed": 0,
+      "show_pct": 0,
+      "qualified": 0,
+      "qual_pct": 0,
+      "closed": 0,
+      "cw_pct": 0,
+      "revenue": 0.0
+    },
+    "Linkedin": {
+      "leads_created": 4,
+      "setter": 2,
+      "stuck": 2,
+      "advance_pct": 0.0,
+      "booked": 5,
+      "book_pct": 125.0,
+      "showed": 4,
+      "show_pct": 80.0,
+      "qualified": 2,
+      "qual_pct": 40.0,
+      "closed": 0,
+      "cw_pct": 0.0,
+      "revenue": 0.0
+    },
+    "Anthony X": {
+      "leads_created": 0,
+      "setter": 0,
+      "stuck": 0,
+      "advance_pct": 0,
+      "booked": 0,
+      "book_pct": 0,
+      "showed": 0,
+      "show_pct": 0,
+      "qualified": 0,
+      "qual_pct": 0,
+      "closed": 0,
+      "cw_pct": 0,
+      "revenue": 0.0
+    }
+  }
+}
